@@ -2,8 +2,8 @@
 
 ## Installation and Configuration
 
-1. Compile `fift` and `func` from [ton](https://github.com/newton-blockchain/ton) and add them to `PATH` env or move
-   to `/usr/bin`
+1. Compile `fift`, `func`, `lite-server` from [ton](https://github.com/newton-blockchain/ton) and add them to `PATH` env
+   or move to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
     1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
 2. Clone repo and install it with pip
 
