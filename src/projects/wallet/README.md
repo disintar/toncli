@@ -2,7 +2,7 @@
 
 Deployed by [fift-cli](https://github.com/disintar/fift-cli)
 
-Usage:
+### Usage
 
 - `fift-cli run data.fif`
 - `fift-cli run code.fc`

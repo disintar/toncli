@@ -28,14 +28,19 @@ Interested in contributing? Feel free to create issues and pull requests.
 
 ## Features and status
 
-| Feature                                                | Status |
-|--------------------------------------------------------|--------|
-| Auto compile func & hot reload                         | ❌      |
-| Load from hard structure `code / data / lib / message` | ❌      |
-| Easy bootstrap project samples `wallet, hello world`   | ❌      |
-| Project debugging with `runvmcode`                     | ❌      |
-| Gas auto calculation for store & deploy                | ❌      |
-| Auto send TON to init contract address                 | ❌      |
+| Feature                                                 | Status |
+|---------------------------------------------------------|--------|
+| Easy bootstrap project samples `wallet`                 | ❌      |
+| ... `hello world`                                       | ❌      |
+| Auto compile func & hot reload into `/tmp`              | ❌      |
+| Auto send TON to init contract address                  | ❌      |
+| Deploy to mainnet / testnet                             | ❌      |
+| Run get methods of contract                             | ❌      |
+| Send messages with comment and TON to deployed contract | ❌      |
+| Gas auto calculation for store & deploy                 | ❌      |
+| Load from hard structure `code / data / lib / message`  | ❌      |
+| Project debugging with `runvmcode`                      | ❌      |
+| Library support                                         | ❌      |
 
 ## License
 

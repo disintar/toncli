@@ -3,7 +3,8 @@ import shutil
 
 from colorama import Fore, Style
 
-from .log import logger
+from .utils.conf import project_root
+from .utils.log import logger
 
 
 class ProjectBootstrapper:
@@ -13,15 +14,17 @@ class ProjectBootstrapper:
         self.project_name = project_name
         self.folder_name = folder_name
 
-        self.project_location = os.path.realpath(__file__)  # current script path after pip install
-        self.project_location = "/".join(self.project_location.split("/")[:-3])  # get root folder of fift-cli/src
-        self.project_location = f"{self.project_location}/projects"
-
+        self.project_location = f"{project_root}/projects"
         self.current_location = os.getcwd()  # current location where we need to create folder with project
 
-    def deploy(self):
+    def deploy(self) -> None:
         logger.info(f"🐒 I'll create folder {self.folder_name} with project {self.project_name} and all needed files")
-        os.mkdir(self.folder_name)  # create new project dir
+
+        if not os.path.exists(self.folder_name):
+            os.mkdir(self.folder_name)  # create new project dir
+        else:
+            logger.error(f"🧨 Folder {self.folder_name} already exist, please use different one")
+            return
 
         shutil.copytree(f"{self.project_location}/{self.project_name}", f"{self.current_location}/{self.folder_name}",
                         dirs_exist_ok=True)  # copy all from default project to new directory
