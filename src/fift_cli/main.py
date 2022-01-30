@@ -3,7 +3,7 @@ import textwrap
 
 from colorama import Fore
 
-from .lib.projects import ProjectBootstrapper
+from .modules.projects import ProjectBootstrapper
 
 
 def main():
