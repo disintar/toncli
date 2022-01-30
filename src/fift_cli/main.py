@@ -46,7 +46,6 @@ Each command have help e.g.: fift-cli deploy -h
                                help='Configurate deploy wallet')
 
     args = parser.parse_args()
-    print(args)
 
     if 'project' in args:
         bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=args.name)

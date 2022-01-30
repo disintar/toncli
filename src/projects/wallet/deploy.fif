@@ -1,0 +1,11 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+// Load data cell
+"data.fif" include
+constant data
+
+// Load code cell
+"build/code.fif" include
+constant code
+

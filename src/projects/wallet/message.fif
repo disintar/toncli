@@ -1,5 +1,0 @@
-<b
-   0 32 u, // subwallet id
-   -1 32 i, // valid_until
-   0 32 u, // msg_seqno
-b>

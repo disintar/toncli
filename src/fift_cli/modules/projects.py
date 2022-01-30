@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import Optional
 
 from colorama import Fore, Style
 
@@ -10,20 +11,22 @@ from .utils.log import logger
 class ProjectBootstrapper:
     ''' Create new folder and copy files from src/projects/{project} to this folder'''
 
-    def __init__(self, project_name: str, folder_name: str):
+    def __init__(self, project_name: str, folder_name: str, location: Optional[str] = None):
         self.project_name = project_name
         self.folder_name = folder_name
 
         self.project_location = f"{project_root}/projects"
-        self.current_location = os.getcwd()  # current location where we need to create folder with project
+        # current location where we need to create folder with project
+        self.current_location = os.getcwd() if not location else location
 
     def deploy(self) -> None:
-        logger.info(f"🐒 I'll create folder {self.folder_name} with project {self.project_name} and all needed files")
+        logger.info(
+            f"🐒 I'll create folder {self.current_location}/{self.folder_name} with project {self.project_name} and all needed files")
 
-        if not os.path.exists(self.folder_name):
-            os.mkdir(self.folder_name)  # create new project dir
+        if not os.path.exists(f"{self.current_location}/{self.folder_name}"):
+            os.mkdir(f"{self.current_location}/{self.folder_name}")  # create new project dir
         else:
-            logger.error(f"🧨 Folder {self.folder_name} already exist, please use different one")
+            logger.error(f"🧨 Folder {self.current_location}/{self.folder_name} already exist, please use different one")
             return
 
         shutil.copytree(f"{self.project_location}/{self.project_name}", f"{self.current_location}/{self.folder_name}",

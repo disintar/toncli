@@ -27,7 +27,7 @@ class Deployer:
         '''Check needed files and log if there is no one'''
 
         files = os.listdir(self.project_root)
-        needed_files = ['data.fif', 'message.fif', 'code.fc']
+        needed_files = ['data.fif', 'code.fc']
 
         for file in needed_files:
             if file not in files:
