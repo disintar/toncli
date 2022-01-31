@@ -1,7 +1,7 @@
 import subprocess
 from typing import List, Optional
 
-from .utils.conf import config_folder, executable
+from .conf import config_folder, executable
 
 
 def build(func_files_location: List[str], to_save_location: str) -> Optional[str]:

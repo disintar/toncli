@@ -22,6 +22,7 @@ Command list, e.g. usage: fift-cli startproject wallet
 {Fore.GREEN}   wallet - create project with v3 wallet example
 
 {Fore.BLUE}deploy   
+{Fore.BLUE}wallet   
 
 {Style.RESET_ALL}
 Each command have help e.g.: fift-cli deploy -h
@@ -42,16 +43,17 @@ Each command have help e.g.: fift-cli deploy -h
     parser_deploy = subparser.add_parser('deploy')
     parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
                                help='Network to deploy')
-    parser_deploy.add_argument("--configure", action='store_true',
-                               help='Configurate deploy wallet')
+    parser_deploy.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
+    parser_deploy.add_argument("--configure", action='store_true', help='Configurate deploy wallet')
 
     args = parser.parse_args()
+    print(args)
 
     if 'project' in args:
         bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=args.name)
         bootstrapper.deploy()
     elif 'net' in args:
-        deployer = Deployer(network=args.net, update_config=args.configure)
+        deployer = Deployer(network=args.net, update_config=args.configure, workchain=args.workchain)
 
 
 if __name__ == '__name__':

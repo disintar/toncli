@@ -1,0 +1,22 @@
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+
+// define usage comment
+{ ."usage: " $0 type ." <data-path> <code-path>" cr
+."Generate external message and create BOC file" cr 1 halt } : usage
+
+usage
+
+$1 constant data-path
+$2 constant code-code
+
+.s
+
+// Load data cell
+// "data.fif" include
+// constant data
+
+// Load code cell
+// "build/code.fif" include
+// constant code

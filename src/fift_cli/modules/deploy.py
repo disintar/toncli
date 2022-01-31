@@ -3,25 +3,29 @@ import os
 from colorama import Fore, Style
 from requests import get as http_get
 
-from .deploy_contract import DeployContract
+from .deploy_wallet_contract import DeployWalletContract
 from .utils.conf import config_folder, config_uri
 from .utils.log import logger
 
 gr = Fore.GREEN
+bl = Fore.BLUE
 rs = Style.RESET_ALL
 
 
 class Deployer:
-    def __init__(self, network: str, update_config: bool = False):
+    def __init__(self, network: str, update_config: bool = False, workchain: int = 0):
+        logger.info(f"🚀 You want to {bl}deploy{rs} your contract to {gr}{network}{rs} - that's grate!")
+
         self.network: str = Deployer.get_network_config_path(network, update_config)
         self.project_root: str = os.getcwd()
+        self.workchain = workchain # workchain deploy to
 
         # Check needed to deploy files
         if not self.check_for_needed_files_to_deploy():
             # If no - do nothing
             return
 
-        self.deploy_contract = DeployContract()
+        self.deploy_contract = DeployWalletContract()
 
     def check_for_needed_files_to_deploy(self) -> bool:
         '''Check needed files and log if there is no one'''

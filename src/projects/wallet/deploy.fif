@@ -8,4 +8,3 @@ constant data
 // Load code cell
 "build/code.fif" include
 constant code
-
