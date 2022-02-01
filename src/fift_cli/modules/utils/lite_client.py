@@ -78,5 +78,14 @@ def get_account_status(network: str, address: str, cwd: Optional[str] = None,
 
 
 def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: bool = False):
+    """
+    Send BOC via lite-client
+
+    :param network: network to send
+    :param path: path to boc file
+    :param cwd: root dir run command from
+    :param update_config: need to update local cached config of network
+    :return:
+    """
     command = lite_client_execute_command(network, ['-v', '0', '-c', f'sendfile {path}'], update_config=update_config)
     subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)

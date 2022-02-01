@@ -1,6 +1,5 @@
 import os
 import sys
-import time
 
 from colorama import Fore, Style
 
@@ -63,22 +62,7 @@ class DeployWalletContract(AbstractDeployer):
         """Send ton to some address from DeployWallet"""
         balance, is_inited = self.get_status()
 
-        if balance > 0 and not is_inited:
-            # deploy
-            logger.info(f"🤑 Current balance is grater then 0: {gr}{balance}{rs} and "
-                        f"wallet code is not deployed - so try to deploy")
-            self.deploy()
-
-            logger.info("😴 Sleep for 5 sec., wait while blockchain info will be updated")
-            time.sleep(5)
-
-        balance, is_inited = self.get_status()
-
-        logger.info(f"💎 Current balance is: {gr}{balance}{rs} TON, Inited: {gr}{is_inited}{rs}")
-
-        if balance < count:
+        if balance < count or not is_inited:
             logger.error(
                 f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
-
-

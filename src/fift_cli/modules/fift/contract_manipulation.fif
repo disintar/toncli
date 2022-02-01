@@ -59,6 +59,7 @@ nonbounceable_address " " $+ $+
 $>B
 "build/address_text" B>file
 ^green "🖊  Save all addresses to build/address_text" type cr
+^reset
 
 <b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
 2 boc+>B

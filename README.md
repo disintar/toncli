@@ -77,3 +77,6 @@ created
 [WTFPL](https://github.com/dtf0/wtfpl) v3.1
 
 Completely free to use.
+
+Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC
+

@@ -27,7 +27,7 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
     :return:
     """
     logger.info(f"🤗 Run tests on {bl}{fift_files_locations}{rs}")
-
+    print("CWD:      -> ", os.getcwd() if not cwd else cwd)
     for file in fift_files_locations:
         # Run tests from fift and pass path to file
         # (example of tests can be found in fift_cli/modules/fift/run_test.fif)

@@ -25,7 +25,7 @@ class AbstractDeployer:
 
     def get_status(self) -> Tuple[float, bool]:
         """Get balance and inited state for Contract"""
-        return get_account_status(self.network, self.address, update_config=self.update_config)
+        return get_account_status(self.network, self.address, update_config=self.update_config, cwd=self.project_root)
 
     def deploy(self):
         """Deploy Contract"""
@@ -36,8 +36,7 @@ class AbstractDeployer:
         """Generate BOC of external message for project"""
         return contract_manipulation(f"{self.project_root}/build/code.fif",
                                      f"{self.project_root}/fift/data.fif",
-                                     self.workchain,
-                                     cwd=self.project_root)
+                                     self.workchain, cwd=self.project_root)
 
     def get_address(self):
         """Get addres from address_text generated in contract_manipulation.fif"""

@@ -1,7 +1,7 @@
 "TonUtil.fif" include
 "Asm.fif" include
 
-"build/key.pk" load-generate-keypair // generate key pair
+"build/contract.pk" load-generate-keypair // generate key pair
 constant public_key // save public to constant
 constant private_key // save private to constant
 
