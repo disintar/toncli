@@ -31,23 +31,35 @@ data-path include constant data
 // todo: rewrite with comments
 // ok, it's hard to understand but samples are here:
 // https://gist.github.com/tvorogme/fdb174ac0740b6a52d1dbdf85f4ddc63
-<b b{0011} s, data ref, data ref, null dict, b> constant StateInit
+<b b{0011} s, code ref, data ref, null dict, b> constant StateInit
 
 StateInit hashu wc swap 2dup 2constant contract_addr
-2dup "build/contract.addr" save-address-verbose
+2dup "build/contract.addr" save-address
 
-^magenta
-2dup ."🦄 Raw address: " .addr cr
 
-^green
-2dup ."🦝 Bounceable address: " 6 .Addr cr
 
-^yellow
-."🐏 Non-bounceable address: " 7 .Addr cr
+// Create raw address string
+2dup (dump) swap (dump) ":" $+ swap $+ constant raw_address
 
-{ b{0} s, def? body { @' body s, } if } : body,
+// Create bounceable_address
+2dup 6 smca>$ constant bounceable_address
 
-// todo: add possibility to send body as cell ref
-<b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, body, b>
+// Create Non-bounceable address
+2dup 7 smca>$ constant nonbounceable_address
+
+^magenta ."🦄 Raw address: " raw_address type cr
+^green ."🦝 Bounceable address: " bounceable_address type cr
+^yellow  ."🐏 Non-bounceable address: " nonbounceable_address type cr
+^reset
+
+// Save all addresses to text
+raw_address " " $+
+bounceable_address " " $+ $+
+nonbounceable_address " " $+ $+
+$>B
+"build/address_text" B>file
+^green "🖊  Save all addresses to build/address_text" type cr
+
+<b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
 2 boc+>B
 "build/boc/contract-create.boc" tuck B>file

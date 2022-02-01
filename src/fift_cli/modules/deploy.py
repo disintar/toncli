@@ -25,7 +25,8 @@ class Deployer:
             # If no - do nothing
             return
 
-        self.deploy_contract = DeployWalletContract()
+        self.deploy_contract = DeployWalletContract(network, workchain)
+        self.deploy_contract.send_ton()
 
     def check_for_needed_files_to_deploy(self) -> bool:
         '''Check needed files and log if there is no one'''

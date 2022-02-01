@@ -26,6 +26,8 @@ Command list, e.g. usage: fift-cli startproject wallet
 
 {Style.RESET_ALL}
 Each command have help e.g.: fift-cli deploy -h
+
+Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC
 '''
 
     parser = argparse.ArgumentParser(

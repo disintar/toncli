@@ -61,7 +61,7 @@ created
     1. If it's first time - simple wallet will be created in config folder
     2. Message with wallet address and tips will be displayed (user need to send some TON coin on it)
     3. If there is no TON in deploy contract - script will exit and notify user to update deployer balance
-3. Will run `data.fif` / `message.fif` (if exist) / `lib.fif` (if exist)  before creating deploy message
+3. Will run tests on `fift/data.fif` / `fift/message.fif` (if exist) / `fift/lib.fif` (if exist)  before creating deploy message
     1. This will check all files are correct
     2. Also, you can run custom logic - for example create keys in build/
 4. Will calculate address of contract and display it to user

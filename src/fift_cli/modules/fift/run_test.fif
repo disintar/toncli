@@ -47,3 +47,4 @@ test-is-builder
 
 ^cyan
 ."Type test pass 🏁" cr
+^reset
