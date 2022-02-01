@@ -18,11 +18,11 @@ def main():
 --------------------------------
 Command list, e.g. usage: fift-cli startproject wallet
 
-{Fore.BLUE}startproject   
+{Fore.CYAN}startproject   
 {Fore.GREEN}   wallet - create project with v3 wallet example
 
-{Fore.BLUE}deploy   
-{Fore.BLUE}wallet   
+{Fore.CYAN}deploy   
+{Fore.CYAN}wallet   
 
 {Style.RESET_ALL}
 Each command have help e.g.: fift-cli deploy -h

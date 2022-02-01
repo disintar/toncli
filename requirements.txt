@@ -1,3 +1,4 @@
 colorama
 appdirs
 requests
+pyyaml

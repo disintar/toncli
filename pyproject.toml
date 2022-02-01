@@ -4,6 +4,7 @@ requires = [
     "wheel",
     "colorama",
     "appdirs",
-    "requests"
+    "requests",
+    "pyyaml"
 ]
 build-backend = "setuptools.build_meta"

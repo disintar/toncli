@@ -3,11 +3,12 @@ import os
 from colorama import Fore, Style
 
 from .projects import ProjectBootstrapper
-from .utils.conf import config_folder
+from .utils.conf import config_folder, project_root
+from .utils.fift import test_fift
 from .utils.func import build
 from .utils.log import logger
 
-bl = Fore.BLUE
+bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 
@@ -24,6 +25,8 @@ class DeployWalletContract:
             pb.deploy()
 
             # Build code
-            build([f"{config_folder}/wallet/code.fc"], f"{config_folder}/wallet/build/code.fif")
+            build(f"{config_folder}/wallet/func/", f"{config_folder}/wallet/build/code.fif")
 
-            # Get contract address
+            # Run tests
+            test_fift(fift_files_locations=[f"{config_folder}/wallet/fift/data.fif"],
+                      test_file_path=f"{project_root}/fift_cli/modules/fift/run_test.fif")

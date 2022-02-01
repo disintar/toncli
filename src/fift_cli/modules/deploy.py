@@ -8,7 +8,7 @@ from .utils.conf import config_folder, config_uri
 from .utils.log import logger
 
 gr = Fore.GREEN
-bl = Fore.BLUE
+bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 
@@ -18,7 +18,7 @@ class Deployer:
 
         self.network: str = Deployer.get_network_config_path(network, update_config)
         self.project_root: str = os.getcwd()
-        self.workchain = workchain # workchain deploy to
+        self.workchain = workchain  # workchain deploy to
 
         # Check needed to deploy files
         if not self.check_for_needed_files_to_deploy():
@@ -31,12 +31,26 @@ class Deployer:
         '''Check needed files and log if there is no one'''
 
         files = os.listdir(self.project_root)
-        needed_files = ['data.fif', 'code.fc']
+        needed_structure = {
+            'func': ['code.fc', 'files.yaml'],
+            'fift': ['data.fif'],
+            'build': []
+        }
 
-        for file in needed_files:
-            if file not in files:
-                logger.error(f"🚫 It is not project root, there is no {file} - I can't deploy it")
+        for folder in needed_structure:
+
+            if folder not in files:
+                logger.error(f"🚫 It is not project root, there is no folder {bl}{folder}{rs} - I can't deploy it")
                 return False
+
+            for file in needed_structure[folder]:
+                folder_files = os.listdir(f"{self.project_root}/{folder}")
+
+                if file not in folder_files:
+                    logger.error(
+                        f"🚫 It is not project root, there is no file {bl}{file}{rs} folder {bl}{folder}{rs} "
+                        f"- I can't deploy it")
+                    return False
 
         return True
 
