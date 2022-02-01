@@ -1,0 +1,50 @@
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"Color.fif" include
+
+// todo: use GetOpt.fif
+// define usage comment
+{ ."usage: " $0 type ." script-path test-type" cr
+."Run specific test on message.fif / code.fif / data.fif" cr
+."test-type can be: is_only_builder / is_only_dict " cr
+1 halt } : usage
+
+// if less then two arguments print usage message
+$# 2 < ' usage if
+
+// load script-path
+$1 constant script-path
+
+// load test type
+$2 constant test-type
+
+// TEST DEFINITION
+
+// We need to check if it really only one item in stack
+{
+    depth // get stack depth
+    1 = // check if it equal to 1
+    0= abort"Not valid stack depth need to be 1 😈" // if so raise abort message
+} : test-stack-depth // define as function
+
+// We need to check if is is builder or dict in stack
+// There is no type methods right now - so we will use some tricks
+{
+    <s // try to create slice from builder
+} : test-valid-type
+
+// run script
+script-path include
+
+// Run stack length test
+test-stack-depth
+
+^green
+."Depth test pass 🏁" cr
+
+// Run type check
+test-valid-type
+
+^cyan
+."Type test pass 🏁" cr

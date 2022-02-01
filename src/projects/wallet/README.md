@@ -4,7 +4,7 @@ Deployed by [fift-cli](https://github.com/disintar/fift-cli)
 
 ### Usage
 
-- `fift-cli run data.fif`
+- `fift-cli run fift/data.fif`
 - `fift-cli run func/code.fc`
 - `fift-cli deploy -n tesnet -wc 0`
 
