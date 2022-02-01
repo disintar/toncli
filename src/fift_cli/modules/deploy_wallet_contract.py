@@ -1,4 +1,5 @@
 import os
+from typing import Tuple
 
 from colorama import Fore, Style
 
@@ -6,7 +7,7 @@ from .projects import ProjectBootstrapper
 from .utils.conf import config_folder, project_root
 from .utils.fift import test_fift, contract_manipulation
 from .utils.func import build
-from .utils.lite_client import get_account_balance
+from .utils.lite_client import get_account_status, send_boc
 from .utils.log import logger
 
 bl = Fore.CYAN
@@ -68,12 +69,28 @@ class DeployWalletContract:
                 f"🦘 Found existing deploy-wallet [{gr}{address_text[1]}{rs}] in {config_folder}")
             self.address = address_text[1]
 
-    def get_balance(self) -> int:
-        return get_account_balance(self.network, self.address)
+    def get_status(self) -> Tuple[float, bool]:
+        """Get balance and inited state for DeployWallet"""
+        return get_account_status(self.network, self.address)
+
+    def deploy(self):
+        """Deploy DeployWallet"""
+
+        send_boc(self.network, f'{config_folder}/wallet/build/boc/contract-create.boc', f'{config_folder}/wallet/')
 
     def send_ton(self):
-        balance = self.get_balance()
-        logger.info(f"💎 Current balance is: {gr}{balance}{rs} TON")
+        """Send ton to some address from DeployWallet"""
+        balance, is_inited = self.get_status()
+
+        if balance > 0 and not is_inited:
+            # deploy
+            logger.info(f"🤑 Current balance is grater then 0: {gr}{balance}{rs} and "
+                        f"wallet code is not deployed - so try to deploy")
+            self.deploy()
+
+        balance, is_inited = self.get_status()
+
+        logger.info(f"💎 Current balance is: {gr}{balance}{rs} TON, Inited: {gr}{is_inited}{rs}")
 
         if balance == 0:
             logger.error(f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}]")
