@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from typing import List, Optional
 
 from colorama import Fore, Style
@@ -48,4 +49,4 @@ def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: O
     else:
         logger.error(f"😳 {rd}Error{rs} on contract_manipulation, please double check everything.")
         logger.error(output_data)
-        return
+        sys.exit()

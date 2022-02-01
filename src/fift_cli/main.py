@@ -3,7 +3,7 @@ import textwrap
 
 from colorama import Fore, Style
 
-from .modules.deploy import Deployer
+from .modules.deploy_contract import ContractDeployer
 from .modules.projects import ProjectBootstrapper
 
 
@@ -46,7 +46,8 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
     parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
                                help='Network to deploy')
     parser_deploy.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
-    parser_deploy.add_argument("--configure", action='store_true', help='Configurate deploy wallet')
+    parser_deploy.add_argument("--ton", "-t", default=0.05, type=int, help='How much TON will be sent to new contract')
+    parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
 
     args = parser.parse_args()
     print(args)
@@ -55,7 +56,8 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=args.name)
         bootstrapper.deploy()
     elif 'net' in args:
-        deployer = Deployer(network=args.net, update_config=args.configure, workchain=args.workchain)
+        deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
+        deployer.publish()
 
 
 if __name__ == '__name__':

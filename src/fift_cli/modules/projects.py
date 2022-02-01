@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 from typing import Optional
 
 from colorama import Fore, Style
@@ -32,7 +33,7 @@ class ProjectBootstrapper:
         else:
             logger.error(
                 f"🧨 Folder {self.current_location}/{self.folder_name} already exist, please use different one")
-            return
+            sys.exit()
 
         shutil.copytree(f"{self.project_location}/{self.project_name}", f"{self.current_location}/{self.folder_name}",
                         dirs_exist_ok=True)  # copy all from default project to new directory

@@ -1,6 +1,7 @@
 import os
 import subprocess
-from typing import List, Optional
+import sys
+from typing import Optional
 
 import yaml
 from colorama import Fore, Style
@@ -17,7 +18,7 @@ def build(func_folder_path: str, to_save_location: str, cwd: Optional[str] = Non
     """
     Build func file(s) and save result fift file to location
 
-    :param func_files_locations: Files to build in needed order
+    :param func_folder_path: Files to build in needed order
     :param to_save_location: Location to save fift result
     :param cwd: If you need to change root of running script pass it here
     :return:
@@ -29,7 +30,7 @@ def build(func_folder_path: str, to_save_location: str, cwd: Optional[str] = Non
         except yaml.YAMLError as exc:
             logger.error(f"😒 Can't load {bl}files.yaml{rs} in {gr}{func_folder_path}{rs}, error:")
             logger.error(exc)
-            return
+            sys.exit()
 
     func_files_locations = [f"{func_folder_path}/{file}" for file in func_configuration['files']]
 
