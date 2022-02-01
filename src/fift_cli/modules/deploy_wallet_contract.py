@@ -25,8 +25,11 @@ class DeployWalletContract:
             pb.deploy()
 
             # Build code
-            build(f"{config_folder}/wallet/func/", f"{config_folder}/wallet/build/code.fif")
+            build(f"{config_folder}/wallet/func/",
+                  f"{config_folder}/wallet/build/code.fif")
 
             # Run tests
             test_fift(fift_files_locations=[f"{config_folder}/wallet/fift/data.fif"],
-                      test_file_path=f"{project_root}/fift_cli/modules/fift/run_test.fif")
+                      test_file_path=f"{project_root}/fift_cli/modules/fift/run_test.fif",
+                      # Need to specify folder so keys saved to build/ (relative path in fift)
+                      cwd=f"{config_folder}/wallet/")
