@@ -41,6 +41,7 @@ class AbstractDeployer:
     def get_address(self):
         """Get addres from address_text generated in contract_manipulation.fif"""
 
+        # TODO: load address from build/contract.addr
         if not os.path.exists(f"{self.project_root}/build/address_text"):
             raise ValueError(f"😥 No address_text found in {self.project_root}/build/address_text")
 

@@ -72,6 +72,13 @@ created
     2. Boc will generated
     3. Will invoke sendfile in lite-client (TODO: use native python lib, not lite-client)
 
+##  Improvement
+
+There is two main tasks and many TODOs.
+
+Main tasks are - not use lite-client / fift / func. All can be done with python.
+There is many TODOs in code - feel free to fix them and create PRs
+
 ## License
 
 [WTFPL](https://github.com/dtf0/wtfpl) v3.1

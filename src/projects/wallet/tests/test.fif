@@ -1,0 +1,12 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+"build/code.fif" include constant code
+
+"EQB36_EfYjFYMV8p_cxSYX61bA0FZ4B65ZNN6L8INY-5gL6w" bounce parse-load-address force-bounce or allow-bounce and =: bounce 2=: dest_addr
+0 constant subwallet_id
+0 constant  seqno
+
+subwallet_id (.) 1 ' $+ does : +subwallet
+
+.s

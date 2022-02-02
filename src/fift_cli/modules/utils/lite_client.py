@@ -6,8 +6,8 @@ from typing import List, Optional, Tuple
 from colorama import Fore, Style
 from requests import get as http_get
 
-from .conf import executable, config_folder, config_uri
-from .log import logger
+from fift_cli.modules.utils.conf import executable, config_folder, config_uri
+from fift_cli.modules.utils.log import logger
 
 gr = Fore.GREEN
 bl = Fore.CYAN

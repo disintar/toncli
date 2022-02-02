@@ -3,12 +3,10 @@ import sys
 import time
 
 from colorama import Fore, Style
-from requests import get as http_get
 
-from .abstract.deployer import AbstractDeployer
-from .deploy_wallet_contract import DeployWalletContract
-from .utils.conf import config_folder, config_uri
-from .utils.log import logger
+from fift_cli.modules.abstract.deployer import AbstractDeployer
+from fift_cli.modules.deploy_wallet_contract import DeployWalletContract
+from fift_cli.modules.utils.log import logger
 
 gr = Fore.GREEN
 bl = Fore.CYAN

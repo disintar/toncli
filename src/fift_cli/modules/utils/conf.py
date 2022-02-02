@@ -5,7 +5,7 @@ import shutil
 from appdirs import user_config_dir
 from colorama import Fore, Style
 
-from .log import logger
+from fift_cli.modules.utils.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL

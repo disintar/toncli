@@ -74,6 +74,3 @@ dup hashu wallet_pk ed25519_sign_uint
    swap B, swap <s s, b>
 dup ."resulting external message: " <s csr. cr
 2 boc+>B dup Bx. cr
-savefile +".boc" tuck B>file
-."Query expires in " timeout . ."seconds" cr
-."(Saved to file " type .")" cr

@@ -8,7 +8,7 @@
 { ."usage: " $0 type ." code-path data-path workchain [lib-path]" cr
 ."Generate init message and and calculate wallet address" cr 1 halt } : usage
 
-// if less then two arguments print usage message
+// if less then 3 arguments print usage message
 $# 3 < ' usage if
 
 // load at least 2 command line arguments
@@ -36,8 +36,6 @@ data-path include constant data
 StateInit hashu wc swap 2dup 2constant contract_addr
 2dup "build/contract.addr" save-address
 
-
-
 // Create raw address string
 2dup (dump) swap (dump) ":" $+ swap $+ constant raw_address
 
@@ -47,9 +45,9 @@ StateInit hashu wc swap 2dup 2constant contract_addr
 // Create Non-bounceable address
 2dup 7 smca>$ constant nonbounceable_address
 
-^magenta ."🦄 Raw address: " raw_address type cr
-^green ."🦝 Bounceable address: " bounceable_address type cr
-^yellow  ."🐏 Non-bounceable address: " nonbounceable_address type cr
+^magenta ."INFO: 🦄 Raw address: " raw_address type cr
+^green ."INFO: 🦝 Bounceable address: " bounceable_address type cr
+^yellow  ."INFO: 🐏 Non-bounceable address: " nonbounceable_address type cr
 ^reset
 
 // Save all addresses to text
@@ -63,4 +61,5 @@ $>B
 
 <b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
 2 boc+>B
-"build/boc/contract-create.boc" tuck B>file
+
+// "build/boc/contract-create.boc" tuck B>file

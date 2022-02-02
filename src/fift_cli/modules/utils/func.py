@@ -6,8 +6,8 @@ from typing import Optional
 import yaml
 from colorama import Fore, Style
 
-from .conf import config_folder, executable
-from .log import logger
+from fift_cli.modules.utils.conf import config_folder, executable
+from fift_cli.modules.utils.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN

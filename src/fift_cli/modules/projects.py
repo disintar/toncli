@@ -5,8 +5,8 @@ from typing import Optional
 
 from colorama import Fore, Style
 
-from .utils.conf import project_root
-from .utils.log import logger
+from fift_cli.modules.utils.conf import project_root
+from fift_cli.modules.utils.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL

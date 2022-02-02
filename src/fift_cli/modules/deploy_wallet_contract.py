@@ -3,10 +3,10 @@ import sys
 
 from colorama import Fore, Style
 
-from .abstract.deployer import AbstractDeployer
-from .projects import ProjectBootstrapper
-from .utils.conf import config_folder
-from .utils.log import logger
+from fift_cli.modules.abstract.deployer import AbstractDeployer
+from fift_cli.modules.projects import ProjectBootstrapper
+from fift_cli.modules.utils.conf import config_folder
+from fift_cli.modules.utils.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -53,9 +53,12 @@ class DeployWalletContract(AbstractDeployer):
                 sys.exit()
         else:
             address_text = self.get_address()
+            self.address = address_text[1]
+            balance, is_inited = self.get_status()
 
             logger.info(
-                f"🦘 Found existing deploy-wallet [{gr}{address_text[1]}{rs}] in {config_folder}")
+                f"🦘 Found existing deploy-wallet [{gr}{address_text[1]}{rs}] (Balance: {balance}💎, "
+                f"Is inited: {is_inited}) in {config_folder}")
             self.address = address_text[1]
 
     def send_ton(self, address: str, count: int):
@@ -66,3 +69,7 @@ class DeployWalletContract(AbstractDeployer):
             logger.error(
                 f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
+
+
+if __name__ == '__main__':
+    DeployWalletContract('testnet', 0)
