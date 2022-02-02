@@ -4,10 +4,10 @@ import textwrap
 
 from colorama import Fore, Style
 
-from fift_cli.modules.deploy_contract import ContractDeployer
-from fift_cli.modules.projects import ProjectBootstrapper
-from fift_cli.modules.utils.argparse_fix import argv_fix
-from fift_cli.modules.utils.fift import Fift
+from tncli.modules.deploy_contract import ContractDeployer
+from tncli.modules.projects import ProjectBootstrapper
+from tncli.modules.utils.argparse_fix import argv_fix
+from tncli.modules.utils.fift import Fift
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -23,7 +23,7 @@ def main():
 
     help_text = f'''{Fore.YELLOW}TON blockchain is the future 🦄
 --------------------------------
-Command list, e.g. usage: fift-cli startproject wallet
+Command list, e.g. usage: tncli startproject wallet
 
 {bl}startproject - create new project structure based on example project  
 {gr}   wallet - create project with v3 wallet example
@@ -39,7 +39,7 @@ Command list, e.g. usage: fift-cli startproject wallet
 {bl}wallet - interact with deploy-wallet
 
 {rs}
-Each command have help e.g.: fift-cli deploy -h
+Each command have help e.g.: tncli deploy -h
 
 Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC
 '''
@@ -77,6 +77,9 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
     subparser.add_parser('f', help="Same as fift",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
+    subparser.add_parser('run', help="Same as fift run",
+                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                         description=textwrap.dedent(fift_help))
     parser_fift = subparser.add_parser('fift', help=fift_help,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
                                        description=textwrap.dedent(fift_help))
@@ -88,7 +91,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
                              help='Pass args to fift command, e.g.: -fa "-v 4" - '
                                   'set verbose level, will overwrite default ones, '
                                   'if you want pass args after command just don\'t use flag, f.e.g. '
-                                  '[fift-cli fift run wallet.fif 0 0 1 -v 4]')
+                                  '[tncli fift run wallet.fif 0 0 1 -v 4]')
     parser_fift.add_argument("--lite-client-args", "-la", type=str,
                              default='',
                              help='Pass args to lite-client command in sendboc mode, '
@@ -96,7 +99,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
     command = sys.argv[1] if len(sys.argv) > 1 else None
 
     # wtf I need to do this, need to change!
-    if command and command in ['fift', 'f'] and len(sys.argv) >= 2:
+    if command and command in ['fift', 'f', 'run'] and len(sys.argv) >= 2:
         _, kwargs = argv_fix(sys.argv)
         args = parser.parse_args(['fift', *kwargs])
     else:
@@ -114,12 +117,15 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
         deployer.publish()
 
-    elif command == 'fift' or command == 'f':
+    elif command == 'fift' or command == 'f' or command == 'run':
         # get real args
         real_args, _ = argv_fix(sys.argv)
 
-        # Parse command (fift [command])
-        command = real_args[2] if len(real_args) > 2 else None
+        # Add support of tncli run ...
+        if command != 'run':
+            # Parse command (fift [command])
+            command = real_args[2] if len(real_args) > 2 else None
+
         # Parse kwargs by argparse
         kwargs = dict(args._get_kwargs())
 

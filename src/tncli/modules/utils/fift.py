@@ -7,8 +7,8 @@ from typing import List, Optional
 
 from colorama import Fore, Style
 
-from fift_cli.modules.utils.conf import config_folder, executable, project_root
-from fift_cli.modules.utils.log import logger
+from tncli.modules.utils.conf import config_folder, executable, project_root
+from tncli.modules.utils.log import logger
 
 bl = Fore.CYAN
 rd = Fore.RED
@@ -32,7 +32,7 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
 
     for file in fift_files_locations:
         # Run tests from fift and pass path to file
-        # (example of tests can be found in fift_cli/modules/fift/run_test.fif)
+        # (example of tests can be found in tncli/modules/fift/run_test.fif)
         subprocess.run(fift_execute_command(test_file_path, [file]), cwd=os.getcwd() if not cwd else cwd)
 
 
@@ -101,7 +101,6 @@ class Fift:
 
         # generate BOC file
         command = fift_execute_command(f"{project_root}/fift_cli/modules/fift/sendboc.fif", [self.args[0], path])
-        print(command)
         subprocess.run(command)
 
     def run_script(self):

@@ -5,21 +5,21 @@ import shutil
 from appdirs import user_config_dir
 from colorama import Fore, Style
 
-from fift_cli.modules.utils.log import logger
+from tncli.modules.utils.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
-project_root = "/".join(project_root.split("/")[:-4])  # get root folder of fift-cli/src
+project_root = "/".join(project_root.split("/")[:-4])  # get root folder of tncli/src
 
 # Folder to store config files in
-config_folder = user_config_dir('fift_cli')
+config_folder = user_config_dir('tncli')
 
 # Create if not exist
 if not os.path.exists(config_folder):
     config = configparser.ConfigParser()
-    config.read(f'{project_root}/fift_cli/config.ini')
+    config.read(f'{project_root}/tncli/config.ini')
 
     config['executable'] = {
         'func': '',

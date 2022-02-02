@@ -4,11 +4,11 @@ from typing import Tuple
 
 from colorama import Fore, Style
 
-from fift_cli.modules.utils.conf import project_root
-from fift_cli.modules.utils.fift import contract_manipulation, test_fift
-from fift_cli.modules.utils.func import build as fift_build
-from fift_cli.modules.utils.lite_client import get_account_status, send_boc
-from fift_cli.modules.utils.log import logger
+from tncli.modules.utils.conf import project_root
+from tncli.modules.utils.fift import contract_manipulation, test_fift
+from tncli.modules.utils.func import build as fift_build
+from tncli.modules.utils.lite_client import get_account_status, send_boc
+from tncli.modules.utils.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN

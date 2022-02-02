@@ -1,12 +1,12 @@
 # Simple wallet project
 
-Deployed by [fift-cli](https://github.com/disintar/fift-cli)
+Deployed by [tncli](https://github.com/disintar/tncli)
 
 ### Usage
 
-- `fift-cli run fift/data.fif`
-- `fift-cli run func/code.fc`
-- `fift-cli deploy -n tesnet -wc 0`
+- `tncli run fift/data.fif`
+- `tncli run func/code.fc`
+- `tncli deploy -n tesnet -wc 0`
 
 ### Project structure
 

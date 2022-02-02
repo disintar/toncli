@@ -3,10 +3,10 @@ import sys
 
 from colorama import Fore, Style
 
-from fift_cli.modules.abstract.deployer import AbstractDeployer
-from fift_cli.modules.projects import ProjectBootstrapper
-from fift_cli.modules.utils.conf import config_folder
-from fift_cli.modules.utils.log import logger
+from tncli.modules.abstract.deployer import AbstractDeployer
+from tncli.modules.projects import ProjectBootstrapper
+from tncli.modules.utils.conf import config_folder
+from tncli.modules.utils.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN

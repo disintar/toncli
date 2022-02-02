@@ -5,8 +5,8 @@ from typing import Optional
 
 from colorama import Fore, Style
 
-from fift_cli.modules.utils.conf import project_root
-from fift_cli.modules.utils.log import logger
+from tncli.modules.utils.conf import project_root
+from tncli.modules.utils.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL
@@ -40,4 +40,4 @@ class ProjectBootstrapper:
 
         logger.info(f"👑 Folder {gr}successfully {rs}created - happy blockchain hacking")
         logger.info(
-            f"🐼 You now can do {gr}cd {self.folder_name}{rs} and {gr}fift-cli deploy -n testnet{rs}")
+            f"🐼 You now can do {gr}cd {self.folder_name}{rs} and {gr}tncli deploy -n testnet{rs}")

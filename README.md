@@ -1,4 +1,6 @@
-# Fift-cli
+# Tncli
+
+TON smart contract command line interface
 
 ## State
 
@@ -12,18 +14,18 @@ Not working, in active development
 2. Clone repo and install it with pip
 
 ```
-git clone git@github.com:disintar/fift-cli.git
-cd fift-cli && pip install .
+git clone git@github.com:disintar/tncli.git
+cd tncli && pip install .
 ```
 
-Now you can access `CLI` tool by typing in terminal `fift-cli`
+Now you can access `CLI` tool by typing in terminal `tncli`
 
 ### Usage example
 
 ```
-fift-cli startproject wallet -n my-wallet
+tncli startproject wallet -n my-wallet
 cd my-wallet
-fift-cli deploy
+tncli deploy
 ```
 
 ## Contributor Guide
@@ -38,7 +40,7 @@ Interested in contributing? Feel free to create issues and pull requests.
 | Easy bootstrap project samples `wallet`                       | ❌      |
 | ... `hello world`                                             | ❌      |
 | Auto compile func & hot reload into `build/`                  | ❌      |
-| Get contract address by `fift-cli address`                    | ❌      |
+| Get contract address by `tncli address`                       | ❌      |
 | Auto send TON to init contract address                        | ❌      |
 | Deploy to mainnet / testnet                                   | ❌      |
 | Run get methods of contract                                   | ❌      |
@@ -85,5 +87,5 @@ There is many TODOs in code - feel free to fix them and create PRs
 
 Completely free to use.
 
-Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC
+Credits: andrey@head-labs.com / TON: `EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC`
 
