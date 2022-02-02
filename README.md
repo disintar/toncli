@@ -11,12 +11,7 @@ Not working, in active development
 1. Compile `fift`, `func`, `lite-client` from [ton](https://github.com/newton-blockchain/ton) and add them to `PATH` env
    or move to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
     1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
-2. Clone repo and install it with pip
-
-```
-git clone git@github.com:disintar/tncli.git
-cd tncli && pip install .
-```
+2. `pip install tncli`
 
 Now you can access `CLI` tool by typing in terminal `tncli`
 
@@ -31,6 +26,12 @@ tncli deploy
 ## Contributor Guide
 
 Interested in contributing? Feel free to create issues and pull requests.
+
+There is two main tasks and many TODOs.
+
+Main tasks are - not to use lite-client / fift / func. All can be done with python.
+
+There is many TODOs in code - feel free to fix them and create PRs
 
 ## Features and status
 
@@ -63,7 +64,8 @@ created
     1. If it's first time - simple wallet will be created in config folder
     2. Message with wallet address and tips will be displayed (user need to send some TON coin on it)
     3. If there is no TON in deploy contract - script will exit and notify user to update deployer balance
-3. Will run tests on `fift/data.fif` / `fift/message.fif` (if exist) / `fift/lib.fif` (if exist)  before creating deploy message
+3. Will run tests on `fift/data.fif` / `fift/message.fif` (if exist) / `fift/lib.fif` (if exist)  before creating deploy
+   message
     1. This will check all files are correct
     2. Also, you can run custom logic - for example create keys in build/
 4. Will calculate address of contract and display it to user
@@ -74,12 +76,12 @@ created
     2. Boc will generated
     3. Will invoke sendfile in lite-client (TODO: use native python lib, not lite-client)
 
-##  Improvement
+## Development
 
-There is two main tasks and many TODOs.
-
-Main tasks are - not use lite-client / fift / func. All can be done with python.
-There is many TODOs in code - feel free to fix them and create PRs
+```
+git clone git@github.com:disintar/tncli.git
+cd tncli && pip install -e .
+```
 
 ## License
 

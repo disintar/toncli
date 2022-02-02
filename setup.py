@@ -17,8 +17,9 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: WTFPL License",
+        "License :: OSI Approved :: Apple Public Source License",
         "Operating System :: OS Independent",
+        "Environment :: Console",
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
