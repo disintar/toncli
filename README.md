@@ -1,12 +1,19 @@
-<img
-  src="https://raw.githubusercontent.com/disintar/tncli/master/docs/images/logo.png"
-  alt="Superset"
-  height="200"
-/>
+<p align="center">
+   <a href="https://disintar.io/">
+       <img
+        src="https://raw.githubusercontent.com/disintar/tncli/master/docs/images/logo.png"
+        alt="Superset"
+        height="150"
+      />
+   </a>
+</p>
 
 # Tncli
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PyPI version](https://badge.fury.io/py/tncli.svg)](https://github.com/disintar/tncli)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/tncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/tncli&amp;utm_campaign=Badge_Grade)
+[![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
 TON smart contract command line interface
 
@@ -90,12 +97,4 @@ created
 git clone git@github.com:disintar/tncli.git
 cd tncli && pip install -e .
 ```
-
-## License
-
-[WTFPL](https://github.com/dtf0/wtfpl) v3.1
-
-Completely free to use.
-
-Credits: andrey@head-labs.com / TON: `EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC`
 
