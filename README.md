@@ -1,4 +1,12 @@
+<img
+  src="https://raw.githubusercontent.com/disintar/tncli/master/docs/images/logo.png"
+  alt="Superset"
+  height="200"
+/>
+
 # Tncli
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 TON smart contract command line interface
 
