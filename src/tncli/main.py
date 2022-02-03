@@ -6,6 +6,7 @@ from colorama import Fore, Style
 
 from tncli.modules.deploy_contract import ContractDeployer
 from tncli.modules.projects import ProjectBootstrapper
+from tncli.modules.utils.func.func import Func
 from tncli.modules.utils.system.argparse_fix import argv_fix
 from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
@@ -77,6 +78,20 @@ Credits: disintar.io team
                if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
   {rs}
 '''
+    lite_client_help = f'''positional arguments:
+      {bl}command{rs}             
+      {gr}   interactive - default, run interactive lite_client
+      {gr}   
+      {gr}   OTHER - all other arguments will passed to lite_client e.g. tnctl lc help
+      {rs}
+    '''
+    func_help = f'''positional arguments:
+      {bl}command{rs}             
+      {gr}   build - default, build func code in build/ folder, if no build 
+      {gr}   
+      {gr}   OTHER - all other arguments and kwargs will pass to fun command
+      {rs}
+    '''
     #
     # shortcuts
     #
@@ -84,9 +99,12 @@ Credits: disintar.io team
     subparser.add_parser('f', help="Same as fift",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
+    subparser.add_parser('fc', help="Same as func",
+                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                         description=textwrap.dedent(func_help))
     subparser.add_parser('lc', help="Same as lite-client",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
-                         description=textwrap.dedent(fift_help))
+                         description=textwrap.dedent(lite_client_help))
     subparser.add_parser('run', help="Same as fift run",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
@@ -103,29 +121,39 @@ Credits: disintar.io team
     parser_fift.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_fift.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
     parser_fift.add_argument("--fift-args", "-fa", type=str, default='',
-                             help='Pass args to fift command, e.g.: -fa "-v 4" - '
+                             help='Pass args and kwargs to fift command, e.g.: -fa "-v 4" - '
                                   'set verbose level, will overwrite default ones, '
                                   'if you want pass args after command just don\'t use flag, f.e.g. '
                                   '[tncli fift run wallet.fif 0 0 1 -v 4]')
     parser_fift.add_argument("--lite-client-args", "-la", type=str,
                              default='',
-                             help='Pass args to lite-client command in sendboc mode, '
+                             help='Pass args and kwargs to lite-client command in sendboc mode, '
                                   'e.g.: -la "-v 4" - set verbose level')
 
     #
     #  LITE CLIENT
     #
 
-    parser_lite_client = subparser.add_parser('lite-client', help=fift_help,
+    parser_lite_client = subparser.add_parser('lite-client', help=lite_client_help,
                                               formatter_class=argparse.RawDescriptionHelpFormatter,
-                                              description=textwrap.dedent(fift_help))
+                                              description=textwrap.dedent(lite_client_help))
     parser_lite_client.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
                                     help='Network to deploy')
     parser_lite_client.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
     parser_lite_client.add_argument("--lite-client-args", "-la", type=str,
                                     default='',
-                                    help='Pass args to lite-client command in sendboc mode, '
-                                         'e.g.: -la "-v 4" - set verbose level')
+                                    help='Pass args and kwargs to lite-client command')
+
+    #
+    #  FUNC
+    #
+
+    parser_func = subparser.add_parser('func', help=func_help,
+                                       formatter_class=argparse.RawDescriptionHelpFormatter,
+                                       description=textwrap.dedent(func_help))
+    parser_func.add_argument("--func-args", "-fa", type=str,
+                             default='',
+                             help='Pass arguments to func command')
 
     command = sys.argv[1] if len(sys.argv) > 1 else None
 
@@ -138,6 +166,9 @@ Credits: disintar.io team
     elif command in ['lite-client', 'lc']:
         _, kwargs = argv_fix(sys.argv)
         args = parser.parse_args(['lite-client', *kwargs])
+    elif command in ['func', 'fc']:
+        _, kwargs = argv_fix(sys.argv)
+        args = parser.parse_args(['func', *kwargs])
     # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
         process_build_cli_lib_command(sys.argv[2:])
@@ -188,6 +219,19 @@ Credits: disintar.io team
         # If use run command instead of f run - need to change start arg parse position
         lite_client = LiteClient(command, kwargs=kwargs, args=args_to_pass)
         lite_client.run()
+    elif command == 'func' or command == 'fc':
+        real_args, _ = argv_fix(sys.argv)
+        args_to_pass = real_args[3:]
+
+        # Parse kwargs by argparse
+        kwargs = dict(args._get_kwargs())
+
+        # Parse command
+        command = real_args[2] if len(real_args) > 2 else None
+
+        # If use run command instead of f run - need to change start arg parse position
+        func = Func(command, kwargs=kwargs, args=args_to_pass)
+        func.run()
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()

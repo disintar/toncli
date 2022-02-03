@@ -1,4 +1,3 @@
-import os
 import shlex
 import subprocess
 import sys
@@ -9,8 +8,6 @@ from tncli.modules.utils.lite_client.commands import lite_client_execute_command
 
 class LiteClient:
     def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
-        print(command, args, kwargs)
-
         self.command = command
 
         if kwargs:
@@ -39,7 +36,7 @@ class LiteClient:
 
     def run_command(self):
         command = lite_client_execute_command(self.kwargs['net'],
-                                              [*self.kwargs['lite_client_args'], '-c', " ".join([self.command, *self.args])],
+                                              [*self.kwargs['lite_client_args'], '-c',
+                                               " ".join([self.command, *self.args])],
                                               self.kwargs['update'])
-        print(command)
         subprocess.run(command)

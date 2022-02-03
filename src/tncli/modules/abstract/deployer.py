@@ -1,14 +1,13 @@
 import os
-import sys
 from typing import Tuple
 
 from colorama import Fore, Style
 
 from tncli.modules.utils.system.conf import project_root
 from tncli.modules.utils.fift.commands import contract_manipulation, test_fift
-from tncli.modules.utils.func import build as fift_build
+from tncli.modules.utils.func.commands import build as fift_build
 from tncli.modules.utils.lite_client.commands import get_account_status, send_boc
-from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.system.project import check_for_needed_files_to_deploy
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -68,26 +67,5 @@ class AbstractDeployer:
                   cwd=self.project_root)
 
     def check_for_needed_files_to_deploy(self) -> bool:
-        """Check needed files and log if there is no one"""
-
-        files = os.listdir(self.project_root)
-        needed_structure = {
-            'func': ['code.fc', 'files.yaml'],
-            'fift': ['data.fif'],
-            'build': []
-        }
-
-        for folder in needed_structure:
-            if folder not in files:
-                logger.error(f"🚫 It is not project root, there is no folder {bl}{folder}{rs} - I can't deploy it")
-                sys.exit()
-
-            for file in needed_structure[folder]:
-                folder_files = os.listdir(f"{self.project_root}/{folder}")
-
-                if file not in folder_files:
-                    logger.error(
-                        f"🚫 It is not project root, there is no file {bl}{file}{rs} folder {bl}{folder}{rs} "
-                        f"- I can't deploy it")
-                    sys.exit()
-        return True
+        """Check if current root is project root"""
+        return check_for_needed_files_to_deploy(self.project_root, True)

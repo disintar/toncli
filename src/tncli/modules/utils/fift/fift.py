@@ -11,6 +11,7 @@ from tncli.modules.utils.system.conf import config_folder, executable
 from tncli.modules.utils.fift.commands import fift_execute_command
 from tncli.modules.utils.lite_client.commands import lite_client_execute_command
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.system.project import check_for_needed_files_to_deploy
 
 bl = Fore.CYAN
 rd = Fore.RED
@@ -35,11 +36,8 @@ class Fift:
         self.args = args
 
         # Currently, running command in project root
-        self.project_dir = False
+        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), True)
         self.cli_fif_lib = None
-
-        if os.path.exists(f'{os.getcwd()}/build/boc/'):
-            self.project_dir = True
 
     def run(self):
         """Run specific command"""

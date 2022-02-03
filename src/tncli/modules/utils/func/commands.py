@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from typing import Optional
+from typing import Optional, List
 
 import yaml
 from colorama import Fore, Style
@@ -14,10 +14,12 @@ gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 
-def build(func_folder_path: str, to_save_location: str, cwd: Optional[str] = None) -> Optional[str]:
+def build(func_folder_path: str, to_save_location: str,
+          cwd: Optional[str] = None, func_args: List[str] = None) -> Optional[str]:
     """
     Build func file(s) and save result fift file to location
 
+    :param func_args: add arguments to func
     :param func_folder_path: Files to build in needed order
     :param to_save_location: Location to save fift result
     :param cwd: If you need to change root of running script pass it here
@@ -34,7 +36,10 @@ def build(func_folder_path: str, to_save_location: str, cwd: Optional[str] = Non
 
     func_files_locations = [f"{func_folder_path}/{file}" for file in func_configuration['files']]
 
-    build_command = [executable['func'], "-SPA",
+    if not func_args:
+        func_args = []
+
+    build_command = [executable['func'], *func_args, "-SPA",
                      f"{config_folder}/func-libs/stdlib.fc", *func_files_locations,
                      "-o", to_save_location]
 
