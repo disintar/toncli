@@ -1,0 +1,16 @@
+// This is cli functions they are project relative
+// So we need to define custom paths
+// Now it will be doing using Jinja templates
+// And saved to build/ of project
+// If we want to use it on custom scripts (like sendboc function)
+// We will create temp file using jinja with paths to custom script
+// To build it on your own - use
+// tncli build-cli-lib [parameters]
+
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"Color.fif" include
+
+
+."INFO: 🍿 Loading fift " ^cyan ."CLI" ^reset ." lib"

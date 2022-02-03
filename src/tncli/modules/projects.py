@@ -32,7 +32,8 @@ class ProjectBootstrapper:
             os.mkdir(f"{self.current_location}/{self.folder_name}")  # create new project dir
         else:
             logger.error(
-                f"🧨 Folder {self.current_location}/{self.folder_name} already exist, please use different one")
+                f"🧨 Folder {self.current_location}/{self.folder_name} already exist, please use different one "
+                f"(folder name can be defined by -n flag, e.g. -n my-wallet)")
             sys.exit()
 
         shutil.copytree(f"{self.project_location}/{self.project_name}", f"{self.current_location}/{self.folder_name}",

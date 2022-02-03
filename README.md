@@ -33,7 +33,7 @@ Now you can access `CLI` tool by typing in terminal `tncli`
 ### Usage example
 
 ```
-tncli startproject wallet -n my-wallet
+tncli start wallet -n my-wallet
 cd my-wallet
 tncli deploy
 ```

@@ -39,7 +39,7 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
 def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: Optional[str] = None) -> Optional[str]:
     logger.info(f"🥳 Start contract manipulation")
 
-    contract_manipulation_fift_path = f"{project_root}/fift_cli/modules/fift/contract_manipulation.fif"
+    contract_manipulation_fift_path = f"{project_root}/tncli/modules/fift/contract_manipulation.fif"
     command = fift_execute_command(contract_manipulation_fift_path, [code_path, data_path, str(workchain)])
 
     output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
@@ -100,7 +100,7 @@ class Fift:
         logger.info(f"💾 Will save BOC to {gr}{path}{rs}")
 
         # generate BOC file
-        command = fift_execute_command(f"{project_root}/fift_cli/modules/fift/sendboc.fif", [self.args[0], path])
+        command = fift_execute_command(f"{project_root}/tncli/modules/fift/cli.fif", [self.args[0], path])
         subprocess.run(command)
 
     def run_script(self):
@@ -121,6 +121,7 @@ class Fift:
     def run_interactive(self):
         """Run interactive fift"""
         logger.info(f"🖥  Run interactive fift for you ({bl}Ctrl+c{rs} to exit)")
+        logger.info(f"🖥  A simple Fift interpreter. Type `bye` to quit, or `words` to get a list of all commands")
         if not len(self.kwargs['fift_args']):
             self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-i"]
         else:

@@ -64,7 +64,7 @@ class AbstractDeployer:
         # Run tests
         # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
         test_fift(fift_files_locations=[f"{self.project_root}/fift/data.fif"],
-                  test_file_path=f"{project_root}/fift_cli/modules/fift/run_test.fif",
+                  test_file_path=f"{project_root}/tncli/modules/fift/run_test.fif",
                   cwd=self.project_root)
 
     def check_for_needed_files_to_deploy(self) -> bool:

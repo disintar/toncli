@@ -7,6 +7,7 @@ from colorama import Fore, Style
 from tncli.modules.deploy_contract import ContractDeployer
 from tncli.modules.projects import ProjectBootstrapper
 from tncli.modules.utils.argparse_fix import argv_fix
+from tncli.modules.utils.cli_lib import process_build_cli_lib_command
 from tncli.modules.utils.fift import Fift
 
 gr = Fore.GREEN
@@ -23,9 +24,9 @@ def main():
 
     help_text = f'''{Fore.YELLOW}TON blockchain is the future 🦄
 --------------------------------
-Command list, e.g. usage: tncli startproject wallet
+Command list, e.g. usage: tncli start wallet
 
-{bl}startproject - create new project structure based on example project  
+{bl}start - create new project structure based on example project  
 {gr}   wallet - create project with v3 wallet example
 
 {bl}deploy - deploy current project to blockchain
@@ -52,7 +53,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
 
     subparser = parser.add_subparsers()
 
-    parser_project = subparser.add_parser('startproject',
+    parser_project = subparser.add_parser('start',
                                           description='Create new project structure based on example project')
     parser_project.add_argument('project', default='wallet', choices=['wallet'],
                                 help="Which default project to bootstrap")
@@ -102,6 +103,8 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
     if command and command in ['fift', 'f', 'run'] and len(sys.argv) >= 2:
         _, kwargs = argv_fix(sys.argv)
         args = parser.parse_args(['fift', *kwargs])
+    elif command == 'build-cli-lib':
+        process_build_cli_lib_command(sys.argv[2:])
     else:
         args = parser.parse_args()
 
@@ -109,7 +112,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         parser.print_help()
         sys.exit(0)
 
-    if command == 'startproject':
+    if command == 'start':
         bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=args.name)
         bootstrapper.deploy()
 
@@ -129,6 +132,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         # Parse kwargs by argparse
         kwargs = dict(args._get_kwargs())
 
+        # If use run command instead of f run - need to change start arg parse position
         fift = Fift(command, kwargs=kwargs, args=real_args[3:] if command != 'run' else real_args[2:])
         fift.run()
 

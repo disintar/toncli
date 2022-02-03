@@ -2,3 +2,4 @@ colorama
 appdirs
 requests
 pyyaml
+Jinja2
