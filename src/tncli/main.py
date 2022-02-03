@@ -34,7 +34,7 @@ Command list, e.g. usage: tncli start wallet
 {bl}fift / f - interact with fift :)
 {gr}   interactive - default, run interactive fift
 {gr}   run - run fift file ([config/fift-lib/] will be auto passed to -I
-{gr}   sendboc - run fift file and run sendfile in lite-client, you need to set only BOC in the end of stack
+{gr}   sendboc - run fift file and run sendfile in lite-client, to made this work you need to add `saveboc` at the end of file
              if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
 
 {bl}wallet - interact with deploy-wallet
@@ -42,7 +42,7 @@ Command list, e.g. usage: tncli start wallet
 {rs}
 Each command have help e.g.: tncli deploy -h
 
-Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1gaVTfVC
+Credits: disintar.io team
 '''
 
     # TODO: add logging verbose
@@ -123,6 +123,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
     elif command == 'fift' or command == 'f' or command == 'run':
         # get real args
         real_args, _ = argv_fix(sys.argv)
+        args_to_pass = real_args[3:] if command != 'run' else real_args[2:]
 
         # Add support of tncli run ...
         if command != 'run':
@@ -133,7 +134,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         kwargs = dict(args._get_kwargs())
 
         # If use run command instead of f run - need to change start arg parse position
-        fift = Fift(command, kwargs=kwargs, args=real_args[3:] if command != 'run' else real_args[2:])
+        fift = Fift(command, kwargs=kwargs, args=args_to_pass)
         fift.run()
 
 

@@ -17,8 +17,11 @@ rs = Style.RESET_ALL
 
 
 # Run fift file with fift-libs folder
-def fift_execute_command(file: str, args: List):
-    return [executable['fift'], "-I", f"{config_folder}/fift-libs", "-s", file, *args]
+def fift_execute_command(file: str, args: List[str], pre_args: Optional[List[str]] = None) -> List[str]:
+    if not pre_args:
+        pre_args = []
+
+    return [executable['fift'], "-I", f"{config_folder}/fift-libs", *pre_args, "-s", file, *args]
 
 
 def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optional[str] = None):
@@ -55,14 +58,24 @@ def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: O
 
 
 class Fift:
-    def __init__(self, command: str, args: List[str], kwargs: dict):
+    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
         self.command = command
 
-        self.kwargs = kwargs
-        self.kwargs['fift_args'] = shlex.split(self.kwargs['fift_args'])
-        self.kwargs['lite_client_args'] = shlex.split(self.kwargs['lite_client_args'])
+        if kwargs:
+            self.kwargs = kwargs
+            self.kwargs['fift_args'] = shlex.split(self.kwargs['fift_args'])
+            self.kwargs['lite_client_args'] = shlex.split(self.kwargs['lite_client_args'])
+        else:
+            self.kwargs = {'fift_args': [], 'lite_client_args': []}
 
         self.args = args
+
+        # Currently runing command in project root
+        self.project_dir = False
+        self.cli_fif_lib = None
+
+        if os.path.exists(f'{os.getcwd()}/build/boc/'):
+            self.project_dir = True
 
     def run(self):
         if not self.command or self.command == 'interactive':
@@ -76,6 +89,8 @@ class Fift:
 
     def sendboc(self):
         """Send BOC to blockchain"""
+        from tncli.modules.utils.cli_lib import build_cli_lib
+
         if not len(self.args):
             logger.error("👉 You need to specify FIFT file path to sendboc")
             sys.exit()
@@ -99,8 +114,26 @@ class Fift:
 
         logger.info(f"💾 Will save BOC to {gr}{path}{rs}")
 
+        # If we never created cli.fif in project root
+        if self.project_dir:
+            self.cli_fif_lib = build_cli_lib(f'{os.getcwd()}/build/cli.fif', {  # Generate cli.fif
+                "is_project": '1',
+                "project_root": f'{os.getcwd()}',
+                "path": path,
+            })
+
+        # If it's not project root
+        elif not self.project_dir:
+            self.cli_fif_lib = build_cli_lib(render_kwargs={
+                "is_project": '0',
+                "project_root": f'/tmp',
+                "path": path
+            })
+
         # generate BOC file
-        command = fift_execute_command(f"{project_root}/tncli/modules/fift/cli.fif", [self.args[0], path])
+        # Our own cli.fif file need to be added before run
+        command = fift_execute_command(file=self.args[0], args=[*self.args[1:]], pre_args=["-L", self.cli_fif_lib])
+
         subprocess.run(command)
 
     def run_script(self):
