@@ -129,7 +129,7 @@ Credits: andrey@head-labs.com / TON: EQCsCSLisPZ6xUtkgi_Tn5c-kipelVHRCxGdPu9x1ga
         # Parse kwargs by argparse
         kwargs = dict(args._get_kwargs())
 
-        fift = Fift(command, kwargs=kwargs, args=real_args[3:])
+        fift = Fift(command, kwargs=kwargs, args=real_args[3:] if command != 'run' else real_args[2:])
         fift.run()
 
 
