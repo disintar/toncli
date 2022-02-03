@@ -50,21 +50,30 @@ There is many TODOs in code - feel free to fix them and create PRs
 
 ## Features and status
 
-| Feature                                                       | Status |
-|---------------------------------------------------------------|--------|
-| Custom definition of `fift` / `func` / `lite-server` bin path | ✅      |
-| Easy bootstrap project samples `wallet`                       | ❌      |
-| ... `hello world`                                             | ❌      |
-| Auto compile func & hot reload into `build/`                  | ❌      |
-| Get contract address by `tncli address`                       | ❌      |
-| Auto send TON to init contract address                        | ❌      |
-| Deploy to mainnet / testnet                                   | ❌      |
-| Run get methods of contract                                   | ❌      |
-| Send messages with comment and TON to deployed contract       | ❌      |
-| Gas auto calculation for store & deploy                       | ❌      |
-| Load from hard structure `code / data / lib / message`        | ❌      |
-| Project debugging with `runvmcode`                            | ❌      |
-| Library support                                               | ❌      |
+| Feature                                                                                         | Status |
+|-------------------------------------------------------------------------------------------------|--------|
+| `fift` / `func` / `lite-server` usage                                                           | ✅      |
+| Easy bootstrap project samples `wallet`                                                         | ✅      |
+| Deploy-wallet for auto send TON to contracts and tests                                          | ✅      |
+| Add more project samples with advanced usage                                                    | ❌      |
+| Compile func to `build/` from `func/` with `files.yaml`                                         | ✅      |
+| Get contract address by `tncli address`                                                         | ❌      |
+| Auto send TON to init contract address                                                          | ❌      |
+| Deploy to mainnet / testnet                                                                     | ✅      |
+| Project interact after deploy: easily send messages, run getmethods                             | ❌      |
+| Gas auto calculation for store & deploy                                                         | ❌      |
+| Load from hard project structure (example: `src/projects/wallet`)                               | ✅      |
+| Project tests with `runvmcode`                                                                  | ❌      |
+| Project debug                                                                                   | ❌      |
+| Library support                                                                                 | ❌      |
+| Init Message support  (with signature)                                                          | ❌      |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ❌      |
+| Docs for contract creation for beginners                                                        | ❌      |
+| Advanced user-friendly docs on `fift`, `func`                                                   | ❌      |
+
+## Commands
+
+All commands could be fined in [docs/commands.md](https://github.com/disintar/tncli/blob/master/docs/commands.md)
 
 ### Configuration
 
