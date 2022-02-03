@@ -40,7 +40,7 @@ def get_network_config_path(network: str, update_config: bool = False) -> str:
     return f"{config_folder}/{filename}"
 
 
-def lite_client_execute_command(network: str, args: List[str], update_config=False) -> List[str]:
+def lite_client_execute_command(network: str, args: List[str], update_config=False,) -> List[str]:
     """
     Execute command to lite_client
 

@@ -6,9 +6,11 @@ from colorama import Fore, Style
 
 from tncli.modules.deploy_contract import ContractDeployer
 from tncli.modules.projects import ProjectBootstrapper
-from tncli.modules.utils.argparse_fix import argv_fix
+from tncli.modules.utils.system.argparse_fix import argv_fix
+from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from tncli.modules.utils.fift.fift import Fift
+from tncli.modules.utils.lite_client.lite_client import LiteClient
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -75,12 +77,24 @@ Credits: disintar.io team
                if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
   {rs}
 '''
+    #
+    # shortcuts
+    #
+
     subparser.add_parser('f', help="Same as fift",
+                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                         description=textwrap.dedent(fift_help))
+    subparser.add_parser('lc', help="Same as lite-client",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
     subparser.add_parser('run', help="Same as fift run",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
+
+    #
+    #  FIFT
+    #
+
     parser_fift = subparser.add_parser('fift', help=fift_help,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
                                        description=textwrap.dedent(fift_help))
@@ -97,17 +111,41 @@ Credits: disintar.io team
                              default='',
                              help='Pass args to lite-client command in sendboc mode, '
                                   'e.g.: -la "-v 4" - set verbose level')
+
+    #
+    #  LITE CLIENT
+    #
+
+    parser_lite_client = subparser.add_parser('lite-client', help=fift_help,
+                                              formatter_class=argparse.RawDescriptionHelpFormatter,
+                                              description=textwrap.dedent(fift_help))
+    parser_lite_client.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+                                    help='Network to deploy')
+    parser_lite_client.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
+    parser_lite_client.add_argument("--lite-client-args", "-la", type=str,
+                                    default='',
+                                    help='Pass args to lite-client command in sendboc mode, '
+                                         'e.g.: -la "-v 4" - set verbose level')
+
     command = sys.argv[1] if len(sys.argv) > 1 else None
 
     # wtf I need to do this, need to change!
+    # Parse fift
     if command and command in ['fift', 'f', 'run'] and len(sys.argv) >= 2:
         _, kwargs = argv_fix(sys.argv)
         args = parser.parse_args(['fift', *kwargs])
+    # Parse lite-client
+    elif command in ['lite-client', 'lc']:
+        _, kwargs = argv_fix(sys.argv)
+        args = parser.parse_args(['lite-client', *kwargs])
+    # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
         process_build_cli_lib_command(sys.argv[2:])
+    # Parse else
     else:
         args = parser.parse_args()
 
+    # If no kwargs and no command just display help text
     if len(args._get_kwargs()) == 0 and not command:
         parser.print_help()
         sys.exit(0)
@@ -136,6 +174,23 @@ Credits: disintar.io team
         # If use run command instead of f run - need to change start arg parse position
         fift = Fift(command, kwargs=kwargs, args=args_to_pass)
         fift.run()
+
+    elif command == 'lite-client' or command == 'lc':
+        real_args, _ = argv_fix(sys.argv)
+        args_to_pass = real_args[3:]
+
+        # Parse kwargs by argparse
+        kwargs = dict(args._get_kwargs())
+
+        # Parse command
+        command = real_args[2] if len(real_args) > 2 else None
+
+        # If use run command instead of f run - need to change start arg parse position
+        lite_client = LiteClient(command, kwargs=kwargs, args=args_to_pass)
+        lite_client.run()
+    else:
+        logger.error("🔎 Can't find such command")
+        sys.exit()
 
 
 if __name__ == '__name__':

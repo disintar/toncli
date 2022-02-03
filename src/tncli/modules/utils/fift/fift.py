@@ -9,7 +9,7 @@ from colorama import Fore, Style
 
 from tncli.modules.utils.system.conf import config_folder, executable
 from tncli.modules.utils.fift.commands import fift_execute_command
-from tncli.modules.utils.lite_client import lite_client_execute_command
+from tncli.modules.utils.lite_client.commands import lite_client_execute_command
 from tncli.modules.utils.system.log import logger
 
 bl = Fore.CYAN
@@ -34,7 +34,7 @@ class Fift:
 
         self.args = args
 
-        # Currently runing command in project root
+        # Currently, running command in project root
         self.project_dir = False
         self.cli_fif_lib = None
 
@@ -52,6 +52,7 @@ class Fift:
             self.sendboc()
         else:
             logger.error("🔎 Can't find such command")
+            sys.exit()
 
     def sendboc(self):
         """Send BOC to blockchain"""
@@ -79,11 +80,11 @@ class Fift:
         if '.' in filename:
             filename = filename.split('.')[0]
 
-        # if not project root - create temp directory
-        path = tempfile.mkdtemp()
         if os.path.exists(f'{os.getcwd()}/build/boc'):
             path = f'{os.getcwd()}/build/boc/{filename}.boc'
         else:
+            # if not project root - create temp directory
+            path = tempfile.mkdtemp()
             path = f"{path}/{filename}.boc"
 
         logger.info(f"💾 Will save BOC to {gr}{path}{rs}")

@@ -7,7 +7,7 @@ from colorama import Fore, Style
 from tncli.modules.utils.system.conf import project_root
 from tncli.modules.utils.fift.commands import contract_manipulation, test_fift
 from tncli.modules.utils.func import build as fift_build
-from tncli.modules.utils.lite_client import get_account_status, send_boc
+from tncli.modules.utils.lite_client.commands import get_account_status, send_boc
 from tncli.modules.utils.system.log import logger
 
 bl = Fore.CYAN
