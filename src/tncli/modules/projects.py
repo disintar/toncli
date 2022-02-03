@@ -5,8 +5,8 @@ from typing import Optional
 
 from colorama import Fore, Style
 
-from tncli.modules.utils.conf import project_root
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.conf import project_root
+from tncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL

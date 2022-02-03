@@ -25,13 +25,13 @@
 
 {
     tuck B>file
-    ."(Saved to file " type .")" cr
+    ."INFO: 💾 (Saved to file " ^green type ^reset .")" cr
 } : _saveboc
 
 {
    build-path // get build-path value
    $len 0= // check build-path length (will be 0 if not specified)
-   { ."INFO: ☺  Create temp name with path" "temp" cr _genpath _saveboc } // if length is zero run code
+   { ."INFO: ☺  Create temp name" "temp" cr _genpath _saveboc } // if length is zero run code
    { ."INFO: 🥰  Save boc" cr build-path _saveboc } // else
    cond
 } : saveboc

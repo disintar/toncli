@@ -6,7 +6,7 @@ from colorama import Fore, Style
 
 from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.deploy_wallet_contract import DeployWalletContract
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
 bl = Fore.CYAN

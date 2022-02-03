@@ -6,8 +6,8 @@ from typing import Optional
 import yaml
 from colorama import Fore, Style
 
-from tncli.modules.utils.conf import config_folder, executable
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.conf import config_folder, executable
+from tncli.modules.utils.system.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN

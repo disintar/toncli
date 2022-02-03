@@ -7,8 +7,8 @@ from colorama import Fore, Style
 from tncli.modules.deploy_contract import ContractDeployer
 from tncli.modules.projects import ProjectBootstrapper
 from tncli.modules.utils.argparse_fix import argv_fix
-from tncli.modules.utils.cli_lib import process_build_cli_lib_command
-from tncli.modules.utils.fift import Fift
+from tncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
+from tncli.modules.utils.fift.fift import Fift
 
 gr = Fore.GREEN
 bl = Fore.CYAN

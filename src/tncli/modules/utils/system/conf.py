@@ -5,13 +5,13 @@ import shutil
 from appdirs import user_config_dir
 from colorama import Fore, Style
 
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
-project_root = "/".join(project_root.split("/")[:-4])  # get root folder of tncli/src
+project_root = "/".join(project_root.split("/")[:-5])  # get root folder of tncli/src
 
 # Folder to store config files in
 config_folder = user_config_dir('tncli')

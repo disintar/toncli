@@ -4,9 +4,9 @@ from typing import List, Optional, Dict, Any
 
 from jinja2 import Environment, select_autoescape, FileSystemLoader
 
-from tncli.modules.utils.conf import project_root
-from tncli.modules.utils.fift import Fift
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.conf import project_root
+from tncli.modules.utils.fift.fift import Fift
+from tncli.modules.utils.system.log import logger
 
 
 def build_cli_lib(to_save_location: Optional[str] = None, render_kwargs: Optional[Dict[str, Any]] = None) -> str:

@@ -5,8 +5,8 @@ from colorama import Fore, Style
 
 from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.projects import ProjectBootstrapper
-from tncli.modules.utils.conf import config_folder
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.conf import config_folder
+from tncli.modules.utils.system.log import logger
 
 bl = Fore.CYAN
 gr = Fore.GREEN

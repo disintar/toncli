@@ -6,8 +6,8 @@ from typing import List, Optional, Tuple
 from colorama import Fore, Style
 from requests import get as http_get
 
-from tncli.modules.utils.conf import executable, config_folder, config_uri
-from tncli.modules.utils.log import logger
+from tncli.modules.utils.system.conf import executable, config_folder, config_uri
+from tncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -25,7 +25,7 @@ def get_network_config_path(network: str, update_config: bool = False) -> str:
     filename = f"{network}.json"
 
     # Find file and return path to it
-    if filename not in os.listdir(config_folder) and update_config:
+    if filename not in os.listdir(config_folder) or update_config:
         logger.info(
             f"🏗  Config of {gr}{network}{rs} will be downloaded to {gr}{config_folder}{rs} "
             f"from {gr}{config_uri[network]}{rs}")
