@@ -8,8 +8,9 @@ from colorama import Fore, Style
 
 from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.system.project import check_for_needed_files_to_deploy
-from tncli.modules.utils.func.commands import build as fift_build
+from tncli.modules.utils.func.commands import build as fift_build, build_files
 from tncli.modules.utils.system.conf import executable
+from tncli.modules.utils.fift.commands import fift_execute_command
 
 bl = Fore.CYAN
 rd = Fore.RED
@@ -19,13 +20,15 @@ rs = Style.RESET_ALL
 
 class Func:
     def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
+        print(command, args, kwargs)
         self.command = command
 
         if kwargs:
             self.kwargs = kwargs
             self.kwargs['func_args'] = shlex.split(self.kwargs['func_args'])
+            self.kwargs['fift_args'] = shlex.split(self.kwargs['fift_args'])
         else:
-            self.kwargs = {'func_args': []}
+            self.kwargs = {'func_args': [], 'fift_args': []}
 
         self.args = args
 
@@ -43,11 +46,43 @@ class Func:
             sys.exit()
 
     def build(self):
-        if not self.project_dir:
-            logger.error(f"🤟 It is not project root [{bl}{os.getcwd()}{rs}] - I can't build project without project")
-            sys.exit()
+        run_code = False
 
-        # Build code
-        fift_build(f"{os.getcwd()}/func/",
-                   f"{os.getcwd()}/build/code.fif", cwd=os.getcwd())
-        logger.info(f"🥌 Build [{bl}{os.getcwd()}{rs}] {gr}successfully{rs}, check out {gr}build/code.fif{rs}")
+        if 'run' in self.kwargs:
+            run_code = True
+
+        # If file to build is passed
+        if len(self.args):
+            file_path = self.args[-1]
+
+            if '/' in file_path:
+                file_path = file_path.split('/')[-1]
+
+            # Parse file base
+            to_save_location = f"{file_path.split('.')[0]}.fif"
+
+            if self.project_dir:
+                to_save_location = f"{os.getcwd()}/build/{to_save_location}"
+
+            self.args = list(map(lambda file: f"{os.getcwd()}/{file}", self.args))
+
+            build_files(self.args, to_save_location, self.kwargs['func_args'], cwd=os.getcwd())
+
+        else:
+            if not self.project_dir:
+                logger.error(
+                    f"🤟 It is not project root [{bl}{os.getcwd()}{rs}] - I can't build project without project")
+                sys.exit()
+
+            to_save_location = f"{os.getcwd()}/build/code.fif"
+
+            # Build code
+            fift_build(f"{os.getcwd()}/func/",
+                       to_save_location, cwd=os.getcwd())
+
+        logger.info(f"🥌 Build [{bl}{os.getcwd()}{rs}] {gr}successfully{rs}, check out {gr}{to_save_location}{rs}")
+
+        if run_code:
+            logger.info(f"🛫 Will run your code!")
+            command = fift_execute_command(to_save_location, self.kwargs['fift_args'])
+            subprocess.run(command)

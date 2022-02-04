@@ -151,23 +151,49 @@ Credits: disintar.io team
     parser_func = subparser.add_parser('func', help=func_help,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
                                        description=textwrap.dedent(func_help))
-    parser_func.add_argument("--func-args", "-fa", type=str,
+    parser_func.add_argument("--func-args", "-fca", type=str,
                              default='',
                              help='Pass arguments to func command')
+    parser_func.add_argument("--fift-args", "-fa", type=str, default='',
+                             help='Pass args and kwargs to fift command, e.g.: -fa "-v 4" - '
+                                  'set verbose level, will overwrite default ones, '
+                                  'if you want pass args after command just don\'t use flag, f.e.g. '
+                                  '[tncli fift run wallet.fif 0 0 1 -v 4]')
+    parser_func.add_argument("--run", "-r", action='store_true', default=False,
+                             help='Run fift code that was generated in build mode')
 
     command = sys.argv[1] if len(sys.argv) > 1 else None
+
+    # it's tricky one
+    # we want to support arguments as by default is None
+    # we can't do it with argparse
+    # so we need to get all str flags to correctly parse kwargs after argument can be none by default
+    string_kwargs = []
+
+    group_actions = parser._subparsers._group_actions
+
+    for group_action in group_actions:
+        choices = group_action.choices
+
+        for choice in choices:
+            arguments = choices[choice]._option_string_actions
+
+            for key in arguments:
+                if arguments[key].type == str:
+                    string_kwargs.append(key)
 
     # wtf I need to do this, need to change!
     # Parse fift
     if command and command in ['fift', 'f', 'run'] and len(sys.argv) >= 2:
-        _, kwargs = argv_fix(sys.argv)
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['fift', *kwargs])
     # Parse lite-client
     elif command in ['lite-client', 'lc']:
-        _, kwargs = argv_fix(sys.argv)
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['lite-client', *kwargs])
     elif command in ['func', 'fc']:
-        _, kwargs = argv_fix(sys.argv)
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
+        print(kwargs)
         args = parser.parse_args(['func', *kwargs])
     # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
@@ -191,7 +217,7 @@ Credits: disintar.io team
 
     elif command == 'fift' or command == 'f' or command == 'run':
         # get real args
-        real_args, _ = argv_fix(sys.argv)
+        real_args, _ = argv_fix(sys.argv, string_kwargs)
         args_to_pass = real_args[3:] if command != 'run' else real_args[2:]
 
         # Add support of tncli run ...
@@ -207,7 +233,7 @@ Credits: disintar.io team
         fift.run()
 
     elif command == 'lite-client' or command == 'lc':
-        real_args, _ = argv_fix(sys.argv)
+        real_args, _ = argv_fix(sys.argv, string_kwargs)
         args_to_pass = real_args[3:]
 
         # Parse kwargs by argparse
@@ -220,7 +246,7 @@ Credits: disintar.io team
         lite_client = LiteClient(command, kwargs=kwargs, args=args_to_pass)
         lite_client.run()
     elif command == 'func' or command == 'fc':
-        real_args, _ = argv_fix(sys.argv)
+        real_args, _ = argv_fix(sys.argv, string_kwargs)
         args_to_pass = real_args[3:]
 
         # Parse kwargs by argparse
@@ -237,5 +263,5 @@ Credits: disintar.io team
         sys.exit()
 
 
-if __name__ == '__name__':
+if __name__ == '__main__':
     main()
