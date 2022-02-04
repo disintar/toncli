@@ -48,7 +48,7 @@ class Func:
     def build(self):
         run_code = False
 
-        if 'run' in self.kwargs:
+        if self.kwargs['run']:
             run_code = True
 
         # If file to build is passed

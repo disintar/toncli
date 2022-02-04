@@ -108,6 +108,9 @@ Credits: disintar.io team
     subparser.add_parser('run', help="Same as fift run",
                          formatter_class=argparse.RawDescriptionHelpFormatter,
                          description=textwrap.dedent(fift_help))
+    subparser.add_parser('build', help="Same as func build",
+                         formatter_class=argparse.RawDescriptionHelpFormatter,
+                         description=textwrap.dedent(fift_help))
 
     #
     #  FIFT
@@ -191,9 +194,8 @@ Credits: disintar.io team
     elif command in ['lite-client', 'lc']:
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['lite-client', *kwargs])
-    elif command in ['func', 'fc']:
+    elif command in ['func', 'fc', 'build']:
         _, kwargs = argv_fix(sys.argv, string_kwargs)
-        print(kwargs)
         args = parser.parse_args(['func', *kwargs])
     # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
@@ -215,15 +217,17 @@ Credits: disintar.io team
         deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
         deployer.publish()
 
-    elif command == 'fift' or command == 'f' or command == 'run':
+    elif command in ['fift', 'f', 'run']:
         # get real args
         real_args, _ = argv_fix(sys.argv, string_kwargs)
-        args_to_pass = real_args[3:] if command != 'run' else real_args[2:]
 
         # Add support of tncli run ...
         if command != 'run':
             # Parse command (fift [command])
             command = real_args[2] if len(real_args) > 2 else None
+            args_to_pass = real_args[3:]
+        else:
+            args_to_pass = real_args[2:]
 
         # Parse kwargs by argparse
         kwargs = dict(args._get_kwargs())
@@ -232,7 +236,7 @@ Credits: disintar.io team
         fift = Fift(command, kwargs=kwargs, args=args_to_pass)
         fift.run()
 
-    elif command == 'lite-client' or command == 'lc':
+    elif command in ['lite-client', 'lc']:
         real_args, _ = argv_fix(sys.argv, string_kwargs)
         args_to_pass = real_args[3:]
 
@@ -245,15 +249,19 @@ Credits: disintar.io team
         # If use run command instead of f run - need to change start arg parse position
         lite_client = LiteClient(command, kwargs=kwargs, args=args_to_pass)
         lite_client.run()
-    elif command == 'func' or command == 'fc':
+    elif command in ['func', 'fc', 'build']:
         real_args, _ = argv_fix(sys.argv, string_kwargs)
-        args_to_pass = real_args[3:]
 
         # Parse kwargs by argparse
         kwargs = dict(args._get_kwargs())
 
-        # Parse command
-        command = real_args[2] if len(real_args) > 2 else None
+        # Add support of tncli run ...
+        if command != 'build':
+            # Parse command (func [command])
+            command = real_args[2] if len(real_args) > 2 else None
+            args_to_pass = real_args[3:]
+        else:
+            args_to_pass = real_args[2:]
 
         # If use run command instead of f run - need to change start arg parse position
         func = Func(command, kwargs=kwargs, args=args_to_pass)
