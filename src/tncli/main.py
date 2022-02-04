@@ -92,7 +92,7 @@ Credits: disintar.io team
 
     parser_project = subparser.add_parser('start',
                                           description='Create new project structure based on example project')
-    parser_project.add_argument('project', choices=['wallet', 'external_data'],
+    parser_project.add_argument('project', choices=['wallet', 'external_data', 'external_code'],
                                 help="Which default project to bootstrap")
 
     parser_project.add_argument("--name", "-n", default=None, type=str, help='New project folder name')
