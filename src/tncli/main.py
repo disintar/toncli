@@ -53,6 +53,8 @@ Command list, e.g. usage: tncli start wallet
 
 {bl}start - create new project structure based on example project  
 {gr}   wallet - create project with v3 wallet example
+{gr}   external_data - create external data usage example
+{gr}   external_code - create external code usage example
 
 {bl}deploy - deploy current project to blockchain
 
@@ -69,8 +71,9 @@ Command list, e.g. usage: tncli start wallet
 {gr}   e.g. -> tncli lc help
 
 {bl}func / fc - interact with func :)
-{gr}   interactive - default, run interactive func
 {gr}   build - run build on file or project, will be auto passed stdlib
+
+{gr}   All other commands will pass to func
 
 {bl}wallet - interact with deploy-wallet
 

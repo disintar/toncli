@@ -68,10 +68,11 @@ class ContractDeployer(AbstractDeployer):
         address_text = self.get_address()
         self.address = address_text[1]
 
-        # Send ton to this address
-        self.deploy_contract.send_ton(address_text[1], self.ton, False)
-        logger.info(f"🌲 TON sent to new contract, wait 10 sec...")
-        time.sleep(10)
+        if self.ton > 0:
+            # Send ton to this address
+            self.deploy_contract.send_ton(address_text[1], self.ton, False)
+            logger.info(f"🌲 TON sent to new contract, wait 10 sec...")
+            time.sleep(10)
 
         # Deploy current contract
         self.deploy()
