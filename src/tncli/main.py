@@ -226,7 +226,6 @@ Credits: disintar.io team
     if command == 'start':
         # if folder name not defined just take project name
         folder_name = args.name if args.name else args.project
-        print(folder_name)
         bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=folder_name)
         bootstrapper.deploy()
 

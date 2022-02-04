@@ -34,6 +34,7 @@ class ContractDeployer(AbstractDeployer):
             if balance > 0:
                 logger.info(f"🤑 Current balance is grater then 0: {gr}{balance}{rs} and "
                             f"wallet code is not deployed - so try to deploy")
+                self.deploy_contract.build()
                 self.deploy_contract.deploy()
 
                 logger.info("😴 Sleep for 5 sec., wait while blockchain info will be updated")
@@ -65,19 +66,19 @@ class ContractDeployer(AbstractDeployer):
 
         # Get contract address
         address_text = self.get_address()
+        self.address = address_text[1]
 
         # Send ton to this address
-        self.deploy_contract.send_ton(address_text[1], self.ton)
-        logger.info(f"🌲 TON sended to new contract")
+        self.deploy_contract.send_ton(address_text[1], self.ton, False)
+        logger.info(f"🌲 TON sent to new contract, wait 10 sec...")
+        time.sleep(10)
 
         # Deploy current contract
-        data = self.deploy()
-        logger.info(data)
+        self.deploy()
 
         logger.info(f"💥 Deployed {gr}successfully{rs}!")
 
         balance, is_inited = self.get_status()
 
         logger.info(f"👾 Contract [{gr}{address_text[1]}{rs}] Balance: {balance}, is_inited: {is_inited}")
-
-
+        logger.info(f"🚀 It may take some time to get is_inited to {gr}True{rs}")

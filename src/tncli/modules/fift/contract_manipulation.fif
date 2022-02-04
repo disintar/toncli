@@ -62,4 +62,4 @@ $>B
 <b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
 2 boc+>B
 
-// "build/boc/contract-create.boc" tuck B>file
+"build/boc/contract-create.boc" tuck B>file

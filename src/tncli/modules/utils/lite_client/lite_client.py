@@ -7,8 +7,10 @@ from tncli.modules.utils.lite_client.commands import lite_client_execute_command
 
 
 class LiteClient:
-    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
+    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None,
+                 get_output: bool = False):
         self.command = command
+        self.get_output = get_output
 
         if kwargs:
             self.kwargs = kwargs
@@ -20,11 +22,11 @@ class LiteClient:
 
         self.args = args
 
-    def run(self):
+    def run(self) -> Optional[bytes]:
         if not self.command or self.command == 'interactive':
             self.run_interactive()
         elif self.command:
-            self.run_command()
+            return self.run_command()
         else:
             logger.error("🔎 Can't find such command")
             sys.exit()
@@ -34,9 +36,13 @@ class LiteClient:
                                               self.kwargs['update'])
         subprocess.run(command)
 
-    def run_command(self):
+    def run_command(self) -> Optional[bytes]:
         command = lite_client_execute_command(self.kwargs['net'],
                                               [*self.kwargs['lite_client_args'], '-c',
                                                " ".join([self.command, *self.args])],
                                               self.kwargs['update'])
-        subprocess.run(command)
+        if not self.get_output:
+            subprocess.run(command)
+        else:
+            output = subprocess.check_output(command)
+            return output

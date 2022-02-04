@@ -1,3 +1,4 @@
+import io
 import os
 import shlex
 import subprocess
@@ -21,8 +22,20 @@ rs = Style.RESET_ALL
 
 
 class Fift:
-    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
+    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None,
+                 quiet: Optional[bool] = False, cwd: Optional[str] = None):
+        """
+        Easy interact with fift command
+
+        :param command: command to run
+        :param args: argumets passed to command
+        :param kwargs: kwargs
+        :param quiet: Is output of lite-client needed
+        :param cwd: Project root
+        """
+        self.cwd = cwd if cwd else os.getcwd()
         self.command = command
+        self.quiet = quiet
 
         if kwargs:
             self.kwargs = kwargs
@@ -49,7 +62,7 @@ class Fift:
         elif self.command == 'run':
             self.run_script()
         elif self.command == 'sendboc':
-            self.sendboc()
+            return self.sendboc()
         else:
             logger.error("🔎 Can't find such command")
             sys.exit()
@@ -80,8 +93,8 @@ class Fift:
         if '.' in filename:
             filename = filename.split('.')[0]
 
-        if os.path.exists(f'{os.getcwd()}/build/boc'):
-            path = f'{os.getcwd()}/build/boc/{filename}.boc'
+        if os.path.exists(f'{self.cwd}/build/boc'):
+            path = f'{self.cwd}/build/boc/{filename}.boc'
         else:
             # if not project root - create temp directory
             path = tempfile.mkdtemp()
@@ -91,9 +104,9 @@ class Fift:
 
         # If we never created cli.fif in project root
         if self.project_dir:
-            self.cli_fif_lib = build_cli_lib(f'{os.getcwd()}/build/cli.fif', {  # Generate cli.fif
+            self.cli_fif_lib = build_cli_lib(f'{self.cwd}/build/cli.fif', {  # Generate cli.fif
                 "is_project": '1',
-                "project_root": f'{os.getcwd()}',
+                "project_root": self.cwd,
                 "build_path": path,
             })
 
@@ -109,12 +122,15 @@ class Fift:
         # Our own cli.fif file need to be added before run
         command = fift_execute_command(file=self.args[0], args=[*self.args[1:]], pre_args=["-L", self.cli_fif_lib])
 
-        subprocess.run(command)
+        subprocess.run(command, cwd=self.cwd)
 
         # send boc file
         command = lite_client_execute_command(self.kwargs['net'], ['-v', '2', '-c', f'sendfile {path}'],
                                               update_config=self.kwargs['update'])
-        subprocess.run(command)
+        output = None
+        if self.quiet:
+            output = open(os.devnull, 'w')
+        subprocess.run(command, stdout=output, stderr=output, cwd=self.cwd)
 
     def run_script(self):
         """Runs fift in script mode on file"""

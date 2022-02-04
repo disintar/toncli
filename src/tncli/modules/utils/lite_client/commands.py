@@ -40,7 +40,7 @@ def get_network_config_path(network: str, update_config: bool = False) -> str:
     return f"{config_folder}/{filename}"
 
 
-def lite_client_execute_command(network: str, args: List[str], update_config=False,) -> List[str]:
+def lite_client_execute_command(network: str, args: List[str], update_config=False, ) -> List[str]:
     """
     Execute command to lite_client
 
@@ -71,21 +71,26 @@ def get_account_status(network: str, address: str, cwd: Optional[str] = None,
 
     account_info = account_info.split('\n')
     if account_info[-2] == 'account state is empty':
-        return 0, is_inited
+        return 0, False
     else:
         # TODO: not to use lite-client!
         return int(account_info[-2].split()[-1][:-2]) / 1000000000, is_inited
 
 
-def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: bool = False):
+def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: bool = False,
+             get_output: bool = False) -> Optional[str]:
     """
     Send BOC via lite-client
 
+    :param get_output: Return output or not
     :param network: network to send
     :param path: path to boc file
     :param cwd: root dir run command from
     :param update_config: need to update local cached config of network
     :return:
     """
-    command = lite_client_execute_command(network, ['-v', '0', '-c', f'sendfile {path}'], update_config=update_config)
-    subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
+    command = lite_client_execute_command(network, ['-v', '2', '-c', f'sendfile {path}'], update_config=update_config)
+    if not get_output:
+        subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
+    else:
+        return subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd).decode()

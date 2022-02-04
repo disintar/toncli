@@ -41,7 +41,7 @@ b> constant recv_external
 
 recv_external hashu wallet_pk ed25519_sign_uint constant recv_external_sign // create signature of first bits
 
-<b recv_external_sign B,
+<b  recv_external_sign B,
     recv_external <s s,
 b> <s
 -1 // function selector

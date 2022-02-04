@@ -2,8 +2,8 @@
 "Asm.fif" include
 
 "build/contract.pk" load-generate-keypair // generate key pair
+constant private_key  // save private to constant
 constant public_key // save public to constant
-constant private_key // save private to constant
 
 <b
   0 32 u, // seqno

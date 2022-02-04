@@ -7,6 +7,7 @@ from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.projects import ProjectBootstrapper
 from tncli.modules.utils.system.conf import config_folder
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.fift.fift import Fift
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -61,14 +62,21 @@ class DeployWalletContract(AbstractDeployer):
                 f"Is inited: {is_inited}) in {config_folder}")
             self.address = address_text[1]
 
-    def send_ton(self, address: str, count: int):
+    def send_ton(self, address: str, amount: float, quiet: bool = False):
         """Send ton to some address from DeployWallet"""
         balance, is_inited = self.get_status()
 
-        if balance < count or not is_inited:
+        if balance < amount or not is_inited:
             logger.error(
                 f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
+
+        seqno = self.get_seqno()
+        args = [f'{self.project_root}/fift/usage.fif', 'build/contract', address, '0', str(seqno), str(amount),
+                "--no-bounce"]
+
+        fift = Fift('sendboc', args, quiet=quiet, cwd=self.project_root)
+        fift.run()
 
 
 if __name__ == '__main__':
