@@ -19,7 +19,7 @@ config_folder = user_config_dir('tncli')
 # Create if not exist
 if not os.path.exists(config_folder):
     config = configparser.ConfigParser()
-    config.read(f'{project_root}/tncli/config.ini')
+    config.read(f'{project_root}/config.ini')
 
     config['executable'] = {
         'func': '',
@@ -63,6 +63,19 @@ config_uri = {
 }
 
 executable_config = config['executable']
+
+for item in ['func', 'fift', 'lite-client']:
+    if not os.path.exists(executable_config[item]):
+        executable_path = shutil.which(item)
+
+        if executable_path:
+            config['executable'][item] = executable_path
+        else:
+            logger.warning(f"🤖 Can't find executable for {item}, please specify it, e.g.: /usr/bin/{item}")
+            config['executable'][item] = input("Path: ")
+
+        with open(f'{config_folder}/config.ini', 'w') as config_file:
+            config.write(config_file)
 
 executable = {
     'fift': executable_config['fift'],

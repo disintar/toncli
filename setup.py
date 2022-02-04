@@ -8,13 +8,14 @@ with open("requirements.txt", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="tncli",
-    version="0.0.8",
+    version="0.0.14",
     author="Andrey Tvorozhkov",
     author_email="andrey@head-labs.com",
     description="Easy to use CLI for fift / func projects",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/disintar/tncli",
+    include_package_data=True,
     project_urls={
         "Bug Tracker": "https://github.com/disintar/tncli/issues",
     },

@@ -40,7 +40,7 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
 def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: Optional[str] = None) -> Optional[str]:
     logger.info(f"🥳 Start contract manipulation")
 
-    contract_manipulation_fift_path = f"{project_root}/tncli/modules/fift/contract_manipulation.fif"
+    contract_manipulation_fift_path = f"{project_root}/modules/fift/contract_manipulation.fif"
     command = fift_execute_command(contract_manipulation_fift_path, [code_path, data_path, str(workchain)])
 
     output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)

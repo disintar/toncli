@@ -11,4 +11,4 @@ Also that means you can take ANY account state and create own code on top of it.
 
 - `tncli lc saveaccountdata ./build/boc/c4.boc EQB36_EfYjFYMV8p_cxSYX61bA0FZ4B65ZNN6L8INY-5gL6w` save account data
 - `tncli lc saveconfig ./build/boc/config.boc` save network config
-- `tncli run fift/load_c4.fif --build` build func and run load_c4.fif
+- `tncli run fift/load_c4.fif -fa "-v 5" --build` build func and run load_c4.fif

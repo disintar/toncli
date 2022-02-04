@@ -16,7 +16,7 @@ def build_cli_lib(to_save_location: Optional[str] = None, render_kwargs: Optiona
         to_save_location: str = tempfile.mkstemp(suffix='.fif')[1]
         logger.info(f"👽 Save ton-cli to {to_save_location}")
 
-    loader = FileSystemLoader(f"{project_root}/tncli/modules/fift")
+    loader = FileSystemLoader(f"{project_root}/modules/fift")
 
     env = Environment(
         loader=loader,

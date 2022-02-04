@@ -1,0 +1,38 @@
+"Color.fif" include
+
+."INFO: 🍿 Loading fift " ^cyan ."CLI" ^reset ." lib" cr
+
+// if is project will save boc to {project-root}/build/{project-name}.boc else to {project-root}
+// 1 project
+// 0 not project, just fif file
+{{ is_project }} constant is-project
+
+"{{ project_root }}" constant project-root
+"{{ build_path }}" constant build-path
+
+{
+
+    // at least one argument need to be in stack
+    depth 0 = { ."ERROR: 😡 Please enter filename to save" cr 1 halt } if
+
+    // generate full path to project-specific directory (need to path filename to stack)
+    project-root // add project-root to stack
+
+    is-project 1 = { "/build/" $+ } if  // if this is project - we need to add build/ to path
+
+    swap $+ +".boc"// get name from stack and concat .boc
+} : _genpath
+
+{
+    tuck B>file
+    ."INFO: 💾 (Saved to file " ^green type ^reset .")" cr
+} : _saveboc
+
+{
+   build-path // get build-path value
+   $len 0= // check build-path length (will be 0 if not specified)
+   { ."INFO: ☺  Create temp name" "temp" cr _genpath _saveboc } // if length is zero run code
+   { ."INFO: 🥰  Save boc" cr build-path _saveboc } // else
+   cond
+} : saveboc
+

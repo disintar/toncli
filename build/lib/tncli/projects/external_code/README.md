@@ -17,5 +17,5 @@ This example is not easy to understand, it's only for pro usage of ton features.
    2. `tncli lc saveaccountcode ./build/boc/c3.boc <wallet>` save account code to
   boc
    3. `tncli lc saveconfig ./build/boc/config.boc` save network config
-4. Run `recv_external` locally: `tncli run fift/load_c3_and_c4.fif`
+4. Run `recv_external` locally: `tncli run fift/load_c3_and_c4.fif -fa "-v 5"`
 

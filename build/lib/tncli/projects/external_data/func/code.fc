@@ -1,0 +1,5 @@
+;; Default cell parse
+int main() impure {
+    return get_data().begin_parse().preload_uint(32);
+}
+

@@ -37,8 +37,8 @@ class ContractDeployer(AbstractDeployer):
                 self.deploy_contract.build()
                 self.deploy_contract.deploy()
 
-                logger.info("😴 Sleep for 5 sec., wait while blockchain info will be updated")
-                time.sleep(5)
+                logger.info("😴 Sleep for 10 sec., wait while blockchain info will be updated")
+                time.sleep(10)
 
             else:
                 logger.error(
