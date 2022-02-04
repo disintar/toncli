@@ -3,9 +3,12 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("requirements.txt", encoding="utf-8") as fh:
+    install_requires = fh.read().split('\n')
+
 setuptools.setup(
     name="tncli",
-    version="0.0.5",
+    version="0.0.8",
     author="Andrey Tvorozhkov",
     author_email="andrey@head-labs.com",
     description="Easy to use CLI for fift / func projects",
@@ -22,6 +25,7 @@ setuptools.setup(
         "Environment :: Console",
     ],
     package_dir={"": "src"},
+    install_requires=install_requires,
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.8",
     entry_points={
