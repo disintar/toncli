@@ -58,7 +58,7 @@ Credits: disintar.io team
 
     parser_project = subparser.add_parser('start',
                                           description='Create new project structure based on example project')
-    parser_project.add_argument('project', default='wallet', choices=['wallet'],
+    parser_project.add_argument('project', default='wallet', choices=['wallet', 'external_data'],
                                 help="Which default project to bootstrap")
 
     parser_project.add_argument("--name", "-n", default='wallet', type=str, help='New project folder name')
@@ -123,7 +123,7 @@ Credits: disintar.io team
                              help='Network to deploy')
     parser_fift.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_fift.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
-    parser_fift.add_argument("--build", action='store_true', default=False, help='Build func code from func/ folder in project')
+    parser_fift.add_argument("--build--build", action='store_true', default=False, help='Build func code from func/ folder in project')
     parser_fift.add_argument("--fift-args", "-fa", type=str, default='',
                              help='Pass args and kwargs to fift command, e.g.: -fa "-v 4" - '
                                   'set verbose level, will overwrite default ones, '
