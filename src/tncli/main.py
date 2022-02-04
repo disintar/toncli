@@ -24,6 +24,28 @@ def main():
 
     :return:
     '''
+    fift_help = f'''positional arguments:
+      {bl}command{rs}              Which mode to run, can be [interactive, run, sendboc]
+      {gr}   interactive - default, run interactive fift
+      {gr}   run - run fift file ([config/fift-lib/] will be auto passed to -I
+      {gr}   sendboc - run fift file and run sendfile in lite-client, you need to set only BOC in the stack
+                   if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
+      {rs}
+    '''
+    lite_client_help = f'''positional arguments:
+          {bl}command{rs}             
+          {gr}   interactive - default, run interactive lite_client
+          {gr}   
+          {gr}   OTHER - all other arguments will passed to lite_client e.g. tnctl lc help
+          {rs}
+        '''
+    func_help = f'''positional arguments:
+          {bl}command{rs}             
+          {gr}   build - default, build func code in build/ folder, or just build func file 
+          {gr}   
+          {gr}   OTHER - all other arguments and kwargs will pass to fun command
+          {rs}
+        '''
 
     help_text = f'''{Fore.YELLOW}TON blockchain is the future 🦄
 --------------------------------
@@ -40,7 +62,19 @@ Command list, e.g. usage: tncli start wallet
 {gr}   sendboc - run fift file and run sendfile in lite-client, to made this work you need to add `saveboc` at the end of file
              if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
 
+{bl}lite-client / lc - interact with lite-client :)
+{gr}   interactive - default, run interactive lite-client
+{gr}   
+{gr}   All other commands will pass to lite-client -c (network config will auto pass to command)
+{gr}   e.g. -> tncli lc help
+
+{bl}func / fc - interact with func :)
+{gr}   interactive - default, run interactive func
+{gr}   build - run build on file or project, will be auto passed stdlib
+
 {bl}wallet - interact with deploy-wallet
+
+All commands can be found in https://github.com/disintar/tncli/blob/master/docs/commands.md
 
 {rs}
 Each command have help e.g.: tncli deploy -h
@@ -58,10 +92,10 @@ Credits: disintar.io team
 
     parser_project = subparser.add_parser('start',
                                           description='Create new project structure based on example project')
-    parser_project.add_argument('project', default='wallet', choices=['wallet', 'external_data'],
+    parser_project.add_argument('project', choices=['wallet', 'external_data'],
                                 help="Which default project to bootstrap")
 
-    parser_project.add_argument("--name", "-n", default='wallet', type=str, help='New project folder name')
+    parser_project.add_argument("--name", "-n", default=None, type=str, help='New project folder name')
 
     parser_deploy = subparser.add_parser('deploy', description='Deploy project to blockchain')
     parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
@@ -70,28 +104,6 @@ Credits: disintar.io team
     parser_deploy.add_argument("--ton", "-t", default=0.05, type=int, help='How much TON will be sent to new contract')
     parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
 
-    fift_help = f'''positional arguments:
-  {bl}command{rs}              Which mode to run, can be [interactive, run, sendboc]
-  {gr}   interactive - default, run interactive fift
-  {gr}   run - run fift file ([config/fift-lib/] will be auto passed to -I
-  {gr}   sendboc - run fift file and run sendfile in lite-client, you need to set only BOC in the stack
-               if it called in project root - will create build/boc/[filename].boc file, else will use temp dir
-  {rs}
-'''
-    lite_client_help = f'''positional arguments:
-      {bl}command{rs}             
-      {gr}   interactive - default, run interactive lite_client
-      {gr}   
-      {gr}   OTHER - all other arguments will passed to lite_client e.g. tnctl lc help
-      {rs}
-    '''
-    func_help = f'''positional arguments:
-      {bl}command{rs}             
-      {gr}   build - default, build func code in build/ folder, if no build 
-      {gr}   
-      {gr}   OTHER - all other arguments and kwargs will pass to fun command
-      {rs}
-    '''
     #
     # shortcuts
     #
@@ -123,7 +135,8 @@ Credits: disintar.io team
                              help='Network to deploy')
     parser_fift.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_fift.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
-    parser_fift.add_argument("--build", action='store_true', default=False, help='Build func code from func/ folder in project')
+    parser_fift.add_argument("--build", action='store_true', default=False,
+                             help='Build func code from func/ folder in project')
     parser_fift.add_argument("--fift-args", "-fa", type=str, default='',
                              help='Pass args and kwargs to fift command, e.g.: -fa "-v 4" - '
                                   'set verbose level, will overwrite default ones, '
@@ -211,7 +224,10 @@ Credits: disintar.io team
         sys.exit(0)
 
     if command == 'start':
-        bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=args.name)
+        # if folder name not defined just take project name
+        folder_name = args.name if args.name else args.project
+        print(folder_name)
+        bootstrapper = ProjectBootstrapper(project_name=args.project, folder_name=folder_name)
         bootstrapper.deploy()
 
     elif command == 'deploy':
