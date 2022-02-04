@@ -7,6 +7,7 @@ from typing import List, Optional
 
 from colorama import Fore, Style
 
+from tncli.modules.utils.func.func import Func
 from tncli.modules.utils.system.conf import config_folder, executable
 from tncli.modules.utils.fift.commands import fift_execute_command
 from tncli.modules.utils.lite_client.commands import lite_client_execute_command
@@ -30,6 +31,7 @@ class Fift:
         else:
             self.kwargs = {'fift_args': [],
                            'lite_client_args': [],
+                           'build': False,
                            'net': 'testnet',
                            'update': False}
 
@@ -124,6 +126,10 @@ class Fift:
             self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-s"]
         else:
             self.kwargs['fift_args'].append("-s")
+
+        if self.project_dir and self.kwargs['build']:
+            func = Func()
+            func.run()
 
         command = [executable['fift'], *self.kwargs['fift_args'], *self.args]
 

@@ -14,8 +14,8 @@ def check_for_needed_files_to_deploy(project_root: str, silence: bool = False) -
 
     files = os.listdir(project_root)
     needed_structure = {
-        'func': ['code.fc', 'files.yaml'],
-        'fift': ['data.fif'],
+        'func': [],
+        'fift': [],
         'build': ['boc']
     }
 

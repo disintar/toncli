@@ -19,8 +19,7 @@ rs = Style.RESET_ALL
 
 
 class Func:
-    def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
-        print(command, args, kwargs)
+    def __init__(self, command: Optional[str] = None, args: Optional[List[str]] = None, kwargs: Optional[dict] = None):
         self.command = command
 
         if kwargs:
@@ -28,12 +27,12 @@ class Func:
             self.kwargs['func_args'] = shlex.split(self.kwargs['func_args'])
             self.kwargs['fift_args'] = shlex.split(self.kwargs['fift_args'])
         else:
-            self.kwargs = {'func_args': [], 'fift_args': []}
+            self.kwargs = {'func_args': [], 'fift_args': [], 'run': False}
 
-        self.args = args
+        self.args = args if args else []
 
         # Currently, running command in project root
-        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), True)
+        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), False)
 
     def run(self):
         if not self.command or self.command == 'build':
@@ -75,12 +74,15 @@ class Func:
                 sys.exit()
 
             to_save_location = f"{os.getcwd()}/build/code.fif"
+            self.args = [f"{os.getcwd()}/func/"]
 
             # Build code
-            fift_build(f"{os.getcwd()}/func/",
+            fift_build(self.args[0],
                        to_save_location, cwd=os.getcwd())
 
-        logger.info(f"🥌 Build [{bl}{os.getcwd()}{rs}] {gr}successfully{rs}, check out {gr}{to_save_location}{rs}")
+        build = [i.replace(os.getcwd(), '') for i in self.args]
+        location = to_save_location.replace(os.getcwd(), '')
+        logger.info(f"🥌 Build {bl}{build}{rs} {gr}successfully{rs}, check out {gr}.{location}{rs}")
 
         if run_code:
             logger.info(f"🛫 Will run your code!")

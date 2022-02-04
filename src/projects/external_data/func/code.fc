@@ -1,4 +1,5 @@
 ;; Default cell parse
-int seqno() method_id {
+int main() impure {
     return get_data().begin_parse().preload_uint(32);
 }
+
