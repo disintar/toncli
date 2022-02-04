@@ -1,3 +1,5 @@
+"Color.fif" include
+
 "build/boc/c4.boc" file>B // load file to bytes
  B>boc // deserializes bag of cells
  constant storage // save as storage
@@ -21,4 +23,6 @@ global_config        // global_config
 code <s // load func code as slice
 storage // add c4 cell lodaded from lite-client
 c7 // add c7 cell
-runvmctx 2drop .s // Runvm, print stack with output
+runvmctx 2drop // Runvm, in stack now seqno
+
+."🙀 Seqno of wallet: " ^green .s ^reset // print seqno

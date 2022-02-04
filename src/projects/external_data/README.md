@@ -5,6 +5,7 @@ This is an example that shows developers that any information stored in a smart 
 Deployed by [tncli](https://github.com/disintar/tncli)
 
 
+Also that means you can take ANY account state and create own code on top of it.
 
 ### Usage
 
