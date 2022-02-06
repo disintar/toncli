@@ -61,8 +61,7 @@ class ContractDeployer(AbstractDeployer):
             f"👻 Your smart contract project [{gr}{self.project_root}{rs}] "
             f"is now going to be {gr}deployed{rs}, get ready!")
         logger.info(f"🌈 Start building: ")
-
-        if contracts:
+        if contracts is not None and len(contracts) > 0:
             real_contracts = []
 
             for item in contracts:
@@ -70,7 +69,7 @@ class ContractDeployer(AbstractDeployer):
                     if config.name == item:
                         real_contracts.append(config)
         else:
-            real_contracts = None
+            real_contracts = self.project_config.contracts
 
         # Compile func
         self.compile_func(real_contracts)
@@ -87,10 +86,11 @@ class ContractDeployer(AbstractDeployer):
         self.addresses = self.get_address(real_contracts)
 
         if self.ton > 0:
-            for address in self.addresses:
+            for address, config in zip(self.addresses, real_contracts):
+                logger.info(f"🌲 Sending TON to new contract [{bl}{config.name}{rs}] [{gr}{address[1]}{rs}]")
+
                 # Send ton to this address
                 self.deploy_contract.send_ton(address[1], self.ton, False)
-                logger.info(f"🌲 TON sent to new contract [{gr}{address[1]}{rs}]")
 
             time.sleep(10)
 
@@ -100,7 +100,8 @@ class ContractDeployer(AbstractDeployer):
 
         statuses = self.get_status()
 
-        for address, status in zip(self.addresses, statuses):
-            logger.info(f"👾 Contract [{gr}{address[1]}{rs}] Balance: {status[0]}, is_inited: {status[1]}")
+        for address, status, config in zip(self.addresses, statuses, real_contracts):
+            logger.info(
+                f"👾 Contract [{bl}{config.name}{rs}]  [{gr}{address[1]}{rs}] Balance: {status[0]}, is_inited: {status[1]}")
 
         logger.info(f"🚀 It may take some time to get is_inited to {gr}True{rs}")

@@ -199,7 +199,7 @@ Credits: {gr}disintar.io{rs} team
             arguments = choices[choice]._option_string_actions
 
             for key in arguments:
-                if arguments[key].type == str:
+                if arguments[key].type == str or arguments[key].type == int:
                     string_kwargs.append(key)
 
     # wtf I need to do this, need to change!
@@ -239,7 +239,7 @@ Credits: {gr}disintar.io{rs} team
         deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
         real_args, _ = argv_fix(sys.argv, string_kwargs)
 
-        deployer.publish(real_args)
+        deployer.publish(real_args[2:])
 
     elif command in ['fift', 'f', 'run']:
         # get real args
