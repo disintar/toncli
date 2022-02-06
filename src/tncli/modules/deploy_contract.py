@@ -46,8 +46,8 @@ class ContractDeployer(AbstractDeployer):
                 self.deploy_contract.build()
                 self.deploy_contract.deploy()
 
-                logger.info("😴 Sleep for 10 sec., wait while blockchain info will be updated")
-                time.sleep(10)
+                logger.info("😴  Wait while blockchain info will be updated:")
+                self.deploy_contract.wait_for_deploy()
 
             else:
                 logger.error(
@@ -91,17 +91,12 @@ class ContractDeployer(AbstractDeployer):
 
                 # Send ton to this address
                 self.deploy_contract.send_ton(address[1], self.ton, False)
-
-            time.sleep(10)
+                self.wait_for_deploy(contracts=[config], only_balance=True, addreses=[address])
 
         # Deploy current contract
         self.deploy(real_contracts)
         logger.info(f"💥 Deployed {gr}successfully{rs}!")
 
-        statuses = self.get_status()
-
-        for address, status, config in zip(self.addresses, statuses, real_contracts):
-            logger.info(
-                f"👾 Contract [{bl}{config.name}{rs}]  [{gr}{address[1]}{rs}] Balance: {status[0]}, is_inited: {status[1]}")
-
         logger.info(f"🚀 It may take some time to get is_inited to {gr}True{rs}")
+
+        self.wait_for_deploy(contracts=contracts)

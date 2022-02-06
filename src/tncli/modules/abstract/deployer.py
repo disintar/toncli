@@ -1,5 +1,7 @@
 import os
 import sys
+from itertools import cycle
+from time import sleep
 from typing import Tuple, Optional, List
 
 from colorama import Fore, Style
@@ -27,11 +29,13 @@ class AbstractDeployer:
         self.project_root: str = ""
         self.project_config: ProjectConf = ...
 
-    def get_status(self) -> List[Tuple[float, bool]]:
+    def get_status(self, addreses: List[List[str]] = None) -> List[Tuple[float, bool]]:
         """Get balance and inited state for Contract"""
+        if not addreses:
+            addreses = self.addresses
         statuses = []
 
-        for address in self.addresses:
+        for address in addreses:
             statuses.append(
                 get_account_status(self.network, address[1],
                                    update_config=self.update_config,
@@ -111,6 +115,50 @@ class AbstractDeployer:
     def check_for_needed_files_to_deploy(self) -> bool:
         """Check if current root is project root"""
         return check_for_needed_files_to_deploy(self.project_root, True)
+
+    def wait_for_deploy(self, contracts: List[TonProjectConfig] = None, only_balance=False,
+                        addreses: List[List[str]] = None):
+        """
+        Check current deploy status
+
+        :param addreses: need to pass if only_balance to correctly get status
+        :param contracts: contracts to check
+        :param only_balance: if only_balance passed - will check only non-zero balance
+        :return:
+        """
+        if not addreses:
+            addreses = self.addresses
+
+        if not contracts:
+            contracts = self.project_config.contracts
+
+        is_deployed = 0
+        statuses_emoji = cycle(["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"])
+
+        while is_deployed != len(contracts):
+            # TODO: fjx addreses, it's not a good solution here
+            statuses = self.get_status(addreses)
+            current_text_status = []
+            is_deployed = 0
+            status = next(statuses_emoji)
+
+            for address, (balance, is_inited), contract in zip(addreses, statuses, contracts):
+                text_status = f"[{status}] [{bl}{contract.name}{rs}] [{gr}{address[1]}{rs}] {balance}💎 / Inited: {gr}{is_inited}{rs}"
+                current_text_status.append(text_status)
+
+                if not only_balance:
+                    if is_inited:
+                        is_deployed += 1
+                else:
+                    if balance > 0:
+                        is_deployed += 1
+
+            if is_deployed != len(contracts):
+                print("\r", current_text_status[is_deployed], end='')
+                sleep(1)
+        print()  # add new line at the end
+        logger.info(
+            "🙀 All contracts successfully deployed!" if not only_balance else "🙀 All contracts now with non-zero balance")
 
     def get_seqno(self) -> List[int]:
         """Run runmethod on lite-client and parse seqno from answer"""

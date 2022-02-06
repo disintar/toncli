@@ -13,7 +13,7 @@
 - [x] Update yaml project structure
 - [x] Add support of multiple contracts in one project
 - [x] Add support to deploy one specific contract when you have multiple of them in one project
-- [ ] Remove `sleep` in project deployment and check true `lite-client`
+- [x] Remove `sleep` in project deployment and check true `lite-client`
 
 **New features**
 
