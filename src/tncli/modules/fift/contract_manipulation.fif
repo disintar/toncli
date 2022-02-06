@@ -5,14 +5,14 @@
 
 // todo: use GetOpt.fif
 // define usage comment
-{ ."usage: " $0 type ." code-path data-path workchain [lib-path]" cr
+{ ."usage: " $0 type ." code-path data-path workchain boc-path address-path [lib-path]" cr
 ."Generate init message and and calculate wallet address" cr 1 halt } : usage
 
-// if less then 3 arguments print usage message
-$# 3 < ' usage if
+// if less then 5 arguments print usage message
+$# 5 < ' usage if
 
 // load at least 2 command line arguments
-3 :$1..n
+5 :$1..n
 
 // load code path from command line
 $1 constant code-path
@@ -20,6 +20,8 @@ $1 constant code-path
 // load lib path from command line, if no lib provided - set it to null
 $2 constant data-path
 $3 parse-workchain-id =: wc
+$4 constant output_boc
+$5 constant output_address
 
 // It's trick from https://t.me/tonsc_chat/949
 <{ SETCP0 ACCEPT
@@ -55,11 +57,15 @@ raw_address " " $+
 bounceable_address " " $+ $+
 nonbounceable_address " " $+ $+
 $>B
-"build/address_text" B>file
-^green "🖊  Save all addresses to build/address_text" type cr
+output_address B>file
+^green "🖊  Save all addresses to " output_address $+ type cr
 ^reset
 
 <b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
 2 boc+>B
 
-"build/boc/contract-create.boc" tuck B>file
+output_boc tuck B>file
+
+^green "🖊  Save boc_file to " output_boc $+ type cr
+^reset
+

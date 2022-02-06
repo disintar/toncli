@@ -8,38 +8,40 @@ from colorama import Fore, Style
 
 from tncli.modules.utils.system.conf import config_folder, executable
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.system.project import migrate_project_struction
+from tncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
 
 bl = Fore.CYAN
 gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 
-def build(func_folder_path: str, to_save_location: str,
-          cwd: Optional[str] = None, func_args: List[str] = None) -> Optional[str]:
+def build(project_root: str,
+          cwd: Optional[str] = None,
+          func_args: List[str] = None,
+          contracts: List[TonProjectConfig] = None) -> Optional[str]:
     """
     Build func file(s) and save result fift file to location
 
+    :param contracts: contracts to build
     :param func_args: add arguments to func
-    :param func_folder_path: Files to build in needed order
-    :param to_save_location: Location to save fift result
+    :param project_root: Files to build in needed order
     :param cwd: If you need to change root of running script pass it here
     :return:
     """
+    project_config = ProjectConf(project_root)
 
-    with open(f"{func_folder_path}/files.yaml", "r") as stream:
-        try:
-            func_configuration = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            logger.error(f"😒 Can't load {bl}files.yaml{rs} in {gr}{func_folder_path}{rs}, error:")
-            logger.error(exc)
-            sys.exit()
-
-    func_files_locations = [f"{func_folder_path}/{file}" for file in func_configuration['files']]
+    if not contracts:
+        contracts = project_config.contracts
 
     if not func_args:
         func_args = []
 
-    return build_files(func_files_locations, to_save_location, func_args, cwd)
+    output = []
+    for contract in contracts:
+        output.append(build_files(contract.func_files_locations, contract.to_save_location, func_args, cwd))
+
+    return "\n".join(list(map(str, output)))
 
 
 def build_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,

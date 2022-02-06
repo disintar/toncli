@@ -9,7 +9,11 @@
  B>boc // deserializes bag of cells
  constant code // save as code
 
-"build/boc/config.boc" file>B B>boc constant global_config
+// You can do in bash: tncli lc saveconfig ./build/boc/config.boc
+// Ad comment null, and uncomment next line
+// "build/boc/config.boc" file>B B>boc
+// To use network config
+null constant global_config
 
 "build/contract.pk" load-keypair nip constant wallet_pk
 

@@ -37,11 +37,15 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
         subprocess.run(fift_execute_command(test_file_path, [file]), cwd=os.getcwd() if not cwd else cwd)
 
 
-def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: Optional[str] = None) -> Optional[str]:
+def contract_manipulation(code_path: str, data_path: str, workchain: int, boc_location: str, address_location: str,
+                          cwd: Optional[str] = None) -> Optional[str]:
+    """Run contract_manipulation.fif code"""
+
     logger.info(f"🥳 Start contract manipulation")
 
     contract_manipulation_fift_path = f"{project_root}/modules/fift/contract_manipulation.fif"
-    command = fift_execute_command(contract_manipulation_fift_path, [code_path, data_path, str(workchain)])
+    command = fift_execute_command(contract_manipulation_fift_path,
+                                   [code_path, data_path, str(workchain), boc_location, address_location])
 
     output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
     output_data = output.decode()
@@ -53,4 +57,3 @@ def contract_manipulation(code_path: str, data_path: str, workchain: int, cwd: O
         logger.error(f"😳 {rd}Error{rs} on contract_manipulation, please double check everything.")
         logger.error(output_data)
         sys.exit()
-

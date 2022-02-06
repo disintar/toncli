@@ -1,12 +1,15 @@
 import os
 import sys
 import time
+from typing import List
 
 from colorama import Fore, Style
 
 from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.deploy_wallet_contract import DeployWalletContract
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.system.project import migrate_project_struction
+from tncli.modules.utils.system.project_conf import ProjectConf
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -21,6 +24,12 @@ class ContractDeployer(AbstractDeployer):
         self.network: str = network
         self.update_config: bool = update_config
         self.project_root: str = os.getcwd()
+
+        # If files.yaml in func folder - it's older version of project structure, so migrate
+        if os.path.exists(f"{self.project_root}/func/files.yaml"):
+            migrate_project_struction('0.0.14', self.project_root)
+
+        self.project_config = ProjectConf(self.project_root)
         self.ton = ton  # ton to send to smart contract
         self.workchain = workchain  # workchain deploy to
 
@@ -28,7 +37,7 @@ class ContractDeployer(AbstractDeployer):
         self.check_for_needed_files_to_deploy()
 
         self.deploy_contract = DeployWalletContract(network, workchain)
-        balance, is_inited = self.deploy_contract.get_status()
+        balance, is_inited = self.deploy_contract.get_status()[0]
 
         if not is_inited:
             if balance > 0:
@@ -45,7 +54,7 @@ class ContractDeployer(AbstractDeployer):
                     "🧓 Deployer contract is not inited yet, please send some TON there and then I can deploy project")
                 sys.exit()
 
-    def publish(self):
+    def publish(self, contracts: List[str] = None):
         """Build, send ton, deploy contract"""
 
         logger.info(
@@ -53,33 +62,45 @@ class ContractDeployer(AbstractDeployer):
             f"is now going to be {gr}deployed{rs}, get ready!")
         logger.info(f"🌈 Start building: ")
 
+        if contracts:
+            real_contracts = []
+
+            for item in contracts:
+                for config in self.project_config.contracts:
+                    if config.name == item:
+                        real_contracts.append(config)
+        else:
+            real_contracts = None
+
         # Compile func
-        self.compile_func()
+        self.compile_func(real_contracts)
         logger.info(f"🌲 Func compiled")
 
-        self.run_tests()
+        self.run_tests(real_contracts)
         logger.info(f"🌲 Tests passed")
 
-        # Build contract
-        self.build()
+        # Build contracts
+        self.build(real_contracts)
         logger.info(f"🌲 BOC created")
 
-        # Get contract address
-        address_text = self.get_address()
-        self.address = address_text[1]
+        # Get contracts addresses
+        self.addresses = self.get_address(real_contracts)
 
         if self.ton > 0:
-            # Send ton to this address
-            self.deploy_contract.send_ton(address_text[1], self.ton, False)
-            logger.info(f"🌲 TON sent to new contract, wait 10 sec...")
+            for address in self.addresses:
+                # Send ton to this address
+                self.deploy_contract.send_ton(address[1], self.ton, False)
+                logger.info(f"🌲 TON sent to new contract [{gr}{address[1]}{rs}]")
+
             time.sleep(10)
 
         # Deploy current contract
-        self.deploy()
-
+        self.deploy(real_contracts)
         logger.info(f"💥 Deployed {gr}successfully{rs}!")
 
-        balance, is_inited = self.get_status()
+        statuses = self.get_status()
 
-        logger.info(f"👾 Contract [{gr}{address_text[1]}{rs}] Balance: {balance}, is_inited: {is_inited}")
+        for address, status in zip(self.addresses, statuses):
+            logger.info(f"👾 Contract [{gr}{address[1]}{rs}] Balance: {status[0]}, is_inited: {status[1]}")
+
         logger.info(f"🚀 It may take some time to get is_inited to {gr}True{rs}")

@@ -1,8 +1,11 @@
 import os
+import shutil
+
 from colorama import Fore, Style
 
 from tncli.modules.utils.system.log import logger
 import sys
+import yaml
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -39,3 +42,43 @@ def check_for_needed_files_to_deploy(project_root: str, silence: bool = False) -
                 else:
                     return False
     return True
+
+
+def migrate_project_struction(old_version: str, cwd: str):
+    """
+    Project struction migration
+
+    :param cwd: project root
+    :param old_version: Version to migrate from
+    :return:
+    """
+
+    if old_version == '0.0.14':
+        logger.warning("🙀 Detected old version of project, migrate to newer one")
+
+        func_files_path = f"{cwd}/func/files.yaml"
+        with open(f"{func_files_path}", "r") as stream:
+            try:
+                func_configuration = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                logger.error(f"😒 Can't load {bl}files.yaml{rs} in {gr}{func_files_path}{rs}, error:")
+                logger.error(exc)
+                sys.exit()
+
+        new_structure = {
+            'contract': {
+                'func': [f"func/{file}" for file in func_configuration['files']],
+                'data': 'fift/data.fif'
+            }
+        }
+
+        yaml_structure = yaml.dump(new_structure)
+
+        with open(f"{cwd}/project.yaml", "w") as stream:
+            stream.write(yaml_structure)
+
+        if os.path.exists(f'{cwd}/build/address_text'):
+            shutil.move(f"{cwd}/build/address_text", f"{cwd}/build/contract_address")
+
+        os.remove(func_files_path)
+        logger.info("☀ Successful migrated to v0.0.15 project structure")

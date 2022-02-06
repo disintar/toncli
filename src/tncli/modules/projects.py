@@ -1,6 +1,7 @@
 import os
 import shutil
 import sys
+from collections import defaultdict
 from typing import Optional
 
 from colorama import Fore, Style
@@ -18,6 +19,11 @@ class ProjectBootstrapper:
     def __init__(self, project_name: str, folder_name: str, location: Optional[str] = None):
         self.project_name = project_name
         self.folder_name = folder_name
+        self.project_help_action = defaultdict(lambda: "")
+
+        self.project_help_action['wallet'] = f" and {gr}tncli deploy -n testnet{rs}"
+        self.project_help_action['external_code'] = f" and {gr}cat README.md{rs} for more information"
+        self.project_help_action['external_data'] = f" and {gr}cat README.md{rs} for more information"
 
         self.project_location = f"{project_root}/projects"
         # current location where we need to create folder with project
@@ -41,4 +47,4 @@ class ProjectBootstrapper:
 
         logger.info(f"👑 Folder {gr}successfully {rs}created - happy blockchain hacking")
         logger.info(
-            f"🐼 You now can do {gr}cd {self.folder_name}{rs} and {gr}tncli deploy -n testnet{rs}")
+            f"🐼 You now can do {gr}cd {self.folder_name}{rs}{self.project_help_action[self.project_name]}")

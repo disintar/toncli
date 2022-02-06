@@ -5,9 +5,11 @@ import shutil
 from appdirs import user_config_dir
 from colorama import Fore, Style
 
+from tncli.modules.utils.system.check_executable import safe_get_version, check_executable
 from tncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
+bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
@@ -30,16 +32,11 @@ if not os.path.exists(config_folder):
     logger.info(f"🥰 {gr}First time run{rs} - i'll create config folder 4you and save some stuff there")
     logger.info(f"🤖 Check all executables are installed...")
 
-    for item in ['func', 'fift', 'lite-client']:
-        executable_path = shutil.which(item)
+    # Here we need to correctly define executable path
+    new_executable, is_executable_changes = check_executable(dict(config['executable']))
+    config['executable'] = new_executable
 
-        if executable_path:
-            config['executable'][item] = executable_path
-        else:
-            logger.warning(f"🤖 Can't find executable for {item}, please specify it, e.g.: /usr/bin/{item}")
-            config['executable'][item] = input("Path: ")
-
-    logger.info(f"🥰 Feel free to change it if needed: {config_folder}/config.ini")
+    logger.info(f"🥰 Feel free to change it if needed: {bl}{config_folder}/config.ini{rs}")
 
     os.makedirs(config_folder)
 
@@ -62,23 +59,17 @@ config_uri = {
     'mainnet': main_config.get('mainnet')
 }
 
-executable_config = config['executable']
+# Here we need to correctly define executable path
+new_executable, is_executable_changes = check_executable(dict(config['executable']))
 
-for item in ['func', 'fift', 'lite-client']:
-    if not os.path.exists(executable_config[item]):
-        executable_path = shutil.which(item)
+if is_executable_changes:
+    config['executable'] = new_executable
 
-        if executable_path:
-            config['executable'][item] = executable_path
-        else:
-            logger.warning(f"🤖 Can't find executable for {item}, please specify it, e.g.: /usr/bin/{item}")
-            config['executable'][item] = input("Path: ")
-
-        with open(f'{config_folder}/config.ini', 'w') as config_file:
-            config.write(config_file)
+    with open(f'{config_folder}/config.ini', 'w') as config_file:
+        config.write(config_file)
 
 executable = {
-    'fift': executable_config['fift'],
-    'func': executable_config['func'],
-    'lite-client': executable_config['lite-client'],
+    'fift': new_executable['fift'],
+    'func': new_executable['func'],
+    'lite-client': new_executable['lite-client'],
 }

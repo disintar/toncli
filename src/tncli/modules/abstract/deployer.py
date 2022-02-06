@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Tuple
+from typing import Tuple, Optional, List
 
 from colorama import Fore, Style
 
@@ -11,6 +11,7 @@ from tncli.modules.utils.lite_client.commands import get_account_status, send_bo
 from tncli.modules.utils.system.project import check_for_needed_files_to_deploy
 from tncli.modules.utils.lite_client.lite_client import LiteClient
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -20,83 +21,118 @@ rs = Style.RESET_ALL
 class AbstractDeployer:
     def __init__(self):
         self.update_config: bool = False
-        self.address: str = ""
+        self.addresses: List[str] = [""]
         self.network: str = ""
         self.workchain: int = 0
         self.project_root: str = ""
+        self.project_config: ProjectConf = ...
 
-    def get_status(self) -> Tuple[float, bool]:
+    def get_status(self) -> List[Tuple[float, bool]]:
         """Get balance and inited state for Contract"""
-        return get_account_status(self.network, self.address, update_config=self.update_config, cwd=self.project_root)
+        statuses = []
 
-    def deploy(self):
+        for address in self.addresses:
+            statuses.append(
+                get_account_status(self.network, address[1],
+                                   update_config=self.update_config,
+                                   cwd=self.project_root))
+        return statuses
+
+    def deploy(self, contracts: List[TonProjectConfig] = None):
         """Deploy Contract"""
+        if not contracts:
+            contracts = self.project_config.contracts
 
-        deploy_boc = send_boc(self.network, f'{self.project_root}/build/boc/contract-create.boc', cwd=self.project_root,
-                              update_config=self.update_config, get_output=True)
+        statuses = self.get_status()
 
-        if 'error' in deploy_boc:
-            logger.error("🥵 Can't deploy boc...")
-            logger.error(deploy_boc)
-            sys.exit()
+        for contract, (_, is_inited) in zip(contracts, statuses):
+            if not is_inited:
+                deploy_boc = send_boc(self.network, contract.boc, cwd=self.project_root,
+                                      update_config=self.update_config, get_output=True)
 
-    def build(self):
+                if 'error' in deploy_boc:
+                    logger.error("🥵 Can't deploy boc...")
+                    logger.error(deploy_boc)
+                    sys.exit()
+            else:
+                logger.warning(f"🥰 Contract [{gr}{contract.name}{rs}] is already inited, pass")
+
+    def build(self, contracts: List[TonProjectConfig] = None):
         """Generate BOC of external message for project"""
-        return contract_manipulation(f"{self.project_root}/build/code.fif",
-                                     f"{self.project_root}/fift/data.fif",
-                                     self.workchain, cwd=self.project_root)
 
-    def get_address(self):
+        if not contracts:
+            contracts = self.project_config.contracts
+
+        for contract in contracts:
+            contract_manipulation(contract.to_save_location,
+                                  contract.data,
+                                  self.workchain,
+                                  contract.boc,
+                                  contract.address,
+                                  cwd=self.project_root)
+
+    def get_address(self, contracts: List[TonProjectConfig] = None) -> List[List[str]]:
         """Get addres from address_text generated in contract_manipulation.fif"""
+        if not contracts:
+            contracts = self.project_config.contracts
 
-        # TODO: load address from build/contract.addr
-        if not os.path.exists(f"{self.project_root}/build/address_text"):
-            raise ValueError(f"😥 No address_text found in {self.project_root}/build/address_text")
+        addresses = []
 
-        with open(f"{self.project_root}/build/address_text") as f:
-            address_text = f.read().split()
+        for contract in contracts:
+            # TODO: load address from build/contract.addr
+            if not os.path.exists(contract.address):
+                raise ValueError(f"😥 No address_text found in {contract.address}")
 
-            if len(address_text) != 3:
-                raise ValueError(f"😥 Strange data in {self.project_root}/build/address_text")
+            with open(contract.address) as f:
+                address_text = f.read().split()
 
-        return address_text
+                if len(address_text) != 3:
+                    raise ValueError(f"😥 Strange data in {contract.address}")
+                addresses.append(address_text)
 
-    def compile_func(self):
+        return addresses
+
+    def compile_func(self, contracts: List[TonProjectConfig] = None):
         """Compile func to code.fif"""
-
         # Build code
-        fift_build(f"{self.project_root}/func/",
-                   f"{self.project_root}/build/code.fif", cwd=self.project_root)
+        fift_build(self.project_root, cwd=self.project_root, contracts=contracts)
 
-    def run_tests(self):
-        # Run tests
-        # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
-        test_fift(fift_files_locations=[f"{self.project_root}/fift/data.fif"],
-                  test_file_path=f"{project_root}/modules/fift/run_test.fif",
-                  cwd=self.project_root)
+    def run_tests(self, contracts: List[TonProjectConfig]):
+        if not contracts:
+            contracts = self.project_config.contracts
+
+        for contract in contracts:
+            # Run tests
+            # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
+            test_fift(fift_files_locations=[contract.data],
+                      test_file_path=f"{project_root}/modules/fift/run_test.fif",
+                      cwd=self.project_root)
 
     def check_for_needed_files_to_deploy(self) -> bool:
         """Check if current root is project root"""
         return check_for_needed_files_to_deploy(self.project_root, True)
 
-    def get_seqno(self) -> int:
+    def get_seqno(self) -> List[int]:
         """Run runmethod on lite-client and parse seqno from answer"""
 
-        lite_client = LiteClient('runmethod', args=[self.address, 'seqno'], kwargs={'lite_client_args': '-v 0',
-                                                                                    'net': self.network,
-                                                                                    'update': False},
-                                 get_output=True)
-        output = lite_client.run()
+        seqnos = []
+        for address in self.addresses:
+            lite_client = LiteClient('runmethod', args=[address[1], 'seqno'], kwargs={'lite_client_args': '-v 0',
+                                                                                      'net': self.network,
+                                                                                      'update': False},
+                                     get_output=True)
+            output = lite_client.run()
 
-        if output:
-            output = output.decode()
+            if output:
+                output = output.decode()
 
-        if not output or 'result' not in output:
-            logger.error("👻 There is a problem when trying to get seqno of wallet")
-            logger.error("".join(output if output else "No output"))
-            sys.exit()
+            if not output or 'result' not in output:
+                logger.error("👻 There is a problem when trying to get seqno of wallet")
+                logger.error("".join(output if output else "No output"))
+                sys.exit()
 
-        output = output.split('\n')[-3]
-        output = int(output[11:-2])
+            output = output.split('\n')[-3]
+            output = int(output[11:-2])
+            seqnos.append(output)
 
-        return output
+        return seqnos

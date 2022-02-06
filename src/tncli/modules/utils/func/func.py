@@ -73,11 +73,10 @@ class Func:
                     f"🤟 It is not project root [{bl}{os.getcwd()}{rs}] - I can't build project without project")
                 sys.exit()
 
-            to_save_location = f"{os.getcwd()}/build/code.fif"
-            self.args = [f"{os.getcwd()}/func/"]
+            to_save_location = f"{os.getcwd()}/build"
 
             # Build code
-            fift_build(self.args[0],
+            fift_build(os.getcwd(),
                        to_save_location, cwd=os.getcwd())
 
         build = [i.replace(os.getcwd(), '') for i in self.args]

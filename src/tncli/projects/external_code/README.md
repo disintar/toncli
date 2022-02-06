@@ -12,10 +12,9 @@ This example is not easy to understand, it's only for pro usage of ton features.
 1. Create and deploy wallet (`tncli start wallet && cd wallet && tncli deploy`)
 2. Copy private key of wallet to build folder of this project `cp wallet/build/contract.pk build/`
 3. Save contract data to this project
-   1. `tncli lc saveaccountdata ./build/boc/c4.boc <wallet>` save account data to
+   1. `tncli lc saveaccountdata ./build/boc/c4.boc <smc_address>` save account data to
      boc
-   2. `tncli lc saveaccountcode ./build/boc/c3.boc <wallet>` save account code to
+   2. `tncli lc saveaccountcode ./build/boc/c3.boc <smc_address>` save account code to
   boc
-   3. `tncli lc saveconfig ./build/boc/config.boc` save network config
 4. Run `recv_external` locally: `tncli run fift/load_c3_and_c4.fif`
 

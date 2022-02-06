@@ -4,8 +4,13 @@
  B>boc // deserializes bag of cells
  constant storage // save as storage
 
-"build/code.fif" include constant code
-"build/boc/config.boc" file>B B>boc constant global_config
+"build/contract.fif" include constant code
+
+// You can do in bash: tncli lc saveconfig ./build/boc/config.boc
+// Ad comment null, and uncomment next line
+// "build/boc/config.boc" file>B B>boc
+// To use network config
+null constant global_config
 
 0x076ef1ea           // magic
 0                    // actions

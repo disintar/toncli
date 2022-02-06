@@ -8,6 +8,8 @@ from tncli.modules.projects import ProjectBootstrapper
 from tncli.modules.utils.system.conf import config_folder
 from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.fift.fift import Fift
+from tncli.modules.utils.system.project import migrate_project_struction
+from tncli.modules.utils.system.project_conf import ProjectConf
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -24,6 +26,12 @@ class DeployWalletContract(AbstractDeployer):
         self.network = network
         self.workchain = workchain
         self.project_root = f"{config_folder}/wallet"
+
+        # If files.yaml in func folder - it's older version of project structure, so migrate
+        if os.path.exists(f"{self.project_root}/func/files.yaml"):
+            migrate_project_struction('0.0.14', self.project_root)
+
+        self.project_config = ProjectConf(self.project_root)
 
         # We need to check if wallet for deploying is exist
         if 'wallet' not in os.listdir(config_folder):
@@ -53,25 +61,23 @@ class DeployWalletContract(AbstractDeployer):
 
                 sys.exit()
         else:
-            address_text = self.get_address()
-            self.address = address_text[1]
-            balance, is_inited = self.get_status()
+            self.addresses = self.get_address()
+            balance, is_inited = self.get_status()[0]
 
             logger.info(
-                f"🦘 Found existing deploy-wallet [{gr}{address_text[1]}{rs}] (Balance: {balance}💎, "
+                f"🦘 Found existing deploy-wallet [{gr}{self.addresses[0][1]}{rs}] (Balance: {balance}💎, "
                 f"Is inited: {is_inited}) in {config_folder}")
-            self.address = address_text[1]
 
     def send_ton(self, address: str, amount: float, quiet: bool = False):
         """Send ton to some address from DeployWallet"""
-        balance, is_inited = self.get_status()
+        balance, is_inited = self.get_status()[0]
 
         if balance < amount or not is_inited:
             logger.error(
                 f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
 
-        seqno = self.get_seqno()
+        seqno = self.get_seqno()[0]
         args = [f'{self.project_root}/fift/usage.fif', 'build/contract', address, '0', str(seqno), str(amount),
                 "--no-bounce"]
 

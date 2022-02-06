@@ -82,7 +82,7 @@ All commands can be found in https://github.com/disintar/tncli/blob/master/docs/
 {rs}
 Each command have help e.g.: tncli deploy -h
 
-Credits: disintar.io team
+Credits: {gr}disintar.io{rs} team
 '''
 
     # TODO: add logging verbose
@@ -214,6 +214,9 @@ Credits: disintar.io team
     elif command in ['func', 'fc', 'build']:
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['func', *kwargs])
+    elif command == 'deploy':
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
+        args = parser.parse_args(['deploy', *kwargs])
     # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
         process_build_cli_lib_command(sys.argv[2:])
@@ -234,7 +237,9 @@ Credits: disintar.io team
 
     elif command == 'deploy':
         deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
-        deployer.publish()
+        real_args, _ = argv_fix(sys.argv, string_kwargs)
+
+        deployer.publish(real_args)
 
     elif command in ['fift', 'f', 'run']:
         # get real args
