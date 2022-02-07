@@ -76,8 +76,7 @@ class Func:
             to_save_location = f"{os.getcwd()}/build"
 
             # Build code
-            fift_build(os.getcwd(),
-                       to_save_location, cwd=os.getcwd())
+            fift_build(os.getcwd(), cwd=os.getcwd())
 
         build = [i.replace(os.getcwd(), '') for i in self.args]
         location = to_save_location.replace(os.getcwd(), '')

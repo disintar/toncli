@@ -37,7 +37,6 @@ class ProjectConf:
 
         for contract in func_configuration:
             contract_config = func_configuration[contract]
-
             func_files_locations = [f"{project_root}/{file_path}" for file_path in contract_config['func']]
 
             self.contracts.append(TonProjectConfig(**{
@@ -46,5 +45,5 @@ class ProjectConf:
                 'boc': f"{project_root}/build/boc/{contract}.boc",
                 'address': f"{project_root}/build/{contract}_address",
                 'to_save_location': f"{project_root}/build/{contract}.fif",
-                'data': f"{project_root}/{contract_config['data']}"
+                'data': f"{project_root}/{contract_config['data']}" if 'data' in contract_config else ""
             }))

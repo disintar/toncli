@@ -1,0 +1,3 @@
+contract:
+  func:
+    - func/code.fc
