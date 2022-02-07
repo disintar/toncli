@@ -46,3 +46,16 @@ class LiteClient:
         else:
             output = subprocess.check_output(command)
             return output
+
+    def run_safe(self):
+        output = self.run()
+
+        if output:
+            output = output.decode()
+
+        if not output or 'result' not in output:
+            logger.error("👻 There is a problem when trying to run get method of contract")
+            logger.error("".join(output if output else "No output"))
+            sys.exit()
+
+        return output

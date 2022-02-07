@@ -39,3 +39,11 @@ int get_public_key() method_id {
     cs~load_uint(64);
     return cs.preload_uint(256);
 }
+
+int hello_world() method_id {
+ ;; Ok now you need to add integer of your text
+ ;; But soon TON Foundation will add string literals to func
+ ;; And you will not need to do this
+ ;; hi as integer, try tncli tointeger hi
+ return 26729;
+}

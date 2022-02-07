@@ -57,6 +57,7 @@ Command list, e.g. usage: tncli start wallet
 {gr}   external_code - create external code usage example
 
 {bl}deploy - deploy current project to blockchain
+{bl}get - run get method on contract
 
 {bl}fift / f - interact with fift :)
 {gr}   interactive - default, run interactive fift
@@ -76,6 +77,7 @@ Command list, e.g. usage: tncli start wallet
 {gr}   All other commands will pass to func
 
 {bl}wallet - interact with deploy-wallet
+{bl}tointeger - parse string to integer to pass to contract in func
 
 All commands can be found in https://github.com/disintar/tncli/blob/master/docs/commands.md
 
@@ -93,6 +95,10 @@ Credits: {gr}disintar.io{rs} team
 
     subparser = parser.add_subparsers()
 
+    #
+    # START
+    #
+
     parser_project = subparser.add_parser('start',
                                           description='Create new project structure based on example project')
     parser_project.add_argument('project', choices=['wallet', 'external_data', 'external_code'],
@@ -100,12 +106,33 @@ Credits: {gr}disintar.io{rs} team
 
     parser_project.add_argument("--name", "-n", default=None, type=str, help='New project folder name')
 
+    #
+    # DEPLOY
+    #
+
     parser_deploy = subparser.add_parser('deploy', description='Deploy project to blockchain')
     parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
                                help='Network to deploy')
     parser_deploy.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_deploy.add_argument("--ton", "-t", default=0.05, type=int, help='How much TON will be sent to new contract')
     parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
+
+    #
+    # get
+    #
+
+    parser_get = subparser.add_parser('get', description='Deploy project to blockchain')
+    parser_get.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+                            help='Network to deploy')
+    parser_get.add_argument("--update", action='store_true', help='Update cached configs of net')
+    parser_get.add_argument("--contracts", "-c", type=str,
+                            help='Set contract name from project.yaml to run getmethod on')
+
+    #
+    # tohex
+    #
+
+    subparser.add_parser('tointeger', description='Encode string to hex, than to integer')
 
     #
     # shortcuts
@@ -217,6 +244,14 @@ Credits: {gr}disintar.io{rs} team
     elif command == 'deploy':
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['deploy', *kwargs])
+    elif command == 'get':
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
+        args = parser.parse_args(['get', *kwargs])
+    elif command == 'tointeger':
+        args, _ = argv_fix(sys.argv, string_kwargs)
+        string_to_encode = " ".join(args[2:])
+        logger.info(f"👻  Your string: {int(string_to_encode.encode().hex(), 16)}")
+        sys.exit()
     # Parse specific build-cli-lib
     elif command == 'build-cli-lib':
         process_build_cli_lib_command(sys.argv[2:])
@@ -240,6 +275,11 @@ Credits: {gr}disintar.io{rs} team
         real_args, _ = argv_fix(sys.argv, string_kwargs)
 
         deployer.publish(real_args[2:])
+
+    elif command == 'get':
+        deployer = ContractDeployer(network=args.net, update_config=args.update)
+        real_args, kwargs = argv_fix(sys.argv, string_kwargs)
+        deployer.get(real_args[2:], args)
 
     elif command in ['fift', 'f', 'run']:
         # get real args

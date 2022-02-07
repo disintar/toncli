@@ -156,6 +156,8 @@ class AbstractDeployer:
             if is_deployed != len(contracts):
                 print("\r", current_text_status[is_deployed], end='')
                 sleep(1)
+            else:
+                print("\r", current_text_status[is_deployed - 1], end='')
         print()  # add new line at the end
         logger.info(
             "🙀 All contracts successfully deployed!" if not only_balance else "🙀 All contracts now with non-zero balance")
@@ -169,15 +171,7 @@ class AbstractDeployer:
                                                                                       'net': self.network,
                                                                                       'update': False},
                                      get_output=True)
-            output = lite_client.run()
-
-            if output:
-                output = output.decode()
-
-            if not output or 'result' not in output:
-                logger.error("👻 There is a problem when trying to get seqno of wallet")
-                logger.error("".join(output if output else "No output"))
-                sys.exit()
+            output = lite_client.run_safe()
 
             output = output.split('\n')[-3]
             output = int(output[11:-2])

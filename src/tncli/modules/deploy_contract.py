@@ -1,7 +1,8 @@
 import os
 import sys
 import time
-from typing import List
+from argparse import Namespace
+from typing import List, Dict
 
 from colorama import Fore, Style
 
@@ -9,6 +10,7 @@ from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.deploy_wallet_contract import DeployWalletContract
 from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.system.project import migrate_project_struction
+from tncli.modules.utils.lite_client.lite_client import LiteClient
 from tncli.modules.utils.system.project_conf import ProjectConf
 
 gr = Fore.GREEN
@@ -19,7 +21,6 @@ rs = Style.RESET_ALL
 class ContractDeployer(AbstractDeployer):
     def __init__(self, network: str, update_config: bool = False, workchain: int = 0, ton: int = 0.05):
         super().__init__()
-        logger.info(f"🚀 You want to {bl}deploy{rs} your contract to {gr}{network}{rs} - that's grate!")
 
         self.network: str = network
         self.update_config: bool = update_config
@@ -30,6 +31,8 @@ class ContractDeployer(AbstractDeployer):
             migrate_project_struction('0.0.14', self.project_root)
 
         self.project_config = ProjectConf(self.project_root)
+        logger.info(
+            f"🚀 You want to {bl}interact{rs} with your contracts {gr}{[i.name for i in self.project_config.contracts]}{rs} in {gr}{network}{rs} - that's grate!")
         self.ton = ton  # ton to send to smart contract
         self.workchain = workchain  # workchain deploy to
 
@@ -53,6 +56,41 @@ class ContractDeployer(AbstractDeployer):
                 logger.error(
                     "🧓 Deployer contract is not inited yet, please send some TON there and then I can deploy project")
                 sys.exit()
+
+    def get(self, args: List[str], kwargs: Namespace):
+        """Run get methods on contracts"""
+        contracts = kwargs.contracts.split() if kwargs.contracts else None
+        if contracts is not None and len(contracts) > 0:
+            real_contracts = []
+
+            for item in contracts:
+                for config in self.project_config.contracts:
+                    if config.name == item:
+                        real_contracts.append(config)
+        else:
+            real_contracts = self.project_config.contracts
+
+        # Get contracts addresses
+        self.addresses = self.get_address(real_contracts)
+
+        for address, contract in zip(self.addresses, real_contracts):
+            logger.info(f"👯 [{bl}{contract.name}{rs}] [{gr}{address[1]}{rs}] runmethod {args}")
+            lite_client = LiteClient('runmethod', args=[address[1], *args], kwargs={'lite_client_args': '-v 0',
+                                                                                    'net': self.network,
+                                                                                    'update': self.update_config},
+                                     get_output=True)
+            output = lite_client.run_safe()
+            output = output.split('\n')[-3]
+            output = output[11:-2]
+
+            logger.info(f"🧐 Output: [ {output} ]")
+
+            try:
+                output = int(output)
+                string_output = bytearray.fromhex("{0:x}".format(output)).decode()
+                logger.info(f"🧐 Auto parse sting: [ {string_output} ]")
+            except Exception as e:
+                logger.error(f"🧐 Can't auto parse string")
 
     def publish(self, contracts: List[str] = None):
         """Build, send ton, deploy contract"""
