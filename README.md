@@ -56,19 +56,19 @@ There is many TODOs in code - feel free to fix them and create PRs
 | `fift` / `func` / `lite-server` usage                                                           | ✅      |
 | Easy bootstrap project samples `wallet`                                                         | ✅      |
 | Deploy-wallet for auto send TON to contracts and tests                                          | ✅      |
-| Add more project samples with advanced usage                                                    | ❌      |
 | Compile func to `build/` from `func/` with `files.yaml`                                         | ✅      |
-| Get contract address by `tncli address`                                                         | ❌      |
-| Auto send TON to init contract address                                                          | ❌      |
+| Auto send TON to init contract address                                                          | ✅      |
 | Deploy to mainnet / testnet                                                                     | ✅      |
-| Project interact after deploy: easily send messages, run getmethods                             | ❌      |
-| Gas auto calculation for store & deploy                                                         | ❌      |
+| Project interact after deploy: easily send messages, run getmethods                             | ✅      |
 | Load from hard project structure (example: `src/projects/wallet`)                               | ✅      |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅      |
+| Get contract address by `tncli address`                                                         | ❌      |
+| Gas auto calculation for store & deploy                                                         | ❌      |
+| Add more project samples with advanced usage                                                    | ❌      |
 | Project tests with `runvmcode`                                                                  | ❌      |
 | Project debug                                                                                   | ❌      |
 | Library support                                                                                 | ❌      |
 | Init Message support  (with signature)                                                          | ❌      |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ❌      |
 | Docs for contract creation for beginners                                                        | ❌      |
 | Advanced user-friendly docs on `fift`, `func`                                                   | ❌      |
 
