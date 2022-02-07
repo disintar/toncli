@@ -19,7 +19,7 @@
 
 - [x] Run `getmethod` on contract without need to pass contract addr (with support of multiple contracts)
 - [ ] Send `exteranal_message` to contract without need to provide wrapper of `external_message`, just pass body bytes (with support of multiple contracts)
-- [ ]  Add local debug of external messages problem: pass lt hash addr, start `external_code` and receive real error in
+- [x]  Add local debug of external messages problem: pass lt hash addr, start `external_code` and receive real error in
   stack
 - [ ] Add `func` tests (with support of multiple contracts)
 

@@ -12,6 +12,7 @@ from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from tncli.modules.utils.fift.fift import Fift
 from tncli.modules.utils.lite_client.lite_client import LiteClient
+from tncli.modules.utils.toncenter import run_transaction
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -58,6 +59,7 @@ Command list, e.g. usage: tncli start wallet
 
 {bl}deploy - deploy current project to blockchain
 {bl}get - run get method on contract
+{bl}run_transaction - run remote transaction locally
 
 {bl}fift / f - interact with fift :)
 {gr}   interactive - default, run interactive fift
@@ -86,6 +88,9 @@ Each command have help e.g.: tncli deploy -h
 
 Credits: {gr}disintar.io{rs} team
 '''
+    # This is concept of nft https://disintar.io
+    # Nft information parse will be added in next versions of CLI
+    print("disintar.io NFT owners today say: 🙈 🙉 🙊")
 
     # TODO: add logging verbose
 
@@ -114,7 +119,8 @@ Credits: {gr}disintar.io{rs} team
     parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
                                help='Network to deploy')
     parser_deploy.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
-    parser_deploy.add_argument("--ton", "-t", default=0.05, type=int, help='How much TON will be sent to new contract')
+    parser_deploy.add_argument("--ton", "-t", default=0.05, type=float,
+                               help='How much TON will be sent to new contract')
     parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
 
     #
@@ -129,10 +135,23 @@ Credits: {gr}disintar.io{rs} team
                             help='Set contract name from project.yaml to run getmethod on')
 
     #
-    # tohex
+    # tointeger
     #
 
     subparser.add_parser('tointeger', description='Encode string to hex, than to integer')
+
+    #
+    # run_transaction
+    #
+
+    parser_run_transaction = subparser.add_parser('run_transaction',
+                                                description='Message debug - by lt / transaction hash / smart contract address'
+                                                            ' - run message locally and get stack error')
+    parser_run_transaction.add_argument("logical_time", type=str)
+    parser_run_transaction.add_argument("transaction_hash", type=str)
+    parser_run_transaction.add_argument("smc_address", type=str)
+    parser_run_transaction.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+                            help='Network to run transaction')
 
     #
     # shortcuts
@@ -226,7 +245,7 @@ Credits: {gr}disintar.io{rs} team
             arguments = choices[choice]._option_string_actions
 
             for key in arguments:
-                if arguments[key].type == str or arguments[key].type == int:
+                if arguments[key].type in [str, int, float]:
                     string_kwargs.append(key)
 
     # wtf I need to do this, need to change!
@@ -280,6 +299,10 @@ Credits: {gr}disintar.io{rs} team
         deployer = ContractDeployer(network=args.net, update_config=args.update)
         real_args, kwargs = argv_fix(sys.argv, string_kwargs)
         deployer.get(real_args[2:], args)
+
+    elif command == 'run_transaction':
+        run_transaction(args.net, args.smc_address, args.logical_time, args.transaction_hash)
+        sys.exit()
 
     elif command in ['fift', 'f', 'run']:
         # get real args

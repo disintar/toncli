@@ -51,12 +51,24 @@ config_file = f"{config_folder}/config.ini"
 config = configparser.ConfigParser()
 config.read(config_file)
 
+if 'toncenter_mainnet' not in config['DEFAULT'] or 'toncenter_testnet' not in config['DEFAULT']:
+    config['DEFAULT']['toncenter_mainnet'] = 'https://toncenter.com/api/v2'
+    config['DEFAULT']['toncenter_testnet'] = 'https://testnet.toncenter.com/api/v2'
+
+    with open(config_file, 'w') as config_f:
+        config.write(config_f)
+
 main_config = config['DEFAULT']
 
 # URI to get config from
 config_uri = {
     'testnet': main_config.get('testnet'),
     'mainnet': main_config.get('mainnet')
+}
+
+toncenter = {
+    'mainnet': main_config.get('toncenter_mainnet'),
+    'testnet': main_config.get('toncenter_testnet'),
 }
 
 # Here we need to correctly define executable path

@@ -54,16 +54,19 @@ def lite_client_execute_command(network: str, args: List[str], update_config=Fal
 
 
 def get_account_status(network: str, address: str, cwd: Optional[str] = None,
-                       update_config: bool = False) -> Tuple[float, bool]:
+                       update_config: bool = False, block_id_ext: str = None) -> Tuple[float, bool]:
     """
     Get balance and inited / uninited status
 
+    :param block_id_ext: Block to get status from
+    :param update_config: Update config
     :param network: Account network
     :param address: Account address
     :param cwd: Optional path to run lite-client
     :return: balance, is_inited
     """
-    command = lite_client_execute_command(network, ['-v', '0', '-c', f'getaccount {address}'],
+    command = lite_client_execute_command(network, ['-v', '0', '-c',
+                                                    f'getaccount {address} {block_id_ext if block_id_ext else ""}'],
                                           update_config=update_config)
     account_info = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
     account_info = account_info.decode()
