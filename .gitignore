@@ -143,4 +143,4 @@ dmypy.json
 cython_debug/
 
 .idea/
-/src/tncli/projects/external_code/build/contract.pk
+/src/toncli/projects/external_code/build/contract.pk

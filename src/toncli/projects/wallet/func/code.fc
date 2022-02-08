@@ -1,0 +1,69 @@
+;; Simple wallet smart contract
+
+() recv_internal(slice in_msg) impure {
+    ;; do nothing for internal messages
+}
+
+() recv_external(slice in_msg) impure {
+    var signature = in_msg~load_bits(512);
+    var cs = in_msg;
+    var (subwallet_id, valid_until, msg_seqno) = (cs~load_uint(32), cs~load_uint(32), cs~load_uint(32));
+    throw_if(35, valid_until <= now());
+    var ds = get_data().begin_parse();
+    var (stored_seqno, stored_subwallet, public_key) = (ds~load_uint(32), ds~load_uint(32), ds~load_uint(256));
+    ds.end_parse();
+    throw_unless(33, msg_seqno == stored_seqno);
+    throw_unless(34, subwallet_id == stored_subwallet);
+    throw_unless(35, check_signature(slice_hash(in_msg), signature, public_key));
+    accept_message();
+    cs~touch();
+
+    while (cs.slice_refs()) {
+        var mode = cs~load_uint(8);
+        send_raw_message(cs~load_ref(), mode);
+    }
+
+    set_data(begin_cell()
+    .store_uint(stored_seqno + 1, 32)
+    .store_uint(stored_subwallet, 32)
+    .store_uint(public_key, 256)
+    .end_cell());
+}
+
+;; Get methods
+
+int seqno() method_id {
+    return get_data().begin_parse().preload_uint(32);
+}
+
+int get_public_key() method_id {
+    var cs = get_data().begin_parse();
+    cs~load_uint(64);
+    return cs.preload_uint(256);
+}
+
+int hello_world() method_id {
+    ;; Ok now you need to add integer of your text
+    ;; But soon TON Foundation will add string literals to func
+    ;; And you will not need to do this
+    ;; hi as integer, try toncli tointeger hi
+    return 26729;
+}
+
+(int, cell) get_hi_from_cell() method_id {
+    ;; This is for example of tnlci get --fift usage
+    ;; We will return cell here, and it will be loaded in our fift script
+    ;; So we can do something intresting with it
+
+    int seqno = get_data().begin_parse().preload_uint(32);
+
+    cell test_inside = begin_cell()
+                    .store_uint(26729, 64) ;; set hi to ref cell to test toncli works with refs in get methods
+                    .end_cell();
+
+    return (seqno, begin_cell()
+                        .store_uint(seqno, 32)
+                        .store_ref(test_inside)
+                        .end_cell());
+}
+

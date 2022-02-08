@@ -28,4 +28,4 @@ If building was successful, needed binary files will be in their directories:
 2. fift: `build/crypto/fift`
 3. lite-client `build/lite-client/lite-client`
 
-You can link or copy them to `/usr/local/bin` and tncli will find them automatically
+You can link or copy them to `/usr/local/bin` and toncli will find them automatically

@@ -1,0 +1,33 @@
+"Color.fif" include
+
+"build/boc/c4.boc" file>B // load file to bytes
+ B>boc // deserializes bag of cells
+ constant storage // save as storage
+
+"build/contract.fif" include constant code
+
+// You can do in bash: toncli lc saveconfig ./build/boc/config.boc
+// Ad comment null, and uncomment next line
+// "build/boc/config.boc" file>B B>boc
+// To use network config
+null constant global_config
+
+0x076ef1ea           // magic
+0                    // actions
+0                    // msgs_sent
+1637535065           // unixtime
+1                    // block_lt
+1                    // trans_lt
+239                  // randseed
+1000000000 null pair // balance_remaining
+null                 // myself
+global_config        // global_config
+10 tuple 1 tuple constant c7 // save as c7 cell
+
+0 // function selector
+code <s // load func code as slice
+storage // add c4 cell lodaded from lite-client
+c7 // add c7 cell
+runvmctx 2drop // Runvm, in stack now seqno
+
+."🙀 Seqno of wallet: " ^green .s ^reset // print seqno
