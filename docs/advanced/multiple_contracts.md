@@ -1,6 +1,6 @@
 ## So I want to manage many smart contracts and have them all in one project
 
-`tncli` support multiple smart contracts structure.
+`toncli` support multiple smart contracts structure.
 
 I'll try to explain it on `wallet` example:
 

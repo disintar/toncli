@@ -4,7 +4,7 @@ Answer is - no way. But you can use `toncli` to do it for you.
 
 For example - the basic example of wallet use `wallet.fif` to generate `boc` files, then they will be pushed to network with lite-client.
 
-In `wallet` example you ccan find `fift/usage.fif` file. This is `wallet.fif` but we added one feature there. 
+In `wallet` example you can find `fift/usage.fif` file. This is `wallet.fif` but we added one feature there. 
 
 You can see that last line is `saveboc`. It's needed for saving `boc` file in `build/boc` location (or `/tmp` if you run command not in project root) and then our CLI tool can catch it and send to network.
 

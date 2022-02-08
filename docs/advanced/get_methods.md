@@ -12,9 +12,9 @@ int hello_world() method_id {
 }
 ```
 
-So this is method from quick start guide and you can easily get this message by running `tncli get hello_world`
+So this is method from quick start guide and you can easily get this message by running `toncli get hello_world`
 
-But sometimes it's necessary to run custom code upon get message output. `tncli` provides interface for it. 
+But sometimes it's necessary to run custom code upon get message output. `toncli` provides interface for it. 
 
 Let's say we have get method that returned cell:
 

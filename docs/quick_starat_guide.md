@@ -48,7 +48,6 @@ To call a GET method of your contract you can use this command:
 `toncli get hello_world` in the directory of your contract, where hello world is the name of a GET method
 
 ## Other types of projects
-
 1. External data
     1. To use this function you need to run `toncli start external_data`
     2. It loads data of another smart-contract

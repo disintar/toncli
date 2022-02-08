@@ -1,4 +1,4 @@
-## How to debug transactions with tncli?
+## How to debug transactions with toncli?
 
 Sometimes when you send your message to network - it's not working like you planned. So what you can do?
 
@@ -6,6 +6,8 @@ First of all - you need to find out 3 constants. Lt (logical_time), transaction 
 you send this transaction. Those constants could be found in any ton scaner.
 
 Tncli provides ease to use command:
+
+`!WARNING!` Before running this command you should run `toncli deploy...` once to create wallet config.
 
 `usage: toncli run_transaction [-h] [--net {testnet,mainnet}] [--function FUNCTION] [--save SAVE] logical_time transaction_hash smc_address
 `
