@@ -1,0 +1,55 @@
+"Color.fif" include
+"TonUtil.fif" include
+
+"build/boc/c4.boc" file>B // load file to bytes
+ B>boc // deserializes bag of cells
+ constant storage // save as storage
+
+"build/boc/c3.boc" file>B // load file to bytes
+ B>boc // deserializes bag of cells
+ constant code // save as code
+
+// You can do in bash: toncli lc saveconfig ./build/boc/config.boc
+// Ad comment null, and uncomment next line
+// "build/boc/config.boc" file>B B>boc
+// To use network config
+null constant global_config
+
+"build/contract.pk" load-keypair nip constant wallet_pk
+
+0x076ef1ea           // magic
+0                    // actions
+0                    // msgs_sent
+now                  // unixtime
+1                    // block_lt
+1                    // trans_lt
+239                  // randseed
+1000000000 null pair // balance_remaining
+null                 // myself
+global_config        // global_config
+10 tuple 1 tuple constant c7 // save as c7 cell
+
+0 =: subwallet_id // subwalet id
+0 =: seqno // seqno
+3 =: send-mode  // mode for SENDRAWMSG: +1 - sender pays fees, +2 - ignore errors
+60 =: timeout   // external message expires in 60 seconds
+"" =: comment // comment
+
+// cell to recv_external
+<b subwallet_id 32 u,
+   now timeout + 32 u,
+   seqno 32 u,
+   send-mode 8 u,
+   <b b{0} s, b> ref, // here we will store cell that will be sended in wallet v3
+b> constant recv_external
+
+recv_external hashu wallet_pk ed25519_sign_uint constant recv_external_sign // create signature of first bits
+
+<b  recv_external_sign B,
+    recv_external <s s,
+b> <s
+-1 // function selector
+code <s // load func code as slice
+storage // add c4 cell lodaded from lite-client
+c7 // add c7 cell
+runvmctx 2drop // Runvm, in stack now seqno

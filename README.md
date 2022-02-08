@@ -1,18 +1,18 @@
 <p align="center">
    <a href="https://disintar.io/">
        <img
-        src="https://raw.githubusercontent.com/disintar/tncli/master/docs/images/logo.png"
+        src="https://raw.githubusercontent.com/disintar/toncli/master/docs/images/logo.png"
         alt="Superset"
         height="150"
       />
    </a>
 </p>
 
-# Tncli
+# toncli
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI version](https://badge.fury.io/py/tncli.svg)](https://github.com/disintar/tncli)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/tncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/tncli&amp;utm_campaign=Badge_Grade)
+[![PyPI version](https://badge.fury.io/py/toncli.svg)](https://github.com/disintar/toncli)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/toncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/toncli&amp;utm_campaign=Badge_Grade)
 [![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
 TON smart contract command line interface
@@ -23,19 +23,24 @@ Not working, in active development
 
 ## Installation and Configuration
 
-1. Compile `fift`, `func`, `lite-client` from [ton](https://github.com/newton-blockchain/ton) and add them to `PATH` env
-   or move to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
+1. Compile `fift`, `func`, `lite-client` from [TON](https://github.com/newton-blockchain/ton)
     1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
-2. `pip install tncli`
+    2. For Apple computers on M1 we have a guide "How to compile them from official repo" [Apple M1 Guide](./docs/apple_m1_compile_fix.md)
+2. Add these 3 packages to `PATH` env-variable
+   or move them to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
+   1. `cp bild/crypto/fift /usr/bin/`
+   2. `cp bild/crypto/func /usr/bin/`
+   3. `cp bild/lite-client/lite-client /usr/bin/`
+3. `pip install toncli`
 
-Now you can access `CLI` tool by typing in terminal `tncli`
+Now you can access `CLI` tool by typing in terminal `toncli`
 
 ### Usage example
 
 ```
-tncli start wallet -n my-wallet
+toncli start wallet -n my-wallet
 cd my-wallet
-tncli deploy
+toncli deploy
 ```
 
 ## Contributor Guide
@@ -55,25 +60,25 @@ There is many TODOs in code - feel free to fix them and create PRs
 | `fift` / `func` / `lite-server` usage                                                           | ✅      |
 | Easy bootstrap project samples `wallet`                                                         | ✅      |
 | Deploy-wallet for auto send TON to contracts and tests                                          | ✅      |
-| Add more project samples with advanced usage                                                    | ❌      |
 | Compile func to `build/` from `func/` with `files.yaml`                                         | ✅      |
-| Get contract address by `tncli address`                                                         | ❌      |
-| Auto send TON to init contract address                                                          | ❌      |
+| Auto send TON to init contract address                                                          | ✅      |
 | Deploy to mainnet / testnet                                                                     | ✅      |
-| Project interact after deploy: easily send messages, run getmethods                             | ❌      |
-| Gas auto calculation for store & deploy                                                         | ❌      |
+| Project interact after deploy: easily send messages, run getmethods                             | ✅      |
 | Load from hard project structure (example: `src/projects/wallet`)                               | ✅      |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅      |
+| Get contract address by `toncli address`                                                         | ❌      |
+| Gas auto calculation for store & deploy                                                         | ❌      |
+| Add more project samples with advanced usage                                                    | ❌      |
 | Project tests with `runvmcode`                                                                  | ❌      |
 | Project debug                                                                                   | ❌      |
 | Library support                                                                                 | ❌      |
 | Init Message support  (with signature)                                                          | ❌      |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ❌      |
 | Docs for contract creation for beginners                                                        | ❌      |
 | Advanced user-friendly docs on `fift`, `func`                                                   | ❌      |
 
 ## Commands
 
-All commands could be fined in [docs/commands.md](https://github.com/disintar/tncli/blob/master/docs/commands.md)
+All commands could be fined in [docs/commands.md](https://github.com/disintar/toncli/blob/master/docs/commands.md)
 
 ### Configuration
 
@@ -103,7 +108,7 @@ created
 ## Development
 
 ```
-git clone git@github.com:disintar/tncli.git
-cd tncli && pip install -e .
+git clone git@github.com:disintar/toncli.git
+cd toncli && pip install -e .
 ```
 

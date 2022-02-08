@@ -7,17 +7,17 @@ with open("requirements.txt", encoding="utf-8") as fh:
     install_requires = fh.read().split('\n')
 
 setuptools.setup(
-    name="tncli",
-    version="0.0.14",
+    name="toncli",
+    version="0.0.16",
     author="Andrey Tvorozhkov",
     author_email="andrey@head-labs.com",
     description="Easy to use CLI for fift / func projects",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/disintar/tncli",
+    url="https://github.com/disintar/toncli",
     include_package_data=True,
     project_urls={
-        "Bug Tracker": "https://github.com/disintar/tncli/issues",
+        "Bug Tracker": "https://github.com/disintar/toncli/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -31,7 +31,7 @@ setuptools.setup(
     python_requires=">=3.8",
     entry_points={
         'console_scripts': [
-            'tncli = tncli.main:main',
+            'toncli = toncli.main:main',
         ],
     }
 )

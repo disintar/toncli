@@ -1,0 +1,11 @@
+"Asm.fif" include
+// automatically generated from `/home/tvorogme/.config/toncli/func-libs/stdlib.fc` `/home/tvorogme/projects/toncli/src/projects/external_data/func//code.fc`
+PROGRAM{
+  DECLPROC main
+  main PROC:<{
+    // 
+    c4 PUSH	//  _0
+    CTOS	//  _1
+    32 PLDU	//  _3
+  }>
+}END>c

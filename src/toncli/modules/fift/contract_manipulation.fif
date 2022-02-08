@@ -1,0 +1,71 @@
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"Color.fif" include
+
+// todo: use GetOpt.fif
+// define usage comment
+{ ."usage: " $0 type ." code-path data-path workchain boc-path address-path [lib-path]" cr
+."Generate init message and and calculate wallet address" cr 1 halt } : usage
+
+// if less then 5 arguments print usage message
+$# 5 < ' usage if
+
+// load at least 2 command line arguments
+5 :$1..n
+
+// load code path from command line
+$1 constant code-path
+
+// load lib path from command line, if no lib provided - set it to null
+$2 constant data-path
+$3 parse-workchain-id =: wc
+$4 constant output_boc
+$5 constant output_address
+
+// It's trick from https://t.me/tonsc_chat/949
+<{ SETCP0 ACCEPT
+   code-path include PUSHREF SETCODE
+}>c constant code
+data-path include constant data
+
+// todo: add library support
+// todo: rewrite with comments
+// ok, it's hard to understand but samples are here:
+// https://gist.github.com/tvorogme/fdb174ac0740b6a52d1dbdf85f4ddc63
+<b b{0011} s, code ref, data ref, null dict, b> constant StateInit
+
+StateInit hashu wc swap 2dup 2constant contract_addr
+2dup "build/contract.addr" save-address
+
+// Create raw address string
+2dup (dump) swap (dump) ":" $+ swap $+ constant raw_address
+
+// Create bounceable_address
+2dup 6 smca>$ constant bounceable_address
+
+// Create Non-bounceable address
+2dup 7 smca>$ constant nonbounceable_address
+
+^magenta ."INFO: 🦄 Raw address: " raw_address type cr
+^green ."INFO: 🦝 Bounceable address: " bounceable_address type cr
+^yellow  ."INFO: 🐏 Non-bounceable address: " nonbounceable_address type cr
+^reset
+
+// Save all addresses to text
+raw_address " " $+
+bounceable_address " " $+ $+
+nonbounceable_address " " $+ $+
+$>B
+output_address B>file
+^green "🖊  Save all addresses to " output_address $+ type cr
+^reset
+
+<b b{1000100} s, contract_addr addr, b{000011} s, StateInit ref, b{0} s, b>
+2 boc+>B
+
+output_boc tuck B>file
+
+^green "🖊  Save boc_file to " output_boc $+ type cr
+^reset
+
