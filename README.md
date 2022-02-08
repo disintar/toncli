@@ -19,29 +19,14 @@ TON smart contract command line interface
 
 ## State
 
-Not working, in active development
+Working!
 
-## Installation and Configuration
+### Usage and docs
+New to `toncli`?
 
-1. Compile `fift`, `func`, `lite-client` from [TON](https://github.com/newton-blockchain/ton)
-    1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
-    2. For Apple computers on M1 we have a guide "How to compile them from official repo" [Apple M1 Guide](./docs/apple_m1_compile_fix.md)
-2. Add these 3 packages to `PATH` env-variable
-   or move them to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
-   1. `cp bild/crypto/fift /usr/bin/`
-   2. `cp bild/crypto/func /usr/bin/`
-   3. `cp bild/lite-client/lite-client /usr/bin/`
-3. `pip install toncli`
+Try: [Quick start guide](/docs/quick_starat_guide.md)
 
-Now you can access `CLI` tool by typing in terminal `toncli`
-
-### Usage example
-
-```
-toncli start wallet -n my-wallet
-cd my-wallet
-toncli deploy
-```
+All other documentation lists in `docs/`
 
 ## Contributor Guide
 
@@ -78,7 +63,7 @@ There is many TODOs in code - feel free to fix them and create PRs
 
 ## Commands
 
-All commands could be fined in [docs/commands.md](https://github.com/disintar/toncli/blob/master/docs/commands.md)
+All commands could be fined in [docs/advanced/commands.md](/docs/advanced/commands.md)
 
 ### Configuration
 
