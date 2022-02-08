@@ -1,5 +1,6 @@
 # toncli Quick start guide
 This quide contains simple steps how-to deploy example smart contract to TON.
+
 ## 1. Clone repository
 ```
 git clone --recursive https://github.com/newton-blockchain/ton

@@ -80,7 +80,6 @@ Command list, e.g. usage: toncli start wallet
 
 {gr}   All other commands will pass to func
 
-{bl}wallet - interact with deploy-wallet
 {bl}tointeger - parse string to integer to pass to contract in func
 
 All commands can be found in https://github.com/disintar/toncli/blob/master/docs/commands.md
