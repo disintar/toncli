@@ -1,6 +1,8 @@
 import argparse
 import sys
 import textwrap
+import pkg_resources
+import requests
 
 from colorama import Fore, Style
 
@@ -88,18 +90,28 @@ Each command have help e.g.: tncli deploy -h
 
 Credits: {gr}disintar.io{rs} team
 '''
+
+    update_text = f'\n🦋 New {bl}TONCLI{rs} version is available. Please install it using "{bl}pip install --upgrade toncli{rs}".\n'
+
     # This is concept of nft https://disintar.io
     # Nft information parse will be added in next versions of CLI
     print("disintar.io NFT owners today say: 🙈 🙉 🙊")
 
     # TODO: add logging verbose
-
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(help_text))
-
+    parser.add_argument("-v", "--version", help="package version", action='store_true')
     subparser = parser.add_subparsers()
 
+    version_local = pkg_resources.get_distribution("tncli").version
+    try:
+        version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
+
+        if version_global and version_global != version_local:
+            print(update_text)
+    except:
+        pass
     #
     # START
     #
@@ -145,13 +157,13 @@ Credits: {gr}disintar.io{rs} team
     #
 
     parser_run_transaction = subparser.add_parser('run_transaction',
-                                                description='Message debug - by lt / transaction hash / smart contract address'
-                                                            ' - run message locally and get stack error')
+                                                  description='Message debug - by lt / transaction hash / smart contract address'
+                                                              ' - run message locally and get stack error')
     parser_run_transaction.add_argument("logical_time", type=str)
     parser_run_transaction.add_argument("transaction_hash", type=str)
     parser_run_transaction.add_argument("smc_address", type=str)
     parser_run_transaction.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
-                            help='Network to run transaction')
+                                        help='Network to run transaction')
 
     #
     # shortcuts
@@ -303,6 +315,9 @@ Credits: {gr}disintar.io{rs} team
     elif command == 'run_transaction':
         run_transaction(args.net, args.smc_address, args.logical_time, args.transaction_hash)
         sys.exit()
+
+    elif command == '-v':
+        print(f'v{version_local}')
 
     elif command in ['fift', 'f', 'run']:
         # get real args
