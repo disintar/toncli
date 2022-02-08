@@ -23,11 +23,15 @@ Not working, in active development
 
 ## Installation and Configuration
 
-1. Compile `fift`, `func`, `lite-client` from [ton](https://github.com/newton-blockchain/ton) and add them to `PATH` env
-   or move to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
+1. Compile `fift`, `func`, `lite-client` from [TON](https://github.com/newton-blockchain/ton)
     1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
-    2. For Apple computers on M1 we have a guide "How to compile them from official repo" [M1 Guide](./docs/apple_m1_compile_fix.md)
-2. `pip install tncli`
+    2. For Apple computers on M1 we have a guide "How to compile them from official repo" [Apple M1 Guide](./docs/apple_m1_compile_fix.md)
+2. Add these 3 packages to `PATH` env-variable
+   or move them to `/usr/bin`, docs can be founded [here](https://ton.org/docs/#/howto/getting-started)
+   1. `cp bild/crypto/fift /usr/bin/`
+   2. `cp bild/crypto/func /usr/bin/`
+   3. `cp bild/lite-client/lite-client /usr/bin/`
+2. `pip install toncli`
 
 Now you can access `CLI` tool by typing in terminal `tncli`
 
