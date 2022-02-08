@@ -1,18 +1,18 @@
 <p align="center">
    <a href="https://disintar.io/">
        <img
-        src="https://raw.githubusercontent.com/disintar/tncli/master/docs/images/logo.png"
+        src="https://raw.githubusercontent.com/disintar/toncli/master/docs/images/logo.png"
         alt="Superset"
         height="150"
       />
    </a>
 </p>
 
-# Tncli
+# toncli
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI version](https://badge.fury.io/py/tncli.svg)](https://github.com/disintar/tncli)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/tncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/tncli&amp;utm_campaign=Badge_Grade)
+[![PyPI version](https://badge.fury.io/py/toncli.svg)](https://github.com/disintar/toncli)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/toncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/toncli&amp;utm_campaign=Badge_Grade)
 [![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
 TON smart contract command line interface
@@ -31,16 +31,16 @@ Not working, in active development
    1. `cp bild/crypto/fift /usr/bin/`
    2. `cp bild/crypto/func /usr/bin/`
    3. `cp bild/lite-client/lite-client /usr/bin/`
-2. `pip install toncli`
+3. `pip install toncli`
 
-Now you can access `CLI` tool by typing in terminal `tncli`
+Now you can access `CLI` tool by typing in terminal `toncli`
 
 ### Usage example
 
 ```
-tncli start wallet -n my-wallet
+toncli start wallet -n my-wallet
 cd my-wallet
-tncli deploy
+toncli deploy
 ```
 
 ## Contributor Guide
@@ -66,7 +66,7 @@ There is many TODOs in code - feel free to fix them and create PRs
 | Project interact after deploy: easily send messages, run getmethods                             | ✅      |
 | Load from hard project structure (example: `src/projects/wallet`)                               | ✅      |
 | Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅      |
-| Get contract address by `tncli address`                                                         | ❌      |
+| Get contract address by `toncli address`                                                         | ❌      |
 | Gas auto calculation for store & deploy                                                         | ❌      |
 | Add more project samples with advanced usage                                                    | ❌      |
 | Project tests with `runvmcode`                                                                  | ❌      |
@@ -78,7 +78,7 @@ There is many TODOs in code - feel free to fix them and create PRs
 
 ## Commands
 
-All commands could be fined in [docs/commands.md](https://github.com/disintar/tncli/blob/master/docs/commands.md)
+All commands could be fined in [docs/commands.md](https://github.com/disintar/toncli/blob/master/docs/commands.md)
 
 ### Configuration
 
@@ -108,7 +108,7 @@ created
 ## Development
 
 ```
-git clone git@github.com:disintar/tncli.git
-cd tncli && pip install -e .
+git clone git@github.com:disintar/toncli.git
+cd toncli && pip install -e .
 ```
 
