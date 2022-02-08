@@ -1,17 +1,21 @@
 import os
 import sys
-import time
+import tempfile
 from argparse import Namespace
-from typing import List, Dict
+from typing import List
 
 from colorama import Fore, Style
 
 from tncli.modules.abstract.deployer import AbstractDeployer
 from tncli.modules.deploy_wallet_contract import DeployWalletContract
 from tncli.modules.utils.system.log import logger
+from tncli.modules.utils.fift.fift import Fift
 from tncli.modules.utils.system.project import migrate_project_struction
-from tncli.modules.utils.lite_client.lite_client import LiteClient
 from tncli.modules.utils.system.project_conf import ProjectConf
+from jinja2 import FileSystemLoader, Environment, select_autoescape
+
+from tncli.modules.utils.lite_client.lite_client import LiteClient
+from tncli.modules.utils.system.conf import project_root
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -82,15 +86,47 @@ class ContractDeployer(AbstractDeployer):
             output = lite_client.run_safe()
             output = output.split('\n')[-3]
             output = output[11:-2]
-
             logger.info(f"🧐 Output: [ {output} ]")
 
-            try:
-                output = int(output)
-                string_output = bytearray.fromhex("{0:x}".format(output)).decode()
-                logger.info(f"🧐 Auto parse sting: [ {string_output} ]")
-            except Exception as e:
-                logger.error(f"🧐 Can't auto parse string")
+            if kwargs.fift and len(kwargs.fift) > 0:
+                # Hi guys from lite-client
+                # Love you change fuckin syntax, so I need to replace it here back
+                # C{ to x{
+                output = output.replace('C{', 'x{')
+
+                render_kwargs = {
+                    'code': kwargs.fift,
+                    'output': output
+                }
+
+                # Load template of transaction_debug
+                loader = FileSystemLoader(f"{project_root}/modules/fift")
+
+                env = Environment(
+                    loader=loader,
+                    autoescape=select_autoescape()
+                )
+
+                template = env.get_template("get_run.fif.template")
+
+                rendered = template.render(**render_kwargs)
+
+                temp_location: str = tempfile.mkstemp(suffix='.fif')[1]
+
+                with open(temp_location, 'w') as f:
+                    f.write(rendered)
+
+                fift = Fift('run', args=[temp_location])
+                fift.run()
+            else:
+                try:
+                    output = int(output)
+                    hex = "{0:x}".format(output)
+
+                    string_output = bytearray.fromhex(hex).decode()
+                    logger.info(f"🧐 Auto parse sting: [ {string_output} ]")
+                except Exception as e:
+                    logger.error(f"🧐 Can't auto parse string")
 
     def publish(self, contracts: List[str] = None):
         """Build, send ton, deploy contract"""

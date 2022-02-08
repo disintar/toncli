@@ -12,7 +12,7 @@ from tncli.modules.utils.system.log import logger
 from tncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from tncli.modules.utils.fift.fift import Fift
 from tncli.modules.utils.lite_client.lite_client import LiteClient
-from tncli.modules.utils.toncenter import run_transaction
+from tncli.modules.utils.transaction import run_transaction
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -133,6 +133,8 @@ Credits: {gr}disintar.io{rs} team
     parser_get.add_argument("--update", action='store_true', help='Update cached configs of net')
     parser_get.add_argument("--contracts", "-c", type=str,
                             help='Set contract name from project.yaml to run getmethod on')
+    parser_get.add_argument("--fift", "-f", type=str,
+                            help='Run fift script on get output. Get output will be loaded to stack')
 
     #
     # tointeger
@@ -145,13 +147,19 @@ Credits: {gr}disintar.io{rs} team
     #
 
     parser_run_transaction = subparser.add_parser('run_transaction',
-                                                description='Message debug - by lt / transaction hash / smart contract address'
-                                                            ' - run message locally and get stack error')
+                                                  description='Message debug - by lt / transaction hash / '
+                                                              'smart contract address'
+                                                              ' - run message locally and get stack error')
     parser_run_transaction.add_argument("logical_time", type=str)
     parser_run_transaction.add_argument("transaction_hash", type=str)
     parser_run_transaction.add_argument("smc_address", type=str)
     parser_run_transaction.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
-                            help='Network to run transaction')
+                                        help='Network to run transaction')
+    parser_run_transaction.add_argument("--function", "-f", default=-1, type=int,
+                                        help='Function selector on runvm (-1 - external message, 0 - internal, ...')
+    parser_run_transaction.add_argument("--save", "-s", default=None, type=str,
+                                        help='Pass save location, so runvm script will not run and just save to '
+                                             'your location')
 
     #
     # shortcuts
@@ -301,7 +309,7 @@ Credits: {gr}disintar.io{rs} team
         deployer.get(real_args[2:], args)
 
     elif command == 'run_transaction':
-        run_transaction(args.net, args.smc_address, args.logical_time, args.transaction_hash)
+        run_transaction(args.net, args.smc_address, args.logical_time, args.transaction_hash, args.function, args.save)
         sys.exit()
 
     elif command in ['fift', 'f', 'run']:

@@ -31,7 +31,7 @@ global_config        // global_config
 msg_value
 in_msg_cell
 in_msg_body
--1 // function selector
+{{ function }} // function selector
 code <s // load func code as slice
 storage // add c4 cell lodaded from lite-client
 c7 // add c7 cell
