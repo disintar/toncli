@@ -226,7 +226,10 @@ Credits: {gr}disintar.io{rs} team
     parser_lite_client.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
     parser_lite_client.add_argument("--lite-client-args", "-la", type=str,
                                     default='',
-                                    help='Pass args and kwargs to lite-client command')
+                                    help='Pass args and kwargs to lite-client command at the start')
+    parser_lite_client.add_argument("--lite-client-post-args", "-lpa", type=str,
+                                    default='',
+                                    help='Pass args to lite-client command at the end')
 
     #
     #  FUNC

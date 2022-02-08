@@ -11,13 +11,11 @@ swap // get seqno as int on top of stack
 type // print it to output
 cr // print endline
 
-// now only slice in stack
-32 i@ // get seqno from cell
-64 i@ // get message from cell
+<s dup 32 i@ // get seqno from cell
+swap ref@ // get ref on first cell
+<s 64 i@ // get message from second cell
+swap // get seqno from cell to top
 
-swap // get seqno on top of stack
+."🤗 Seqno as int from cell from " ^green ."GET" ^reset ." method is: " (dump) type cr
 
-// print seqno loaded from cell
-."🤗 Seqno as int (from cell) from " ^green ."GET" ^reset ." method is: " (dump) type cr
-
-.s
+."🥳 Message from ref cell: " (dump) type cr

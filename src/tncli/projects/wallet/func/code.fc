@@ -56,8 +56,9 @@ int hello_world() method_id {
     ;; So we can do something intresting with it
 
     int seqno = get_data().begin_parse().preload_uint(32);
+
     cell test_inside = begin_cell()
-                    .store_uint(26729, 64)
+                    .store_uint(26729, 64) ;; set hi to ref cell to test tncli works with refs in get methods
                     .end_cell();
 
     return (seqno, begin_cell()

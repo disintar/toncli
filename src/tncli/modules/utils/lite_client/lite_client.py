@@ -18,7 +18,11 @@ class LiteClient:
         else:
             self.kwargs = {'lite_client_args': [],
                            'net': 'testnet',
+                           'lite_client_post_args': [],
                            'update': False}
+
+        if 'lite_client_post_args' not in kwargs:
+            kwargs['lite_client_post_args'] = []
 
         self.args = args
 
@@ -37,15 +41,23 @@ class LiteClient:
         subprocess.run(command)
 
     def run_command(self) -> Optional[bytes]:
-        command = lite_client_execute_command(self.kwargs['net'],
-                                              [*self.kwargs['lite_client_args'], '-c',
-                                               " ".join([self.command, *self.args])],
-                                              self.kwargs['update'])
-        if not self.get_output:
-            subprocess.run(command)
-        else:
-            output = subprocess.check_output(command)
-            return output
+        for _try in range(2):
+            try:
+                command = lite_client_execute_command(self.kwargs['net'],
+                                                      [*self.kwargs['lite_client_args'], '-c',
+                                                       " ".join([self.command, *self.args]),
+                                                       *self.kwargs['lite_client_post_args']],
+                                                      self.kwargs['update'])
+                if not self.get_output:
+                    return subprocess.run(command)
+                else:
+                    output = subprocess.check_output(command)
+                    return output
+            except Exception as e:
+                if _try != 1:
+                    continue
+                else:
+                    console.error(f"😢 Error in lite-client execution")
 
     def run_safe(self):
         output = self.run()

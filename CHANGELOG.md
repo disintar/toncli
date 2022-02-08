@@ -22,12 +22,9 @@
   with support of multiple contracts)
 - [x]  Add local debug of external messages problem: pass lt hash addr, start `external_code` and receive real error in
   stack
-- [ ] Add `func` tests (with support of multiple contracts)
-- [ ] Add support of running `fift` scripts on get method output, to parse cell outputs :)
+- [x] Add support of running `fift` scripts on get method output, to parse cell outputs :)
 - [x] Add `tointeger` command so you can easily convert string to int (needed for func strings)
-- [ ] Add `sendboc` command, so if `.boc` file pass - will send it via lite-cliente, if `.fif` file pass - will
-  invoke `tncli fift sendboc` so fift script will be run, and then boc file on output will be sended
-- [ ] Force update of CLI to user
+- [x] Force update of CLI to user
 
 **Documentation improvements**
 

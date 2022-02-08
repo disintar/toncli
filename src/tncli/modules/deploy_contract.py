@@ -22,6 +22,17 @@ bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 
+class Cell:
+    def __init__(self, data: str, refs: List['Cell']):
+        self.data = data
+        self.refs = refs
+
+    def serialize(self):
+        refs = [cell.serialize() for cell in self.refs]
+        refs = [f"{ref} ref," for ref in refs]
+        return f"<b {self.data} s, {' '.join(refs)} b>"
+
+
 class ContractDeployer(AbstractDeployer):
     def __init__(self, network: str, update_config: bool = False, workchain: int = 0, ton: int = 0.05):
         super().__init__()
@@ -89,14 +100,59 @@ class ContractDeployer(AbstractDeployer):
             logger.info(f"🧐 Output: [ {output} ]")
 
             if kwargs.fift and len(kwargs.fift) > 0:
-                # Hi guys from lite-client
-                # Love you change fuckin syntax, so I need to replace it here back
-                # C{ to x{
-                output = output.replace('C{', 'x{')
+                output = output.split(' ')
+                to_fift = []
+
+                # TODO: use libtonlibjson.so
+                # This is not right, but we have not time
+                # This code is load C{...} from lite client to fift code
+                for line in output:
+                    # If cell hash present
+                    if line[:2] == 'C{':
+                        _hash = line[2:-1]
+                        # we need to parse cell
+                        lite_client = LiteClient('runmethod', args=[address[1], *args],
+                                                 kwargs={'lite_client_args': '-v 0',
+                                                         'net': self.network,
+                                                         'update': self.update_config,
+                                                         'lite_client_post_args': ["-c", f"dumpcell {_hash}"]},
+                                                 get_output=True)
+                        output_cells = lite_client.run_safe()
+
+                        cells = []
+
+                        append_other = False
+                        # cell can contains references
+                        for line in output_cells.split('\n'):
+                            if append_other and len(line):
+                                cells.append(line[2:])
+
+                            if _hash.upper() in line and '} =' in line:
+                                append_other = True
+
+                        main_cell = None
+                        for cell in cells:
+                            level = len(cell) - len(cell.strip())
+
+                            if level == 0:
+                                main_cell = Cell(data=cell, refs=[])
+                            else:
+                                needed_cell: Cell = None
+
+                                for current_level in range(level):
+                                    if not needed_cell:
+                                        needed_cell = main_cell
+                                    else:
+                                        needed_cell = needed_cell.refs[-1]
+
+                                needed_cell.refs.append(Cell(data=cell.strip(), refs=[]))
+                        to_fift.append(main_cell.serialize())
+                    else:
+                        to_fift.append(line)
 
                 render_kwargs = {
                     'code': kwargs.fift,
-                    'output': output
+                    'output': ' '.join(to_fift)
                 }
 
                 # Load template of transaction_debug
