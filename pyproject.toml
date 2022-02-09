@@ -6,6 +6,7 @@ requires = [
     "appdirs",
     "requests",
     "pyyaml",
-    "Jinja2"
+    "Jinja2",
+    "bitstring"
 ]
 build-backend = "setuptools.build_meta"

@@ -3,3 +3,4 @@ appdirs
 requests
 pyyaml
 Jinja2
+bitstring

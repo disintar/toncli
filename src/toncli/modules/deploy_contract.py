@@ -12,6 +12,8 @@ from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.system.project import migrate_project_struction
 from toncli.modules.utils.system.project_conf import ProjectConf
+from toncli.modules.utils.ton.cell import deserialize
+from toncli.modules.utils.lite_client.parser import split_get_output
 from jinja2 import FileSystemLoader, Environment, select_autoescape
 
 from toncli.modules.utils.lite_client.lite_client import LiteClient
@@ -98,18 +100,19 @@ class ContractDeployer(AbstractDeployer):
             output = output.split('\n')[-3]
             output = output[11:-2]
             logger.info(f"🧐 Output: [ {output} ]")
-
             if kwargs.fift and len(kwargs.fift) > 0:
-                output = output.split(' ')
+                output = split_get_output(output)
                 to_fift = []
 
                 # TODO: use libtonlibjson.so
+                # TODO: move to function, add descripion
                 # This is not right, but we have not time
                 # This code is load C{...} from lite client to fift code
                 for line in output:
                     # If cell hash present
                     if line[:2] == 'C{':
                         _hash = line[2:-1]
+
                         # we need to parse cell
                         lite_client = LiteClient('runmethod', args=[address[1], *args],
                                                  kwargs={'lite_client_args': '-v 0',
@@ -147,6 +150,24 @@ class ContractDeployer(AbstractDeployer):
 
                                 needed_cell.refs.append(Cell(data=cell.strip(), refs=[]))
                         to_fift.append(main_cell.serialize())
+                    elif line[:3] == 'CS{':
+                        # Дай бог здоровья больше не писать такой код
+                        # И использовать libtonlibjson.so
+                        # Но к несчастью еще не готово это дело
+                        # И хочется сделать продакшн реди уже сейчас
+                        # disintar.io
+
+                        cell = line.split()[0].replace('CS{Cell{', '')[:-1]
+
+                        cut = list(map(int, line.split()[2][:-1].split('..')))
+
+                        bits = deserialize(cell, *cut)
+
+                        if len(bits) < 16:
+                            to_fift.append("<b b{%s} s, b>" % bits)
+                        else:
+                            to_fift.append("<b x{%s} s, b>" % format(int(bits, 2), 'X'))
+
                     else:
                         to_fift.append(line)
 
