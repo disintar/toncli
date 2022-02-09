@@ -229,4 +229,4 @@ class ContractDeployer(AbstractDeployer):
 
         logger.info(f"🚀 It may take some time to get is_inited to {gr}True{rs}")
 
-        self.wait_for_deploy(contracts=contracts)
+        self.wait_for_deploy(contracts=real_contracts)
