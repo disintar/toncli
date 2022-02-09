@@ -3,20 +3,11 @@
 "Asm.fif" include
 "Color.fif" include
 
-// todo: use GetOpt.fif
-// define usage comment
-{
-    ^yellow
-    ."usage: " $0 type ." script-path" cr
-    ."Run specific test on message.fif / code.fif / data.fif" cr
-    1 halt
-} : usage
+"{{ data_path }}" include
 
-// if less then 1 arguments print usage message
-$# 1 < ' usage if
 
 // load script-path
-$1 constant script-path
+constant data
 
 // TEST DEFINITION
 
@@ -34,7 +25,7 @@ $1 constant script-path
 } : test-is-builder
 
 // run script
-script-path include
+data
 
 // Run stack length test
 test-stack-depth

@@ -28,6 +28,7 @@ class AbstractDeployer:
         self.workchain: int = 0
         self.project_root: str = ""
         self.project_config: ProjectConf = ...
+        self.data_params: list = []
 
     def get_status(self, addreses: List[List[str]] = None) -> List[Tuple[float, bool]]:
         """Get balance and inited state for Contract"""
@@ -70,11 +71,12 @@ class AbstractDeployer:
         data = []
         for contract in contracts:
             data.append(contract_manipulation(contract.to_save_location,
-                                  contract.data,
-                                  self.workchain,
-                                  contract.boc,
-                                  contract.address,
-                                  cwd=self.project_root))
+                                              contract.data,
+                                              self.workchain,
+                                              contract.boc,
+                                              contract.address,
+                                              cwd=self.project_root,
+                                              data_params=self.data_params))
         return data
 
     def get_address(self, contracts: List[TonProjectConfig] = None) -> List[List[str]]:
@@ -111,8 +113,8 @@ class AbstractDeployer:
             # Run tests
             # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
             test_fift(fift_files_locations=[contract.data],
-                      test_file_path=f"{project_root}/modules/fift/run_test.fif",
-                      cwd=self.project_root)
+                      test_file_path=f"run_test.fif.template",
+                      cwd=self.project_root, data_params=self.data_params)
 
     def check_for_needed_files_to_deploy(self) -> bool:
         """Check if current root is project root"""

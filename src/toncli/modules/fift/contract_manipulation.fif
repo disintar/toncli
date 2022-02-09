@@ -27,7 +27,8 @@ $5 constant output_address
 <{ SETCP0 ACCEPT
    code-path include PUSHREF SETCODE
 }>c constant code
-data-path include constant data
+
+data-path file>B B>boc constant data
 
 // todo: add library support
 // todo: rewrite with comments
