@@ -183,7 +183,7 @@ class ContractDeployer(AbstractDeployer):
                     hex = "{0:x}".format(output)
 
                     string_output = bytearray.fromhex(hex).decode()
-                    logger.info(f"🧐 Auto parse sting: [ {string_output} ]")
+                    logger.info(f"🧐 Auto parse string: [ {string_output} ]")
                 except Exception as e:
                     logger.error(f"🧐 Can't auto parse string")
 

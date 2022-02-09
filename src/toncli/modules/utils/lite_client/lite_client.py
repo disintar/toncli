@@ -57,7 +57,7 @@ class LiteClient:
                 if _try != 1:
                     continue
                 else:
-                    console.error(f"😢 Error in lite-client execution")
+                    logger.error(f"😢 Error in lite-client execution")
 
     def run_safe(self):
         output = self.run()

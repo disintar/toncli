@@ -268,3 +268,11 @@ def? config-valid? {
   config-valid?
   } cond } cond } cond
 } : is-valid-config?
+
+{ 1 i@+ swap not abort"Internal address expected"
+  1 i@+
+  1 i@+ swap { 4 u@+ swap u@+ nip } if
+  swap { 9 u@+ 32 } { 256 swap 8 } cond
+  i@+ rot u@+
+} : addr@+
+{ addr@+ drop } : addr@
