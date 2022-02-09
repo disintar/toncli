@@ -25,7 +25,7 @@ def fift_execute_command(file: str, args: List[str], pre_args: Optional[List[str
 
 
 def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optional[str] = None,
-              data_params: list = [""]):
+              data_params: Optional[list] = None):
     """
     :param fift_files_locations: files to pass to test.fif
     :param test_file_path: Path to test.fif file
@@ -33,6 +33,9 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
     :return:
     """
     logger.info(f"🤗 Run tests on {bl}{fift_files_locations}{rs}")
+
+    if not data_params:
+        data_params = [""]
 
     for file in fift_files_locations:
         # Run tests from fift and pass path to file
@@ -57,8 +60,10 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
 
 
 def contract_manipulation(code_path: str, data_path: str, workchain: int, boc_location: str, address_location: str,
-                          cwd: Optional[str] = None, data_params: str = "") -> Optional[str]:
+                          cwd: Optional[str] = None, data_params: List[str] = None) -> Optional[str]:
     """Run contract_manipulation.fif code"""
+    if not data_params:
+        data_params = [""]
 
     logger.info(f"🥳 Start contract manipulation")
 
@@ -91,9 +96,9 @@ def contract_manipulation(code_path: str, data_path: str, workchain: int, boc_lo
     output_data = output.decode()
 
     # # TODO: fix, get normal address from python...
-    # if 'address' in output_data:
-    #     return output_data
-    # else:
-    #     logger.error(f"😳 {rd}Error{rs} on contract_manipulation, please double check everything.")
-    #     logger.error(output_data)
-    #     sys.exit()
+    if 'address' in output_data:
+        return output_data
+    else:
+        logger.error(f"😳 {rd}Error{rs} on contract_manipulation, please double check everything.")
+        logger.error(output_data)
+        sys.exit()
