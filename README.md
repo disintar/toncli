@@ -28,6 +28,10 @@ Try: [Quick start guide](/docs/quick_starat_guide.md)
 
 All other documentation lists in `docs/`
 
+## Configuration
+
+On first start `~/.config/toncli/` (on linux, other systems will have diffrent directory) will be created. If you want to change fift/func libs, network config or other stuff - check it out.
+
 ## Contributor Guide
 
 Interested in contributing? Feel free to create issues and pull requests.
