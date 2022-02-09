@@ -36,7 +36,8 @@ class Cell:
 
 
 class ContractDeployer(AbstractDeployer):
-    def __init__(self, network: str, update_config: bool = False, workchain: int = 0, ton: int = 0.05):
+    def __init__(self, network: str, update_config: bool = False, workchain: int = 0, ton: int = 0.05,
+                 data_params: list = []):
         super().__init__()
 
         self.network: str = network
@@ -52,6 +53,8 @@ class ContractDeployer(AbstractDeployer):
             f"🚀 You want to {bl}interact{rs} with your contracts {gr}{[i.name for i in self.project_config.contracts]}{rs} in {gr}{network}{rs} - that's grate!")
         self.ton = ton  # ton to send to smart contract
         self.workchain = workchain  # workchain deploy to
+
+        self.data_params = data_params if len(data_params) else [""]  # data which yuo want to store in nft
 
         # Check needed to deploy files
         self.check_for_needed_files_to_deploy()

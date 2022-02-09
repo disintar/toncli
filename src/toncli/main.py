@@ -1,6 +1,8 @@
 import argparse
 import sys
 import textwrap
+import shlex
+
 import pkg_resources
 import requests
 
@@ -133,6 +135,7 @@ Credits: {gr}disintar.io{rs} team
     parser_deploy.add_argument("--ton", "-t", default=0.05, type=float,
                                help='How much TON will be sent to new contract')
     parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
+    parser_deploy.add_argument('--data-params', help='Data which you want to pass to NFT', default="", type=str)
 
     #
     # get
@@ -310,7 +313,9 @@ Credits: {gr}disintar.io{rs} team
         bootstrapper.deploy()
 
     elif command == 'deploy':
-        deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton)
+
+        deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton,
+                                    data_params=shlex.split(args.data_params))
         real_args, _ = argv_fix(sys.argv, string_kwargs)
 
         deployer.publish(real_args[2:])
