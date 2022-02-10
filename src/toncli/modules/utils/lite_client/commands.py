@@ -97,3 +97,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
         subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
     else:
         return subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd).decode()
+
+
+if __name__ == "__main__":
+    print(get_account_status('testnet', 'kQDmJ8fyL7VWitcVXv1-CL4iu-xo5mXlSMZCXuIPxyy9yAHG'))

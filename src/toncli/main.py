@@ -110,7 +110,7 @@ Credits: {gr}disintar.io{rs} team
         version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
 
         if version_global and version_global != version_local:
-            print(update_text)
+            logger.info(update_text)
     except:
         pass
     #
@@ -330,7 +330,7 @@ Credits: {gr}disintar.io{rs} team
         sys.exit()
 
     elif command == '-v':
-        print(f'v{version_local}')
+        logger.info(f'v{version_local}')
 
     elif command in ['fift', 'f', 'run']:
         # get real args
