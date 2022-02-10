@@ -234,6 +234,16 @@ Credits: {gr}disintar.io{rs} team
                                     help='Pass args to lite-client command at the end')
 
     #
+    #  SEND BOC
+    #
+    parser_sendboc = subparser.add_parser('sendboc', help="Use this command to send boc files",
+                                          # formatter_class=argparse.RawDescriptionHelpFormatter,
+                                          # description=textwrap.dedent(lite_client_help)
+                                          )
+    parser_sendboc.add_argument('file', type=argparse.FileType('r'))
+    parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+                               help='Network to deploy')
+    #
     #  FUNC
     #
 
@@ -280,6 +290,9 @@ Credits: {gr}disintar.io{rs} team
     elif command in ['lite-client', 'lc']:
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['lite-client', *kwargs])
+    elif command == 'sendboc':
+        args, kwargs = argv_fix(sys.argv, string_kwargs)
+        args = parser.parse_args(['sendboc', args[2], *kwargs])
     elif command in ['func', 'fc', 'build']:
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['func', *kwargs])
@@ -381,6 +394,25 @@ Credits: {gr}disintar.io{rs} team
         # If use run command instead of f run - need to change start arg parse position
         func = Func(command, kwargs=kwargs, args=args_to_pass)
         func.run()
+    elif command == 'sendboc':
+        real_args, _ = argv_fix(sys.argv, string_kwargs)
+
+        # Parse kwargs by argparse
+        kwargs = dict(args._get_kwargs())
+
+        file = kwargs['file']
+        ext = file.name.split('.')[-1]
+        if ext == 'boc':
+            lc = LiteClient(command=f"sendfile", args=[file.name],
+                            kwargs={'net': kwargs['net'], 'update': False, 'lite_client_args': '-v 1'})
+            lc.run()
+        elif ext == 'fif':
+            fift_params = real_args[2:]
+            fift = Fift(command='sendboc', args=fift_params)
+            fift.run()
+        else:
+            logger.error('This file extension is not supported. Supported extensions are .boc and .fif')
+
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()
