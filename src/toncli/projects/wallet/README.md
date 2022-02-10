@@ -6,4 +6,4 @@ Deployed by [toncli](https://github.com/disintar/toncli)
 
 - `toncli run fift/data.fif`
 - `toncli run func/code.fc`
-- `toncli deploy -n tesnet -wc 0`
+- `toncli deploy -n testnet -wc 0`
