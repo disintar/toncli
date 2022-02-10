@@ -6,6 +6,10 @@ import shlex
 import pkg_resources
 import requests
 
+import os.path
+
+from appdirs import user_config_dir
+
 from colorama import Fore, Style
 
 from toncli.modules.deploy_contract import ContractDeployer
@@ -83,6 +87,13 @@ Command list, e.g. usage: toncli start wallet
 {gr}   All other commands will pass to func
 
 {bl}tointeger - parse string to integer to pass to contract in func
+
+{bl}sendboc - send file with boc info
+{gr}   "sendboc <path-to-file.boc>" - sends BOC file
+{gr}   "sendboc <path-to=file.fif> <other-params>" -  run fift file and run sendfile in lite-client (just like command "fift sendboc ...")
+
+{bl}wallet - print addresses of 2 wallets - bounceable wallet and deploy wallet
+{gr}   You can use this command only when wallet is built with commands "toncli build" or "toncli deploy"
 
 All commands can be found in https://github.com/disintar/toncli/blob/master/docs/commands.md
 
@@ -236,13 +247,16 @@ Credits: {gr}disintar.io{rs} team
     #
     #  SEND BOC
     #
-    parser_sendboc = subparser.add_parser('sendboc', help="Use this command to send boc files",
-                                          # formatter_class=argparse.RawDescriptionHelpFormatter,
-                                          # description=textwrap.dedent(lite_client_help)
-                                          )
+    parser_sendboc = subparser.add_parser('sendboc')
     parser_sendboc.add_argument('file', type=argparse.FileType('r'))
     parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
-                               help='Network to deploy')
+                                help='Network to deploy')
+
+    #
+    #  WALLET
+    #
+    parser_wallet = subparser.add_parser('wallet')
+
     #
     #  FUNC
     #
@@ -412,7 +426,28 @@ Credits: {gr}disintar.io{rs} team
             fift.run()
         else:
             logger.error('This file extension is not supported. Supported extensions are .boc and .fif')
+    elif command == 'wallet':
+        contract_addr_file_name = 'build/contract_address'
+        if os.path.isfile(contract_addr_file_name):
+            bounceable_addr = ""
+            with open(contract_addr_file_name, 'r') as file:
+                addresses = file.read().split()
+                bounceable_addr = addresses[2]
+            logger.info(f"Your bounceable address is: {gr}{bounceable_addr}{rs}")
 
+            deploy_wallet_addr_dir = user_config_dir('toncli')
+            deploy_bouncable = ""
+            with open(f"{deploy_wallet_addr_dir}/wallet/build/contract_address", 'r') as file:
+                addresses = file.read().split()
+                deploy_bouncable = addresses[2]
+            logger.info(f"Your deploy wallet address is: {gr}{deploy_bouncable}{rs}")
+        else:
+            logger.error(
+                "Can't find file with address information.\n"
+                "Its seems that you haven't built your wallet yet.\n"
+                "You can do it with commands:\n"
+                "'toncli build' - to build locally\n"
+                "'toncli deploy' to build and immediately deploy it to net")
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()
