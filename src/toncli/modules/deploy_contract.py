@@ -166,11 +166,13 @@ class ContractDeployer(AbstractDeployer):
 
                         bits = deserialize(cell, *cut)
 
-                        if len(bits) < 16:
-                            to_fift.append("<b b{%s} s, b>" % bits)
+                        bits = ["<b b{%s} s, b> <s" % bits[i:i + 128] for i in range(0, len(bits), 128)]
+                        if len(bits) > 1:
+                            bits = f'{bits[0]} {" |+ ".join(bits[1:])} |+'
                         else:
-                            to_fift.append("<b x{%s} s, b>" % format(int(bits, 2), 'X'))
+                            bits = bits[0]
 
+                        to_fift.append(bits)
                     else:
                         to_fift.append(line)
 
