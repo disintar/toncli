@@ -40,7 +40,7 @@ There is two main tasks and many TODOs.
 
 Main tasks are - not to use lite-client / fift / func. All can be done with python.
 
-There is many TODOs in code - feel free to fix them and create PRs
+There are many TODOs in code - feel free to fix them and create PRs
 
 ## Features and status
 
