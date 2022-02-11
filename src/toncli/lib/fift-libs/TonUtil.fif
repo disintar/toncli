@@ -269,14 +269,6 @@ def? config-valid? {
   } cond } cond } cond
 } : is-valid-config?
 
-{ 1 i@+ swap not abort"Internal address expected"
-  1 i@+
-  1 i@+ swap { 4 u@+ swap u@+ nip } if
-  swap { 9 u@+ 32 } { 256 swap 8 } cond
-  i@+ rot u@+
-} : addr@+
-{ addr@+ drop } : addr@
-
 // Get anycast depth / rewrite_pfx or return 0
 // ( S -- x y S )
 {
@@ -299,7 +291,7 @@ def? config-valid? {
     {
         0 0 2 roll // set anycast to none
     } cond
-} : _maybe_anycast
+} : maybe-anycast
 
 // Rewrite first bits of addr with anycast info
 { // input: anycast depth, rewrite_pfx, workchain, slice, address length
@@ -312,7 +304,7 @@ def? config-valid? {
     } cond // rewrite first bits of address with rewrite_pfx
     2 roll
     u@+ // get address
-} : _parse_address_with_anycast
+} : parse-address-with-anycast
 
 // Parse Slice S and return:
 // 0 `addr_none S - if addr_none$00 is parsed
@@ -330,10 +322,10 @@ def? config-valid? {
                 // anycast:(Maybe Anycast)
                 // workchain_id:int8
                 // address:bits256  = MsgAddressInt;
-                _maybe_anycast // get anycast depth, bits, slice
+                maybe-anycast // get anycast depth, bits, slice
                 8 i@+ // get workchain
-                256 _parse_address_with_anycast
-                `addr_std swap
+                256 parse-address-with-anycast
+                `addr-std swap
             }
 
             {
@@ -342,12 +334,12 @@ def? config-valid? {
                 // addr_len:(## 9)
                 // workchain_id:int32
                 // address:(bits addr_len) = MsgAddressInt;
-                _maybe_anycast // get anycast depth, bits, slice
+                maybe-anycast // get anycast depth, bits, slice
                 9 u@+  // get addr_len
                 32 i@+ // get workchain
                 swap 2 -roll // move workchain to neede position
-                swap _parse_address_with_anycast
-                `addr_var swap
+                swap parse-address-with-anycast
+                `addr-var swap
             } cond
 
        }
@@ -358,13 +350,13 @@ def? config-valid? {
             // external_address:(bits len)
             9 u@+ swap  // bit len
             u@+ // external_address
-            `addr_extern swap
+            `addr-extern swap
        } cond
     }
     {
         swap
         // if addr_none$00
-        `addr_none swap
+        `addr-none swap
     } cond
 } : addr@+
 
@@ -373,13 +365,16 @@ def? config-valid? {
 // User-friendly prints output of addr@
 // (0 A or addr A or wc addr A -- )
 {
-    dup `addr_none eq?
+    dup `addr-none eq?
     { 2drop ."addr_none" }
     {
-        `addr_extern eq?
+        `addr-extern eq?
         { (dump) type }
         { (x.) swap (dump) ":" $+ swap $+ type }
         cond
     }
     cond
-} : print_addr // print addr with workchain
+} : print-addr // print addr with workchain
+
+forget maybe-anycast
+forget parse-address-with-anycast

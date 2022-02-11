@@ -24,10 +24,10 @@
     }
 
     set_data(begin_cell()
-    .store_uint(stored_seqno + 1, 32)
-    .store_uint(stored_subwallet, 32)
-    .store_uint(public_key, 256)
-    .end_cell());
+        .store_uint(stored_seqno + 1, 32)
+        .store_uint(stored_subwallet, 32)
+        .store_uint(public_key, 256)
+        .end_cell());
 }
 
 ;; Get methods
