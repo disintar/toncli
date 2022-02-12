@@ -1,4 +1,5 @@
 # toncli Quick start guide
+Provided by [disintar.io](https://disintar.io) team
 
 This quide contains simple steps how-to deploy example smart contract to TON.
 
