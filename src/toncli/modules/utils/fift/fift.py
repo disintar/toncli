@@ -8,7 +8,7 @@ from typing import List, Optional
 from colorama import Fore, Style
 
 from toncli.modules.utils.func.func import Func
-from toncli.modules.utils.system.conf import config_folder, executable
+from toncli.modules.utils.system.conf import config_folder, executable, lite_client_tries
 from toncli.modules.utils.fift.commands import fift_execute_command
 from toncli.modules.utils.lite_client.commands import lite_client_execute_command
 from toncli.modules.utils.system.log import logger
@@ -129,7 +129,18 @@ class Fift:
         output = None
         if self.quiet:
             output = open(os.devnull, 'w')
-        subprocess.run(command, stdout=output, stderr=output, cwd=self.cwd)
+
+        for _try in range(lite_client_tries):
+            try:
+                output = subprocess.check_output(command, cwd=self.cwd)
+                if 'Connection refused' in output.decode():
+                    continue
+                break
+            except Exception as e:
+                if _try != 1:
+                    continue
+                else:
+                    logger.error(f"😢 Error in lite-client execution: {' '.join(command)}")
 
     def run_script(self):
         """Runs fift in script mode on file"""
@@ -160,7 +171,7 @@ class Fift:
             self.kwargs['fift_args'].append("-i")
 
         command = [executable['fift'], *self.kwargs['fift_args']]
-        logger.debug(f"🖥  Command ({command})")
+        logger.debug(f"🖥  Command ({' '.join(command)})")
 
         try:
             subprocess.run(command)

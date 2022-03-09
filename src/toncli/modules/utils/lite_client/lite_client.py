@@ -4,7 +4,7 @@ import sys
 from typing import Optional, List
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.lite_client.commands import lite_client_execute_command
-
+from toncli.modules.utils.system.conf import lite_client_tries
 
 class LiteClient:
     def __init__(self, command: str, args: Optional[List[str]] = None, kwargs: Optional[dict] = None,
@@ -41,7 +41,7 @@ class LiteClient:
         subprocess.run(command)
 
     def run_command(self) -> Optional[bytes]:
-        for _try in range(2):
+        for _try in range(lite_client_tries):
             try:
                 command = lite_client_execute_command(self.kwargs['net'],
                                                       [*self.kwargs['lite_client_args'], '-c',
@@ -57,7 +57,7 @@ class LiteClient:
                 if _try != 1:
                     continue
                 else:
-                    logger.error(f"😢 Error in lite-client execution")
+                    logger.error(f"😢 Error in lite-client execution: {' '.join(command)}")
 
     def run_safe(self):
         output = self.run()

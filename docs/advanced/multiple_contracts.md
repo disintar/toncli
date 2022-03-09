@@ -17,12 +17,12 @@ Add `test` smart contract to file, so it'll look like this:
 contract:
   data: fift/data.fif
   func:
-    - func/code.fc
+    - func/code.func
 
 test:
   data: fift/test.fif
   func:
-    - func/code.fc
+    - func/code.func
 ```
 
 About project structure you can read in `advanced/project_structure.md`.

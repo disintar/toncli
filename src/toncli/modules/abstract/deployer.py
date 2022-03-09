@@ -50,6 +50,20 @@ class AbstractDeployer:
         self.project_config: ProjectConf = ...
         self.data_params: list = []
 
+    def parse_contracts(self, kwargs):
+        contracts = kwargs.contracts.split() if kwargs.contracts else None
+        if contracts is not None and len(contracts) > 0:
+            real_contracts = []
+
+            for item in contracts:
+                for config in self.project_config.contracts:
+                    if config.name == item:
+                        real_contracts.append(config)
+        else:
+            real_contracts = self.project_config.contracts
+
+        return real_contracts
+
     def get_status(self, addreses: List[List[str]] = None) -> List[Tuple[float, bool]]:
         """Get balance and inited state for Contract"""
         if not addreses:
@@ -188,7 +202,7 @@ class AbstractDeployer:
 
     def get_seqno(self) -> List[int]:
         """Run runmethod on lite-client and parse seqno from answer"""
-
+        logger.info("🐰 Getting seqno for transaction")
         seqnos = []
         for address in self.addresses:
             lite_client = LiteClient('runmethod', args=[address[1], 'seqno'], kwargs={'lite_client_args': '-v 0',
@@ -203,25 +217,73 @@ class AbstractDeployer:
 
         return seqnos
 
-    def get(self, args: List[str], kwargs: Namespace):
+    def send(self, args: List[str], kwargs: Namespace, fake_addreses=False):
+        if not fake_addreses:
+            real_contracts = self.parse_contracts(kwargs)
+        else:
+            real_contracts = fake_addreses[0]
+
+        names = ', '.join([i.name for i in real_contracts])
+
+        logger.info(
+            f"🤔 You want to send internal message to [{gr}{names}{rs}] from deploy-wallet"
+            f" with amount [{bl}{kwargs.amount}{rs}]")
+
+        balance, is_inited = self.deploy_contract.get_status()[0]
+
+        if balance < kwargs.amount or not is_inited:
+            logger.error(
+                f"💰 Please, send more TON for deployment to [{gr}{self.deploy_contract.addresses[0][1]}{rs}] in"
+                f" [{bl}{self.deploy_contract.network}{rs}]")
+            sys.exit()
+
+        if not fake_addreses:
+            # Get contracts addresses
+            self.addresses = self.get_address(real_contracts)
+        else:
+            self.addresses = fake_addreses[1]
+
+        for address in self.addresses:
+            seqno = self.deploy_contract.get_seqno()[0]
+            args = [f'{self.deploy_contract.project_root}/fift/usage.fif', 'build/contract', address[1], '0',
+                    str(seqno),
+                    str(kwargs.amount)]
+
+            if kwargs.body:
+                args.extend(['-B', f"{os.getcwd()}/{kwargs.body}"])
+
+            if kwargs.force_bounce:
+                args.append('--force-bounce')
+
+            if kwargs.no_bounce:
+                args.append('--no-bounce')
+
+            if kwargs.mode:
+                args.extend(['--mode', kwargs.mode])
+
+            logger.info(f"Run command: {' '.join(args)}")
+
+            fift = Fift('sendboc', args=args, kwargs={'fift_args': "",
+                                                      'lite_client_args': "",
+                                                      'build': False,
+                                                      'net': self.network,
+                                                      'update': False}, quiet=False,
+                        cwd=self.deploy_contract.project_root)
+            fift.run()
+
+    def get(self, args: List[str], kwargs: Namespace, fake_addreses=False):
         """Run get methods on contracts"""
         # TODO: it wasn't good idea to parse lite client output
         # We can run get methods locally by runvm (savedata / saveaccount) and then get output / run fift
         # It's needed to be done this way
 
-        contracts = kwargs.contracts.split() if kwargs.contracts else None
-        if contracts is not None and len(contracts) > 0:
-            real_contracts = []
+        if not fake_addreses:
+            real_contracts = self.parse_contracts(kwargs)
 
-            for item in contracts:
-                for config in self.project_config.contracts:
-                    if config.name == item:
-                        real_contracts.append(config)
+            # Get contracts addresses
+            self.addresses = self.get_address(real_contracts)
         else:
-            real_contracts = self.project_config.contracts
-
-        # Get contracts addresses
-        self.addresses = self.get_address(real_contracts)
+            real_contracts, self.addresses = fake_addreses
 
         for address, contract in zip(self.addresses, real_contracts):
             logger.info(f"👯 [{bl}{contract.name}{rs}] [{gr}{address[1]}{rs}] runmethod {args}")

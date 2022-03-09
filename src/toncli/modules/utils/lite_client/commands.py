@@ -8,6 +8,7 @@ from requests import get as http_get
 
 from toncli.modules.utils.system.conf import executable, config_folder, config_uri
 from toncli.modules.utils.system.log import logger
+from toncli.modules.utils.system.conf import lite_client_tries
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -50,7 +51,7 @@ def lite_client_execute_command(network: str, args: List[str], update_config=Fal
     :return:
     """
     network = get_network_config_path(network, update_config)
-    return [executable['lite-client'], "-C", network, *args]
+    return [executable['lite-client'], "-v", "3", "--timeout", "3", "-C", network, *args]
 
 
 def get_account_status(network: str, address: str, cwd: Optional[str] = None,
@@ -68,8 +69,22 @@ def get_account_status(network: str, address: str, cwd: Optional[str] = None,
     command = lite_client_execute_command(network, ['-v', '0', '-c',
                                                     f'getaccount {address} {block_id_ext if block_id_ext else ""}'],
                                           update_config=update_config)
-    account_info = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
-    account_info = account_info.decode()
+
+    _try = 0
+    e = None
+    while _try < lite_client_tries + 1:
+        try:
+            account_info = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
+            account_info = account_info.decode()
+            break
+        except Exception as exc:
+            _try += 1
+            e = exc
+
+    if _try == lite_client_tries + 1:
+        logger.error(f"😢 Error running {' '.join(command)}")
+        raise e
+
     is_inited = 'account_uninit' not in account_info
 
     account_info = account_info.split('\n')
@@ -94,9 +109,34 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
     """
     command = lite_client_execute_command(network, ['-v', '2', '-c', f'sendfile {path}'], update_config=update_config)
     if not get_output:
-        subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
+        _try = 0
+        e = None
+        while _try < lite_client_tries + 1:
+            try:
+                subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
+                break
+            except Exception as exc:
+                e = exc
+                _try += 1
+
+        if _try == lite_client_tries + 1:
+            logger.error(f"😢 Error running {' '.join(command)}")
+            raise e
     else:
-        return subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd).decode()
+        _try = 0
+        e = None
+        while _try < lite_client_tries + 1:
+            try:
+                output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd).decode()
+                break
+            except Exception as exc:
+                e = exc
+                _try += 1
+
+        if _try == lite_client_tries + 1:
+            logger.error(f"😢 Error running {' '.join(command)}")
+            raise exc
+        return output
 
 
 if __name__ == "__main__":

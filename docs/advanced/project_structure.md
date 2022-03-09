@@ -7,7 +7,7 @@
 ├── fift
 │   ├── data.fif # data cell
 ├── func
-│   ├── code.fc # main func code
+│   ├── code.func # main func code
 ├── tests # all tests on smart contract goes here
 └── project.yaml # project structure description
 ```
@@ -20,7 +20,7 @@ contract:
   lib: fift/lib.fif (if needed)
   message: fift/message.fif (if needed)
   func:
-    - func/code.fc
+    - func/code.func
     - ...
 
 contract2:
@@ -28,7 +28,7 @@ contract2:
   lib: fift/contract2_lib.fif (if needed)
   message: fift/contract2_message.fif (if needed)
   func:
-    - func/code.fc
+    - func/code.func
     - ...
 
 ...

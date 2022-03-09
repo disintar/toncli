@@ -63,12 +63,14 @@ main_config = config['DEFAULT']
 # URI to get config from
 config_uri = {
     'testnet': main_config.get('testnet'),
-    'mainnet': main_config.get('mainnet')
+    'mainnet': main_config.get('mainnet'),
+    'ownnet': main_config.get('ownnet', ''),
 }
 
 toncenter = {
     'mainnet': main_config.get('toncenter_mainnet'),
     'testnet': main_config.get('toncenter_testnet'),
+    'ownnet': main_config.get('toncenter_ownnet', ''),
 }
 
 # Here we need to correctly define executable path
@@ -85,3 +87,5 @@ executable = {
     'func': new_executable['func'],
     'lite-client': new_executable['lite-client'],
 }
+
+lite_client_tries = 7

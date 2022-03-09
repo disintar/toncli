@@ -85,7 +85,11 @@ class DeployWalletContract(AbstractDeployer):
         args = [f'{self.project_root}/fift/usage.fif', 'build/contract', address, '0', str(seqno), str(amount),
                 "--no-bounce"]
 
-        fift = Fift('sendboc', args, quiet=quiet, cwd=self.project_root)
+        fift = Fift('sendboc', args=args, kwargs={'fift_args': "",
+                                             'lite_client_args': "",
+                                             'build': False,
+                                             'net': self.network,
+                                             'update': False}, quiet=quiet, cwd=self.project_root)
         fift.run()
 
 

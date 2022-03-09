@@ -3,7 +3,7 @@
 0. All commands have well described `help` messages you can run any command with `-h` flag to see help
    1. `toncli -h` - as example
 1. You can use `toncli f` / `toncli fift` instead of running `fift -I .../fift-libs`
-2. You can use `toncli fc` / `toncli func` instead of running `func -SPA .../func-libs/stdlib.fc `
+2. You can use `toncli fc` / `toncli func` instead of running `func -SPA .../func-libs/stdlib.func `
 3. You can use `toncli lc` / `toncli lite-client` instead of running `lite-client -C /usr/lib/testnet-global.config.json`
    1. Network configuration `--net` flag, you may want to see help message
 4. You can convert string to integer `toncli tointeger TEST` to add text to your `func` files

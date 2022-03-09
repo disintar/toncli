@@ -21,6 +21,8 @@ from toncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.lite_client.lite_client import LiteClient
 from toncli.modules.utils.transaction import run_transaction
+from toncli.modules.abstract.deployer import AbstractDeployer
+from toncli.modules.deploy_wallet_contract import DeployWalletContract
 
 gr = Fore.GREEN
 bl = Fore.CYAN
@@ -115,15 +117,16 @@ Credits: {gr}disintar.io{rs} team
         description=textwrap.dedent(help_text))
     parser.add_argument("-v", "--version", help="package version", action='store_true')
     subparser = parser.add_subparsers()
-
     version_local = pkg_resources.get_distribution("toncli").version
-    try:
-        version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
+    #
+    # try:
+    #     version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
+    #
+    #     if version_global and version_global != version_local:
+    #         logger.info(update_text)
+    # except:
+    #     pass
 
-        if version_global and version_global != version_local:
-            logger.info(update_text)
-    except:
-        pass
     #
     # START
     #
@@ -140,7 +143,7 @@ Credits: {gr}disintar.io{rs} team
     #
 
     parser_deploy = subparser.add_parser('deploy', description='Deploy project to blockchain')
-    parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_deploy.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                                help='Network to deploy')
     parser_deploy.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_deploy.add_argument("--ton", "-t", default=0.05, type=float,
@@ -153,13 +156,34 @@ Credits: {gr}disintar.io{rs} team
     #
 
     parser_get = subparser.add_parser('get', description='Deploy project to blockchain')
-    parser_get.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_get.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                             help='Network to deploy')
     parser_get.add_argument("--update", action='store_true', help='Update cached configs of net')
     parser_get.add_argument("--contracts", "-c", type=str,
                             help='Set contract name from project.yaml to run getmethod on')
+    parser_get.add_argument("--address", "-a", type=str,
+                            help='Set contract address to run get method on')
     parser_get.add_argument("--fift", "-f", type=str,
                             help='Run fift script on get output. Get output will be loaded to stack')
+
+    #
+    # send
+    #
+
+    parser_send = subparser.add_parser('send', description='Send internal transaction from deploy wallet to smc')
+    parser_send.add_argument("--amount", "-a", type=float, default=0, help='How much TON need to send')
+    parser_send.add_argument("--contracts", "-c", type=str, help='Set contract name from project.yaml to send to')
+    parser_send.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
+                             help='Network to use')
+    parser_send.add_argument("--update", action='store_true', help='Update cached configs of net')
+    parser_send.add_argument("--address", type=str,
+                             help='Set contract address to run get method on')
+
+    parser_send.add_argument("--mode", type=int, help='Sets transfer mode (0..255) for SENDRAWMSG')
+    parser_send.add_argument("--body", "-b", type=str,
+                             help='Path to fift file to get body from (need to set cell in the end of stack)')
+    parser_send.add_argument("--no-bounce", "-nb", type=int, help='Clears bounce flag')
+    parser_send.add_argument("--force-bounce", "-fb", type=int, help='Forces bounce flag')
 
     #
     # tointeger
@@ -177,7 +201,8 @@ Credits: {gr}disintar.io{rs} team
     parser_run_transaction.add_argument("logical_time", type=str)
     parser_run_transaction.add_argument("transaction_hash", type=str)
     parser_run_transaction.add_argument("smc_address", type=str)
-    parser_run_transaction.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_run_transaction.add_argument("--net", "-n", default='testnet', type=str,
+                                        choices=['testnet', 'mainnet', 'ownnet'],
                                         help='Network to run transaction')
     parser_run_transaction.add_argument("--function", "-f", default=-1, type=int,
                                         help='Function selector on runvm (-1 - external message, 0 - internal, ...')
@@ -211,7 +236,7 @@ Credits: {gr}disintar.io{rs} team
     parser_fift = subparser.add_parser('fift', help=fift_help,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
                                        description=textwrap.dedent(fift_help))
-    parser_fift.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_fift.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                              help='Network to deploy')
     parser_fift.add_argument("--workchain", "-wc", default=0, type=int, help='Workchain deploy to')
     parser_fift.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
@@ -234,7 +259,8 @@ Credits: {gr}disintar.io{rs} team
     parser_lite_client = subparser.add_parser('lite-client', help=lite_client_help,
                                               formatter_class=argparse.RawDescriptionHelpFormatter,
                                               description=textwrap.dedent(lite_client_help))
-    parser_lite_client.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_lite_client.add_argument("--net", "-n", default='testnet', type=str,
+                                    choices=['testnet', 'mainnet', 'ownnet'],
                                     help='Network to deploy')
     parser_lite_client.add_argument("--update", action='store_true', default=False, help='Update cached configs of net')
     parser_lite_client.add_argument("--lite-client-args", "-la", type=str,
@@ -249,13 +275,8 @@ Credits: {gr}disintar.io{rs} team
     #
     parser_sendboc = subparser.add_parser('sendboc')
     parser_sendboc.add_argument('file', type=argparse.FileType('r'))
-    parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet'],
+    parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                                 help='Network to deploy')
-
-    #
-    #  WALLET
-    #
-    parser_wallet = subparser.add_parser('wallet')
 
     #
     #  FUNC
@@ -316,6 +337,19 @@ Credits: {gr}disintar.io{rs} team
     elif command == 'get':
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['get', *kwargs])
+    elif command == 'addrs':
+        if 'project.yaml' not in os.listdir(os.getcwd()):
+            logger.error(f"🚫 {gr}{os.getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
+            sys.exit(0)
+
+        contract = ContractDeployer(network='mainnet')
+        addrs = contract.get_address()
+
+        for name, addr in zip(contract.project_config.contracts, addrs):
+            logger.info(f"[{gr}{name.name}{rs}] 🦄 Raw address: {bl}{addr[0]}{rs}")
+            logger.info(f"[{gr}{name.name}{rs}] 🦝 Bounceable address: {bl}{addr[1]}{rs}")
+            logger.info(f"[{gr}{name.name}{rs}] 🐏 Non-bounceable address: {bl}{addr[2]}{rs}")
+        sys.exit()
     elif command == 'tointeger':
         args, _ = argv_fix(sys.argv, string_kwargs)
         string_to_encode = " ".join(args[2:])
@@ -340,18 +374,43 @@ Credits: {gr}disintar.io{rs} team
         bootstrapper.deploy()
 
     elif command == 'deploy':
-
         deployer = ContractDeployer(network=args.net, update_config=args.update, workchain=args.workchain, ton=args.ton,
                                     data_params=shlex.split(args.data_params))
         real_args, _ = argv_fix(sys.argv, string_kwargs)
-
         deployer.publish(real_args[2:])
 
     elif command == 'get':
-        deployer = ContractDeployer(network=args.net, update_config=args.update)
-        real_args, kwargs = argv_fix(sys.argv, string_kwargs)
-        deployer.get(real_args[2:], args)
 
+        real_args, kwargs = argv_fix(sys.argv, string_kwargs)
+
+        if args.address:
+            class My:
+                name = 'my-cool-smc'
+
+            deployer = AbstractDeployer()
+            deployer.network = args.net
+            deployer.update_config = args.update
+
+            deployer.get(real_args[2:], args, fake_addreses=[[My()], [[None, args.address]]])
+        else:
+            deployer = ContractDeployer(network=args.net, update_config=args.update)
+            deployer.get(real_args[2:], args)
+    elif command == 'send':
+        real_args, kwargs = argv_fix(sys.argv, string_kwargs)
+
+        if args.address:
+            class My:
+                name = 'my-cool-smc'
+
+            deployer = AbstractDeployer()
+            deployer.network = args.net
+            deployer.update_config = args.update
+            deployer.deploy_contract = DeployWalletContract(args.net, 0)
+
+            deployer.send([], args, fake_addreses=[[My()], [[None, args.address]]])
+        else:
+            deployer = ContractDeployer(network=args.net, update_config=args.update)
+            deployer.send([], args)
     elif command == 'run_transaction':
         run_transaction(args.net, args.smc_address, args.logical_time, args.transaction_hash, args.function, args.save)
         sys.exit()

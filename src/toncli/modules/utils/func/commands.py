@@ -47,7 +47,7 @@ def build(project_root: str,
 def build_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,
                 cwd: Optional[str] = None):
     build_command = [executable['func'], *func_args, "-o", to_save_location, "-SPA",
-                     f"{config_folder}/func-libs/stdlib.fc", *func_files_locations]
+                     f"{config_folder}/func-libs/stdlib.func", *func_files_locations]
     get_output = subprocess.check_output(build_command, cwd=os.getcwd() if not cwd else cwd)
 
     if get_output:
