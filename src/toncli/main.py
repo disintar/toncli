@@ -1,8 +1,10 @@
 import argparse
+import shutil
 import sys
 import textwrap
 import shlex
 
+import configparser
 import pkg_resources
 import requests
 
@@ -16,11 +18,13 @@ from toncli.modules.deploy_contract import ContractDeployer
 from toncli.modules.projects import ProjectBootstrapper
 from toncli.modules.utils.func.func import Func
 from toncli.modules.utils.system.argparse_fix import argv_fix
+from toncli.modules.utils.system.conf import config_file
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.lite_client.lite_client import LiteClient
 from toncli.modules.utils.transaction import run_transaction
+from toncli.modules.utils.check_hash import check_2_libs_actual, get_libs_paths
 from toncli.modules.abstract.deployer import AbstractDeployer
 from toncli.modules.deploy_wallet_contract import DeployWalletContract
 
@@ -35,6 +39,7 @@ def main():
 
     :return:
     '''
+
     fift_help = f'''positional arguments:
       {bl}command{rs}              Which mode to run, can be [interactive, run, sendboc]
       {gr}   interactive - default, run interactive fift
@@ -117,16 +122,29 @@ Credits: {gr}disintar.io{rs} team
         description=textwrap.dedent(help_text))
     parser.add_argument("-v", "--version", help="package version", action='store_true')
     subparser = parser.add_subparsers()
-    version_local = pkg_resources.get_distribution("toncli").version
-    #
-    # try:
-    #     version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
-    #
-    #     if version_global and version_global != version_local:
-    #         logger.info(update_text)
-    # except:
-    #     pass
 
+    version_local = pkg_resources.get_distribution("toncli").version
+    try:
+        version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
+
+        if version_global and version_global != version_local:
+            logger.info(update_text)
+    except:
+        pass
+
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    config_default = config['DEFAULT']
+
+    warn = config_default.get('LIBS_WARNING') != 'False'
+
+    if warn:
+        if not check_2_libs_actual():
+            local_lib_path, global_lib_path = get_libs_paths()
+            logger.warning(
+                f"""\nIts seems that your local fift and func libs ({local_lib_path}) differs from their actual versions ({global_lib_path}). 
+You can update them automatically using "toncli update_libs" or disable this warning by changing "LIBS_WARNING" to "False" param in cofig\n\n"""
+            )
     #
     # START
     #
@@ -149,7 +167,8 @@ Credits: {gr}disintar.io{rs} team
     parser_deploy.add_argument("--ton", "-t", default=0.05, type=float,
                                help='How much TON will be sent to new contract')
     parser_deploy.add_argument("--update", action='store_true', help='Update cached configs of net')
-    parser_deploy.add_argument('--data-params', help='Data which you want to pass to NFT', default="", type=str)
+    parser_deploy.add_argument('--data-params', help='Data which you want to pass to data of your smart-contract',
+                               default="", type=str)
 
     #
     # get
@@ -277,6 +296,16 @@ Credits: {gr}disintar.io{rs} team
     parser_sendboc.add_argument('file', type=argparse.FileType('r'))
     parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                                 help='Network to deploy')
+
+    #
+    #  WALLET
+    #
+    parser_wallet = subparser.add_parser('wallet')
+
+    #
+    #  UPDATE LIBS
+    #
+    parser_update_libs = subparser.add_parser('update_libs')
 
     #
     #  FUNC
@@ -507,6 +536,13 @@ Credits: {gr}disintar.io{rs} team
                 "You can do it with commands:\n"
                 "'toncli build' - to build locally\n"
                 "'toncli deploy' to build and immediately deploy it to net")
+    elif command == 'update_libs':
+        global_lib_path, local_lib_path = get_libs_paths()
+
+        shutil.copytree(f"{global_lib_path}/fift-libs", f"{local_lib_path}/fift-libs", dirs_exist_ok=True)
+        shutil.copytree(f"{global_lib_path}/func-libs", f"{local_lib_path}/func-libs", dirs_exist_ok=True)
+        logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
+
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()

@@ -81,3 +81,4 @@ INFO: 👯 [test] [kQCuGN4Varstnk0serOGa2yhBG39sY7ToG8xsxK3FhEAPAeE] runmethod [
 INFO: 🧐 Output: [ 0  ]
 ERROR: 🧐 Can't auto parse strin
 ```
+
