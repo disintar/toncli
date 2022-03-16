@@ -250,7 +250,10 @@ class AbstractDeployer:
                     str(kwargs.amount)]
 
             if kwargs.body:
-                args.extend(['-B', f"{os.getcwd()}/{kwargs.body}"])
+                if kwargs.body[0] != '/':  # not absolute path
+                    args.extend(['-B', f"{os.getcwd()}/{kwargs.body}"])
+                else:  # use absolute path
+                    args.extend(['-B', f"{kwargs.body}"])
 
             if kwargs.force_bounce:
                 args.append('--force-bounce')

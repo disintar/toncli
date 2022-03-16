@@ -123,14 +123,14 @@ Credits: {gr}disintar.io{rs} team
     parser.add_argument("-v", "--version", help="package version", action='store_true')
     subparser = parser.add_subparsers()
 
-    version_local = pkg_resources.get_distribution("toncli").version
-    try:
-        version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
-
-        if version_global and version_global != version_local:
-            logger.info(update_text)
-    except:
-        pass
+    # version_local = pkg_resources.get_distribution("toncli").version
+    # try:
+    #     version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
+    #
+    #     if version_global and version_global != version_local:
+    #         logger.info(update_text)
+    # except:
+    #     pass
 
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -371,7 +371,7 @@ You can update them automatically using "toncli update_libs" or disable this war
             logger.error(f"🚫 {gr}{os.getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
             sys.exit(0)
 
-        contract = ContractDeployer(network='mainnet')
+        contract = ContractDeployer(network='ownnet')
         addrs = contract.get_address()
 
         for name, addr in zip(contract.project_config.contracts, addrs):

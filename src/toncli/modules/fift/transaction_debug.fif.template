@@ -35,5 +35,6 @@ in_msg_body
 code <s // load func code as slice
 storage // add c4 cell lodaded from lite-client
 c7 // add c7 cell
-runvmctx  // Runvm, in stack now seqno
-.s
+
+0x75 runvmx  // Runvm, in stack now seqno
+// .s
