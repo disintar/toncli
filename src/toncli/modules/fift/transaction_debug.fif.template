@@ -14,7 +14,7 @@
 
 "{{ config }}" file>B B>boc constant global_config
 
-"{{ smc_address }}" true parse-load-address drop swap drop constant address
+"{{ smc_address }}" true parse-load-address drop 2constant address
 
 0x076ef1ea           // magic
 0                    // actions
@@ -24,7 +24,7 @@
 {{ trans_lt }}       // trans_lt
 239                  // randseed
 {{ amount }} null pair // balance_remaining
-address                 // myself
+<b address Addr, b> <s // myself
 global_config        // global_config
 10 tuple 1 tuple constant c7 // save as c7 cell
 
