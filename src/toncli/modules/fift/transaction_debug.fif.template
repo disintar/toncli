@@ -24,7 +24,7 @@
 {{ trans_lt }}       // trans_lt
 239                  // randseed
 {{ amount }} null pair // balance_remaining
-address                 // myself
+<b address Addr, b> <s // myself
 global_config        // global_config
 10 tuple 1 tuple constant c7 // save as c7 cell
 

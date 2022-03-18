@@ -119,7 +119,7 @@ class Fift:
 
         # generate BOC file
         # Our own cli.fif file need to be added before run
-        command = fift_execute_command(file=self.args[0], args=[*self.args[1:]], pre_args=["-L", self.cli_fif_lib])
+        command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']], pre_args=["-L", self.cli_fif_lib])
 
         subprocess.run(command, cwd=self.cwd)
 
