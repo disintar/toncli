@@ -135,8 +135,6 @@ def run_transaction(network: str, smc_address: str, logical_time: str, tx_hash: 
         'function': str(function)
     }
 
-    print(render_kwargs)
-
     # Load template of transaction_debug
     loader = FileSystemLoader(f"{project_root}/modules/fift")
 

@@ -28,7 +28,7 @@
 global_config        // global_config
 10 tuple 1 tuple constant c7 // save as c7 cell
 
-{{ amount + msg_value }}
+{{ amount }}
 msg_value
 in_msg_cell
 in_msg_body
