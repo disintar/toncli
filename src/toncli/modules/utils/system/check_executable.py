@@ -3,6 +3,7 @@ import platform
 import shutil
 import subprocess
 from typing import Optional, List, Dict, Tuple
+
 from toncli.modules.utils.system.log import logger
 
 
@@ -21,6 +22,8 @@ def safe_get_version(executable: str) -> Optional[List[str]]:
 
 
 def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
+    from toncli.modules.utils.system.conf import getcwd
+
     config = {}
     is_executable_changes = False
 
@@ -33,8 +36,8 @@ def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
             else:
                 item_name = item
 
-            if item_name in os.listdir(os.getcwd()):
-                item_path = os.path.abspath(os.path.join(os.getcwd(), item_name))
+            if item_name in os.listdir(getcwd()):
+                item_path = os.path.abspath(os.path.join(getcwd(), item_name))
                 version_output = safe_get_version(item_path)
 
                 if version_output is not None and len(version_output) == 2:

@@ -18,7 +18,7 @@ from toncli.modules.deploy_contract import ContractDeployer
 from toncli.modules.projects import ProjectBootstrapper
 from toncli.modules.utils.func.func import Func
 from toncli.modules.utils.system.argparse_fix import argv_fix
-from toncli.modules.utils.system.conf import config_file
+from toncli.modules.utils.system.conf import config_file, getcwd
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.fift.cli_lib import process_build_cli_lib_command
 from toncli.modules.utils.fift.fift import Fift
@@ -367,8 +367,8 @@ You can update them automatically using "toncli update_libs" or disable this war
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['get', *kwargs])
     elif command == 'addrs':
-        if 'project.yaml' not in os.listdir(os.getcwd()):
-            logger.error(f"🚫 {gr}{os.getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
+        if 'project.yaml' not in os.listdir(getcwd()):
+            logger.error(f"🚫 {gr}{getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
             sys.exit(0)
 
         contract = ContractDeployer(network='ownnet')
@@ -518,14 +518,14 @@ You can update them automatically using "toncli update_libs" or disable this war
         contract_addr_file_name = 'build/contract_address'
         if os.path.isfile(contract_addr_file_name):
             bounceable_addr = ""
-            with open(contract_addr_file_name, 'r') as file:
+            with open(contract_addr_file_name, 'r', encoding='utf-8') as file:
                 addresses = file.read().split()
                 bounceable_addr = addresses[2]
             logger.info(f"Your bounceable address is: {gr}{bounceable_addr}{rs}")
 
             deploy_wallet_addr_dir = user_config_dir('toncli')
             deploy_bouncable = ""
-            with open(os.path.abspath(f"{deploy_wallet_addr_dir}/wallet/build/contract_address"), 'r') as file:
+            with open(os.path.abspath(f"{deploy_wallet_addr_dir}/wallet/build/contract_address"), 'r', encoding='utf-8') as file:
                 addresses = file.read().split()
                 deploy_bouncable = addresses[2]
             logger.info(f"Your deploy wallet address is: {gr}{deploy_bouncable}{rs}")

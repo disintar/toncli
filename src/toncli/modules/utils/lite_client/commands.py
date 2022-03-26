@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 from colorama import Fore, Style
 from requests import get as http_get
 
-from toncli.modules.utils.system.conf import executable, config_folder, config_uri
+from toncli.modules.utils.system.conf import executable, config_folder, config_uri, getcwd
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import lite_client_tries
 
@@ -74,7 +74,7 @@ def get_account_status(network: str, address: str, cwd: Optional[str] = None,
     e = None
     while _try < lite_client_tries + 1:
         try:
-            account_info = subprocess.check_output(command, cwd=os.getcwd() if not cwd else os.path.abspath(cwd))
+            account_info = subprocess.check_output(command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
             account_info = account_info.decode()
             break
         except Exception as exc:
@@ -113,7 +113,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
         e = None
         while _try < lite_client_tries + 1:
             try:
-                subprocess.run(command, cwd=os.getcwd() if not cwd else os.path.abspath(cwd))
+                subprocess.run(command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
                 break
             except Exception as exc:
                 e = exc
@@ -127,7 +127,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
         e = None
         while _try < lite_client_tries + 1:
             try:
-                output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else os.path.abspath(cwd)).decode()
+                output = subprocess.check_output(command, cwd=getcwd() if not cwd else os.path.abspath(cwd)).decode()
                 break
             except Exception as exc:
                 e = exc

@@ -6,7 +6,7 @@ from typing import Optional, List
 import yaml
 from colorama import Fore, Style
 
-from toncli.modules.utils.system.conf import config_folder, executable
+from toncli.modules.utils.system.conf import config_folder, executable, getcwd
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.project import migrate_project_struction
 from toncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
@@ -50,8 +50,8 @@ def build_files(func_files_locations: List[str], to_save_location: str, func_arg
                      os.path.abspath(to_save_location), "-SPA",
                      os.path.abspath(f"{config_folder}/func-libs/stdlib.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
-    print(' '.join(build_command))
-    get_output = subprocess.check_output(build_command, cwd=os.getcwd() if not cwd else os.path.abspath(cwd))
+
+    get_output = subprocess.check_output(build_command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
 
     if get_output:
         return get_output.decode()

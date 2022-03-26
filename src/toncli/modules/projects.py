@@ -6,7 +6,7 @@ from typing import Optional
 
 from colorama import Fore, Style
 
-from toncli.modules.utils.system.conf import project_root
+from toncli.modules.utils.system.conf import project_root, getcwd
 from toncli.modules.utils.system.log import logger
 
 gr = Fore.GREEN
@@ -27,7 +27,7 @@ class ProjectBootstrapper:
 
         self.project_location = f"{project_root}/projects"
         # current location where we need to create folder with project
-        self.current_location = os.getcwd() if not location else location
+        self.current_location = getcwd() if not location else location
 
     def deploy(self) -> None:
         logger.info(

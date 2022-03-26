@@ -57,7 +57,7 @@ def migrate_project_struction(old_version: str, cwd: str):
         logger.warning("🙀 Detected old version of project, migrate to newer one")
 
         func_files_path = f"{cwd}/func/files.yaml"
-        with open(f"{func_files_path}", "r") as stream:
+        with open(f"{func_files_path}", "r", encoding='utf-8') as stream:
             try:
                 func_configuration = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
@@ -74,7 +74,7 @@ def migrate_project_struction(old_version: str, cwd: str):
 
         yaml_structure = yaml.dump(new_structure)
 
-        with open(os.path.abspath(f"{cwd}/project.yaml"), "w") as stream:
+        with open(os.path.abspath(f"{cwd}/project.yaml"), "w", encoding='utf-8') as stream:
             stream.write(yaml_structure)
 
         if os.path.exists(os.path.abspath(f'{cwd}/build/address_text')):

@@ -57,7 +57,7 @@ class DeployWalletContract(AbstractDeployer):
 
             if len(data):
                 logger.info(
-                    f"🗝 You need to send TON to {gr}Bounceable address{rs} of Deployment wallet to start work\n"
+                    f"🗝 You need to send TON to {gr}Non-bounceable address{rs} of Deployment wallet to start work\n"
                     f"💎 About {gr}2 TON{rs} will be OK for 10-12 contracts\n"
                     f"🧪 Test coins can be found in {bl}@testgiver_ton_bot{rs} / @tondev")
 

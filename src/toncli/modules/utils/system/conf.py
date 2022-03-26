@@ -2,6 +2,7 @@ import configparser
 import os
 import platform
 import shutil
+import tempfile
 
 from appdirs import user_config_dir
 from colorama import Fore, Style
@@ -15,10 +16,31 @@ rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
 
-project_root = os.path.abspath("/".join(project_root.split(os.path.sep)[:-4]))  # get root folder of toncli/src
+project_root = os.path.abspath(os.path.sep.join(project_root.split(os.path.sep)[:-4]))  # get root folder of toncli/src
 
 # Folder to store config files in
 config_folder = user_config_dir('toncli')
+
+name_replace = ['', '']
+
+# fix win encoding
+# todo: find normal fix
+if platform.system() == 'Windows':
+    old_user = project_root.split(os.path.sep)[2]  # Old cyrillic name
+    user = config_folder.split(os.path.sep)[2]  # New name (in tempfile it's encoded)
+    project_root = project_root.replace(old_user, user)  # New path with encoded cyrillic name of user
+    name_replace = [old_user, user]
+
+
+def getcwd():
+    path = os.getcwd()
+
+    # fix win cyrillic
+    if platform.system() == 'Windows':
+        path = path.replace(name_replace[0], name_replace[1])
+
+    return path
+
 
 # Create if not exist
 if not os.path.exists(os.path.abspath(f"{config_folder}/config.ini")):

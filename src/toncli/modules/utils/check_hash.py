@@ -13,7 +13,7 @@ def get_dir_hashes(path):
     for path, subdirs, files in os.walk(path):
         for name in list(sorted(files)):
             fname = os.path.join(path, name)
-            with open(fname, 'rb') as file:
+            with open(fname, 'rb', encoding='utf-8') as file:
                 data = file.read()
                 ans.append(hashlib.md5(data).hexdigest())
     return ans

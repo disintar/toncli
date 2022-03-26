@@ -9,7 +9,7 @@ from typing import List, Optional
 from colorama import Fore, Style
 
 from toncli.modules.utils.func.func import Func
-from toncli.modules.utils.system.conf import config_folder, executable, lite_client_tries
+from toncli.modules.utils.system.conf import config_folder, executable, lite_client_tries, getcwd
 from toncli.modules.utils.fift.commands import fift_execute_command
 from toncli.modules.utils.lite_client.commands import lite_client_execute_command
 from toncli.modules.utils.system.log import logger
@@ -33,7 +33,7 @@ class Fift:
         :param quiet: Is output of lite-client needed
         :param cwd: Project root
         """
-        self.cwd = cwd if cwd else os.getcwd()
+        self.cwd = cwd if cwd else getcwd()
         self.command = command
         self.quiet = quiet
 
@@ -51,7 +51,7 @@ class Fift:
         self.args = args
 
         # Currently, running command in project root
-        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), True)
+        self.project_dir = check_for_needed_files_to_deploy(getcwd(), True)
         self.cli_fif_lib = None
 
     def run(self):
@@ -78,7 +78,7 @@ class Fift:
         filename = self.args[0]
 
         # Check that
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             code = f.read()
 
             if 'saveboc' not in code:
@@ -132,7 +132,7 @@ class Fift:
                                               update_config=self.kwargs['update'])
         output = None
         if self.quiet:
-            output = open(os.devnull, 'w')
+            output = open(os.devnull, 'w', encoding='utf-8')
 
         for _try in range(lite_client_tries):
             try:
