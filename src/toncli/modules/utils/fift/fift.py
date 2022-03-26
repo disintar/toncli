@@ -1,4 +1,5 @@
 import os
+import platform
 import shlex
 import subprocess
 import sys
@@ -84,26 +85,29 @@ class Fift:
                 logger.error(f"🦷 You need to add {bl}saveboc{rs} to your fif file {gr}{filename}{rs}")
                 sys.exit()
 
-        # remove folder
-        if '/' in filename:
-            filename = filename.split('/')[-1]
+        if platform.system() == 'Windows':
+            if '\\' in filename:
+                filename = os.path.split(filename)[-1]
+        else:
+            if '/' in filename:
+                filename = filename.split('/')[-1]
 
         # get file-base
         if '.' in filename:
             filename = filename.split('.')[0]
 
         if os.path.exists(os.path.abspath(f'{self.cwd}/build/boc')):
-            path = f'{self.cwd}/build/boc/{filename}.boc'
+            path = os.path.abspath(f'{self.cwd}/build/boc/{filename}.boc')
         else:
             # if not project root - create temp directory
             path = tempfile.mkdtemp()
-            path = f"{path}/{filename}.boc"
+            path = os.path.abspath(f"{path}/{filename}.boc")
 
         logger.info(f"💾 Will save BOC to {gr}{path}{rs}")
 
         # If we never created cli.fif in project root
         if self.project_dir:
-            self.cli_fif_lib = build_cli_lib(f'{self.cwd}/build/cli.fif', {  # Generate cli.fif
+            self.cli_fif_lib = build_cli_lib(os.path.abspath(f'{self.cwd}/build/cli.fif'), {  # Generate cli.fif
                 "is_project": '1',
                 "project_root": self.cwd,
                 "build_path": path,
@@ -113,7 +117,7 @@ class Fift:
         elif not self.project_dir:
             self.cli_fif_lib = build_cli_lib(render_kwargs={
                 "is_project": '0',
-                "project_root": f'/tmp',
+                "project_root": tempfile.gettempdir(),
                 "build_path": path
             })
 
@@ -149,7 +153,7 @@ class Fift:
             sys.exit()
 
         if not len(self.kwargs['fift_args']):
-            self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-s"]
+            self.kwargs['fift_args'] = ["-I", os.path.abspath(f"{config_folder}/fift-libs"), "-s"]
         else:
             self.kwargs['fift_args'].append("-s")
 
@@ -166,7 +170,7 @@ class Fift:
         logger.info(f"🖥  Run interactive fift for you ({bl}Ctrl+c{rs} to exit)")
         logger.info(f"🖥  A simple Fift interpreter. Type `bye` to quit, or `words` to get a list of all commands")
         if not len(self.kwargs['fift_args']):
-            self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-i"]
+            self.kwargs['fift_args'] = ["-I", os.path.abspath(f"{config_folder}/fift-libs"), "-i"]
         else:
             self.kwargs['fift_args'].append("-i")
 

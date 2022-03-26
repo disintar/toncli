@@ -1,4 +1,5 @@
 import os
+import platform
 import shlex
 import subprocess
 import sys
@@ -54,16 +55,20 @@ class Func:
         if len(self.args):
             file_path = self.args[-1]
 
-            if '/' in file_path:
-                file_path = file_path.split('/')[-1]
+            if platform.system() == 'Windows':
+                if '\\' in file_path:
+                    file_path = os.path.split(file_path)[-1]
+            else:
+                if '/' in file_path:
+                    file_path = file_path.split('/')[-1]
 
             # Parse file base
             to_save_location = f"{file_path.split('.')[0]}.fif"
 
             if self.project_dir:
-                to_save_location = f"{os.getcwd()}/build/{to_save_location}"
+                to_save_location = os.path.abspath(f"{os.getcwd()}/build/{to_save_location}")
 
-            self.args = list(map(lambda file: f"{os.getcwd()}/{file}", self.args))
+            self.args = list(map(lambda file: os.path.abspath(f"{os.getcwd()}/{file}"), self.args))
 
             build_files(self.args, to_save_location, self.kwargs['func_args'], cwd=os.getcwd())
 
@@ -73,7 +78,7 @@ class Func:
                     f"🤟 It is not project root [{bl}{os.getcwd()}{rs}] - I can't build project without project")
                 sys.exit()
 
-            to_save_location = f"{os.getcwd()}/build"
+            to_save_location = os.path.abspath(f"{os.getcwd()}/build")
 
             # Build code
             fift_build(os.getcwd(), cwd=os.getcwd())

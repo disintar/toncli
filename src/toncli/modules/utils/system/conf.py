@@ -13,7 +13,7 @@ bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
-project_root = "/".join(project_root.split("/")[:-4])  # get root folder of toncli/src
+project_root = os.path.abspath("/".join(os.path.split(project_root)[:-4]))  # get root folder of toncli/src
 
 # Folder to store config files in
 config_folder = user_config_dir('toncli')
@@ -21,7 +21,7 @@ config_folder = user_config_dir('toncli')
 # Create if not exist
 if not os.path.exists(os.path.abspath(config_folder)):
     config = configparser.ConfigParser()
-    config.read(f'{project_root}/config.ini')
+    config.read(os.path.abspath(f'{project_root}/config.ini'))
 
     config['executable'] = {
         'func': '',
@@ -40,13 +40,13 @@ if not os.path.exists(os.path.abspath(config_folder)):
 
     os.makedirs(config_folder)
 
-    with open(f'{config_folder}/config.ini', 'w') as config_file:
+    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as config_file:
         config.write(config_file)
 
     shutil.copytree(os.path.abspath(f"{project_root}/lib/"), os.path.abspath(f"{config_folder}"),
                     dirs_exist_ok=True)  # copy all fift / func libs
 
-config_file = f"{config_folder}/config.ini"
+config_file = os.path.abspath(f"{config_folder}/config.ini")
 
 config = configparser.ConfigParser()
 config.read(config_file)
@@ -79,7 +79,7 @@ new_executable, is_executable_changes = check_executable(dict(config['executable
 if is_executable_changes:
     config['executable'] = new_executable
 
-    with open(f'{config_folder}/config.ini', 'w') as config_file:
+    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as config_file:
         config.write(config_file)
 
 executable = {

@@ -34,11 +34,11 @@ def get_network_config_path(network: str, update_config: bool = False) -> str:
         # need to download config file and save it
         r = http_get(config_uri[network], stream=True)
         if r.status_code == 200:
-            with open(f"{config_folder}/{filename}", 'wb') as f:
+            with open(os.path.abspath(f"{config_folder}/{filename}"), 'wb') as f:
                 for chunk in r:
                     f.write(chunk)
 
-    return f"{config_folder}/{filename}"
+    return os.path.abspath(f"{config_folder}/{filename}")
 
 
 def lite_client_execute_command(network: str, args: List[str], update_config=False, ) -> List[str]:

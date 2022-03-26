@@ -25,7 +25,7 @@ class DeployWalletContract(AbstractDeployer):
         super().__init__()
         self.network = network
         self.workchain = workchain
-        self.project_root = f"{config_folder}/wallet"
+        self.project_root = os.path.abspath(f"{config_folder}/wallet")
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
         if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
@@ -82,7 +82,7 @@ class DeployWalletContract(AbstractDeployer):
             sys.exit()
 
         seqno = self.get_seqno()[0]
-        args = [f'{self.project_root}/fift/usage.fif', 'build/contract', address, '0', str(seqno), str(amount),
+        args = [os.path.abspath(f'{self.project_root}/fift/usage.fif'), 'build/contract', address, '0', str(seqno), str(amount),
                 "--no-bounce"]
 
         fift = Fift('sendboc', args=args, kwargs={'fift_args': "",

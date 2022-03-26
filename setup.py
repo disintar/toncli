@@ -7,8 +7,8 @@ with open("requirements.txt", encoding="utf-8") as fh:
     install_requires = fh.read().split('\n')
 
 setuptools.setup(
-    name="toncli",
-    version="0.0.17",
+    name="toncli-win",
+    version="0.0.02",
     author="Andrey Tvorozhkov",
     author_email="andrey@head-labs.com",
     description="Easy to use CLI for fift / func projects",
