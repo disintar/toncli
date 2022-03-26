@@ -525,7 +525,7 @@ You can update them automatically using "toncli update_libs" or disable this war
 
             deploy_wallet_addr_dir = user_config_dir('toncli')
             deploy_bouncable = ""
-            with open(f"{deploy_wallet_addr_dir}/wallet/build/contract_address", 'r') as file:
+            with open(os.path.abspath(f"{deploy_wallet_addr_dir}/wallet/build/contract_address"), 'r') as file:
                 addresses = file.read().split()
                 deploy_bouncable = addresses[2]
             logger.info(f"Your deploy wallet address is: {gr}{deploy_bouncable}{rs}")

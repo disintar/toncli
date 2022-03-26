@@ -1,3 +1,4 @@
+import os.path
 import sys
 from typing import List
 
@@ -27,7 +28,7 @@ class ProjectConf:
         """Parse project.yaml to correctly build project"""
         self.contracts: List[TonProjectConfig] = []
 
-        with open(f"{project_root}/project.yaml", "r") as stream:
+        with open(os.path.abspath(f"{project_root}/project.yaml"), "r") as stream:
             try:
                 func_configuration = yaml.safe_load(stream)
             except yaml.YAMLError as exc:

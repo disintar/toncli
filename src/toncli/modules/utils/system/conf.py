@@ -1,10 +1,11 @@
 import configparser
 import os
+import platform
 import shutil
 
 from appdirs import user_config_dir
 from colorama import Fore, Style
-
+from copy import deepcopy
 from toncli.modules.utils.system.check_executable import safe_get_version, check_executable
 from toncli.modules.utils.system.log import logger
 
@@ -13,13 +14,14 @@ bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
-project_root = os.path.abspath("/".join(os.path.split(project_root)[:-4]))  # get root folder of toncli/src
+
+project_root = os.path.abspath("/".join(project_root.split(os.path.sep)[:-4]))  # get root folder of toncli/src
 
 # Folder to store config files in
 config_folder = user_config_dir('toncli')
 
 # Create if not exist
-if not os.path.exists(os.path.abspath(config_folder)):
+if not os.path.exists(os.path.abspath(f"{config_folder}/config.ini")):
     config = configparser.ConfigParser()
     config.read(os.path.abspath(f'{project_root}/config.ini'))
 
@@ -49,7 +51,7 @@ if not os.path.exists(os.path.abspath(config_folder)):
 config_file = os.path.abspath(f"{config_folder}/config.ini")
 
 config = configparser.ConfigParser()
-config.read(config_file)
+config.read(os.path.abspath(f"{config_folder}/config.ini"))
 
 if 'toncenter_mainnet' not in config['DEFAULT'] or 'toncenter_testnet' not in config['DEFAULT']:
     config['DEFAULT']['toncenter_mainnet'] = 'https://toncenter.com/api/v2'
@@ -79,8 +81,8 @@ new_executable, is_executable_changes = check_executable(dict(config['executable
 if is_executable_changes:
     config['executable'] = new_executable
 
-    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as config_file:
-        config.write(config_file)
+    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as cfg_path:
+        config.write(cfg_path)
 
 executable = {
     'fift': new_executable['fift'],

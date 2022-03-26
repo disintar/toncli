@@ -74,7 +74,7 @@ def migrate_project_struction(old_version: str, cwd: str):
 
         yaml_structure = yaml.dump(new_structure)
 
-        with open(f"{cwd}/project.yaml", "w") as stream:
+        with open(os.path.abspath(f"{cwd}/project.yaml"), "w") as stream:
             stream.write(yaml_structure)
 
         if os.path.exists(os.path.abspath(f'{cwd}/build/address_text')):

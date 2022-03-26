@@ -48,7 +48,9 @@ def build_files(func_files_locations: List[str], to_save_location: str, func_arg
                 cwd: Optional[str] = None):
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
                      os.path.abspath(to_save_location), "-SPA",
-                     os.path.abspath(f"{config_folder}/func-libs/stdlib.func"), *func_files_locations]
+                     os.path.abspath(f"{config_folder}/func-libs/stdlib.func"),
+                     *[os.path.abspath(i) for i in func_files_locations]]
+    print(' '.join(build_command))
     get_output = subprocess.check_output(build_command, cwd=os.getcwd() if not cwd else os.path.abspath(cwd))
 
     if get_output:
