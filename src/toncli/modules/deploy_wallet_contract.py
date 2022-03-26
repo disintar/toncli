@@ -28,7 +28,7 @@ class DeployWalletContract(AbstractDeployer):
         self.project_root = f"{config_folder}/wallet"
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
-        if os.path.exists(f"{self.project_root}/func/files.yaml"):
+        if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
             migrate_project_struction('0.0.14', self.project_root)
 
         # We need to check if wallet for deploying is exist

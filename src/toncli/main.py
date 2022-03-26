@@ -539,8 +539,10 @@ You can update them automatically using "toncli update_libs" or disable this war
     elif command == 'update_libs':
         global_lib_path, local_lib_path = get_libs_paths()
 
-        shutil.copytree(f"{global_lib_path}/fift-libs", f"{local_lib_path}/fift-libs", dirs_exist_ok=True)
-        shutil.copytree(f"{global_lib_path}/func-libs", f"{local_lib_path}/func-libs", dirs_exist_ok=True)
+        shutil.copytree(os.path.abspath(f"{global_lib_path}/fift-libs"), os.path.abspath(f"{local_lib_path}/fift-libs"),
+                        dirs_exist_ok=True)
+        shutil.copytree(os.path.abspath(f"{global_lib_path}/func-libs"), os.path.abspath(f"{local_lib_path}/func-libs"),
+                        dirs_exist_ok=True)
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
 
     else:

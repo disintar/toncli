@@ -122,7 +122,7 @@ class AbstractDeployer:
 
         for contract in contracts:
             # TODO: load address from build/contract.addr
-            if not os.path.exists(contract.address):
+            if not os.path.exists(os.path.abspath(contract.address)):
                 raise ValueError(f"😥 No address_text found in {contract.address}")
 
             with open(contract.address) as f:

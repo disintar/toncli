@@ -77,8 +77,9 @@ def migrate_project_struction(old_version: str, cwd: str):
         with open(f"{cwd}/project.yaml", "w") as stream:
             stream.write(yaml_structure)
 
-        if os.path.exists(f'{cwd}/build/address_text'):
-            shutil.move(f"{cwd}/build/address_text", f"{cwd}/build/contract_address")
+        if os.path.exists(os.path.abspath(f'{cwd}/build/address_text')):
+            shutil.move(os.path.abspath(f"{cwd}/build/address_text"),
+                        os.path.abspath(f"{cwd}/build/contract_address"))
 
         os.remove(func_files_path)
         logger.info("☀ Successful migrated to v0.0.15 project structure")

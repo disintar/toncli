@@ -92,7 +92,7 @@ class Fift:
         if '.' in filename:
             filename = filename.split('.')[0]
 
-        if os.path.exists(f'{self.cwd}/build/boc'):
+        if os.path.exists(os.path.abspath(f'{self.cwd}/build/boc')):
             path = f'{self.cwd}/build/boc/{filename}.boc'
         else:
             # if not project root - create temp directory
@@ -121,7 +121,7 @@ class Fift:
         # Our own cli.fif file need to be added before run
         command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']], pre_args=["-L", self.cli_fif_lib])
 
-        subprocess.run(command, cwd=self.cwd)
+        subprocess.run(command, cwd=os.path.abspath(self.cwd))
 
         # send boc file
         command = lite_client_execute_command(self.kwargs['net'], ['-v', '2', '-c', f'sendfile {path}'],
@@ -132,7 +132,7 @@ class Fift:
 
         for _try in range(lite_client_tries):
             try:
-                output = subprocess.check_output(command, cwd=self.cwd)
+                output = subprocess.check_output(command, cwd=os.path.abspath(self.cwd))
                 if 'Connection refused' in output.decode():
                     continue
                 break

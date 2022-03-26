@@ -19,7 +19,7 @@ project_root = "/".join(project_root.split("/")[:-4])  # get root folder of tonc
 config_folder = user_config_dir('toncli')
 
 # Create if not exist
-if not os.path.exists(config_folder):
+if not os.path.exists(os.path.abspath(config_folder)):
     config = configparser.ConfigParser()
     config.read(f'{project_root}/config.ini')
 
@@ -43,7 +43,7 @@ if not os.path.exists(config_folder):
     with open(f'{config_folder}/config.ini', 'w') as config_file:
         config.write(config_file)
 
-    shutil.copytree(f"{project_root}/lib/", f"{config_folder}",
+    shutil.copytree(os.path.abspath(f"{project_root}/lib/"), os.path.abspath(f"{config_folder}"),
                     dirs_exist_ok=True)  # copy all fift / func libs
 
 config_file = f"{config_folder}/config.ini"

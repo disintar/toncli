@@ -21,7 +21,11 @@ def fift_execute_command(file: str, args: List[str], pre_args: Optional[List[str
     if not pre_args:
         pre_args = []
 
-    return [executable['fift'], "-I", f"{config_folder}/fift-libs", *pre_args, "-s", file, *args]
+    return [os.path.abspath(executable['fift']), "-I",
+            os.path.abspath(f"{config_folder}/fift-libs"),
+            *pre_args, "-s",
+            os.path.abspath(file),
+            *args]
 
 
 def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optional[str] = None,

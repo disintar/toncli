@@ -7,7 +7,7 @@ from toncli.modules.utils.system.log import logger
 
 def safe_get_version(executable: str) -> Optional[List[str]]:
     try:
-        output = subprocess.check_output([executable, '-V'])
+        output = subprocess.check_output([os.path.abspath(executable), '-V'])
         output = output.decode()
 
         if ' build information:' in output:
@@ -24,7 +24,7 @@ def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
     is_executable_changes = False
 
     for item in ['func', 'fift', 'lite-client']:
-        if not os.path.exists(executable_config[item]):
+        if not os.path.exists(os.path.abspath(executable_config[item])):
             executable_path = shutil.which(item)
 
             if executable_path:
