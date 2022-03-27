@@ -16,6 +16,7 @@ from colorama import Fore, Style
 
 from toncli.modules.deploy_contract import ContractDeployer
 from toncli.modules.projects import ProjectBootstrapper
+from toncli.modules.tests.tests import TestsRunner
 from toncli.modules.utils.func.func import Func
 from toncli.modules.utils.system.argparse_fix import argv_fix
 from toncli.modules.utils.system.conf import config_file, getcwd
@@ -298,9 +299,11 @@ You can update them automatically using "toncli update_libs" or disable this war
                                 help='Network to deploy')
 
     #
-    #  WALLET
+    #  TESTS
     #
-    parser_wallet = subparser.add_parser('wallet')
+    run_tests = subparser.add_parser('run_tests')
+    run_tests.add_argument("--contracts", "-c", type=str,
+                           help='Set contract name from project.yaml to run tests on')
 
     #
     #  UPDATE LIBS
@@ -366,6 +369,9 @@ You can update them automatically using "toncli update_libs" or disable this war
     elif command == 'get':
         _, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['get', *kwargs])
+    elif command == 'run_tests':
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
+        args = parser.parse_args(['run_tests', *kwargs])
     elif command == 'addrs':
         if 'project.yaml' not in os.listdir(getcwd()):
             logger.error(f"🚫 {gr}{getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
@@ -525,7 +531,8 @@ You can update them automatically using "toncli update_libs" or disable this war
 
             deploy_wallet_addr_dir = user_config_dir('toncli')
             deploy_bouncable = ""
-            with open(os.path.abspath(f"{deploy_wallet_addr_dir}/wallet/build/contract_address"), 'r', encoding='utf-8') as file:
+            with open(os.path.abspath(f"{deploy_wallet_addr_dir}/wallet/build/contract_address"), 'r',
+                      encoding='utf-8') as file:
                 addresses = file.read().split()
                 deploy_bouncable = addresses[2]
             logger.info(f"Your deploy wallet address is: {gr}{deploy_bouncable}{rs}")
@@ -544,7 +551,9 @@ You can update them automatically using "toncli update_libs" or disable this war
         shutil.copytree(os.path.abspath(f"{global_lib_path}/func-libs"), os.path.abspath(f"{local_lib_path}/func-libs"),
                         dirs_exist_ok=True)
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
-
+    elif command == 'run_tests':
+        test_runner = TestsRunner()
+        test_runner.run(args.contracts)
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()

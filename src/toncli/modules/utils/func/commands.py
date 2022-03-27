@@ -29,9 +29,8 @@ def build(project_root: str,
     :param cwd: If you need to change root of running script pass it here
     :return:
     """
-    project_config = ProjectConf(project_root)
-
     if not contracts:
+        project_config = ProjectConf(project_root)
         contracts = project_config.contracts
 
     if not func_args:
@@ -40,6 +39,8 @@ def build(project_root: str,
     output = []
     for contract in contracts:
         output.append(build_files(contract.func_files_locations, contract.to_save_location, func_args, cwd))
+        if len(contract.func_tests_files_locations):
+            output.append(build_files(contract.func_tests_files_locations, contract.to_save_tests_location, [], cwd))
 
     return "\n".join(list(map(str, output)))
 

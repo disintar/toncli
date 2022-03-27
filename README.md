@@ -15,7 +15,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/toncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/toncli&amp;utm_campaign=Badge_Grade)
 [![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
-TON smart contract command line interface
+The Open Network cross-platform smart contract command line interface
 
 ## State
 
@@ -41,25 +41,26 @@ There is many TODOs in code - feel free to fix them and create PRs
 ## Features and status
 
 | Feature                                                                                         | Status |
-|-------------------------------------------------------------------------------------------------|--------|
-| `fift` / `func` / `lite-server` usage                                                           | ✅      |
-| Easy bootstrap project samples `wallet`                                                         | ✅      |
-| Deploy-wallet for auto send TON to contracts and tests                                          | ✅      |
-| Compile func to `build/` from `func/` with `files.yaml`                                         | ✅      |
-| Auto send TON to init contract address                                                          | ✅      |
-| Deploy to mainnet / testnet                                                                     | ✅      |
-| Project interact after deploy: easily send messages, run getmethods                             | ✅      |
-| Load from hard project structure (example: `src/projects/wallet`)                               | ✅      |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅      |
-| Get contract address by `toncli address`                                                         | ❌      |
-| Gas auto calculation for store & deploy                                                         | ❌      |
-| Add more project samples with advanced usage                                                    | ❌      |
-| Project tests with `runvmcode`                                                                  | ❌      |
-| Project debug                                                                                   | ❌      |
-| Library support                                                                                 | ❌      |
-| Init Message support  (with signature)                                                          | ❌      |
-| Docs for contract creation for beginners                                                        | ❌      |
-| Advanced user-friendly docs on `fift`, `func`                                                   | ❌      |
+|-------------------------------------------------------------------------------------------------|-----|
+| `fift` / `func` / `lite-server` usage                                                           | ✅   |
+| Easy bootstrap project samples `wallet`                                                         | ✅   |
+| Deploy-wallet for auto send TON to contracts and tests                                          | ✅   |
+| Compile func to `build/` from `func/` with `files.yaml`                                         | ✅   |
+| Auto send TON to init contract address                                                          | ✅   |
+| Deploy to mainnet / testnet                                                                     | ✅   |
+| Project interact after deploy: easily send messages, run getmethods                             | ✅   |
+| Load from hard project structure (example: `src/projects/wallet`)                               | ✅   |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅   |
+| Get contract address by `toncli address`                                                        | ✅    |
+| Docs for contract creation for beginners                                                        | ✅    |
+| Project tests with `runvmcode`                                                                  | ✅    |
+| Windows & Linux support                                                                         | ✅    |
+| Gas auto calculation for store & deploy                                                         | ❌   |
+| Add more project samples with advanced usage                                                    | ❌   |
+| Project debug                                                                                   | ❌   |
+| Library support                                                                                 | ❌   |
+| Init Message support  (with signature)                                                          | ❌   |
+| Advanced user-friendly docs on `fift`, `func`                                                   | ❌   |
 
 ## Commands
 
