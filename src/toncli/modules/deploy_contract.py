@@ -6,6 +6,7 @@ from colorama import Fore, Style
 
 from toncli.modules.abstract.deployer import AbstractDeployer
 from toncli.modules.deploy_wallet_contract import DeployWalletContract
+from toncli.modules.utils.system.conf import getcwd
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.project import migrate_project_struction
 from toncli.modules.utils.system.project_conf import ProjectConf
@@ -22,10 +23,10 @@ class ContractDeployer(AbstractDeployer):
 
         self.network: str = network
         self.update_config: bool = update_config
-        self.project_root: str = os.getcwd()
+        self.project_root: str = getcwd()
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
-        if os.path.exists(f"{self.project_root}/func/files.yaml"):
+        if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
             migrate_project_struction('0.0.14', self.project_root)
 
         self.project_config = ProjectConf(self.project_root)
