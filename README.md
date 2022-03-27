@@ -113,4 +113,4 @@ The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/tonc
 
 ## Help and questions
 
-Feel free to ask questions and help in official telegram chats: [Russion](https://t.me/tondev) / [English](https://t.me/tondev_eng)
+Feel free to ask questions and help in official telegram chats: [Russian](https://t.me/tondev) / [English](https://t.me/tondev_eng)
