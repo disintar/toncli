@@ -1,4 +1,5 @@
 import os
+import platform
 import shlex
 import subprocess
 import sys
@@ -9,7 +10,7 @@ from colorama import Fore, Style
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.project import check_for_needed_files_to_deploy
 from toncli.modules.utils.func.commands import build as fift_build, build_files
-from toncli.modules.utils.system.conf import executable
+from toncli.modules.utils.system.conf import executable, getcwd
 from toncli.modules.utils.fift.commands import fift_execute_command
 
 bl = Fore.CYAN
@@ -32,7 +33,7 @@ class Func:
         self.args = args if args else []
 
         # Currently, running command in project root
-        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), False)
+        self.project_dir = check_for_needed_files_to_deploy(getcwd(), False)
 
     def run(self):
         if not self.command or self.command == 'build':
@@ -53,33 +54,31 @@ class Func:
         # If file to build is passed
         if len(self.args):
             file_path = self.args[-1]
-
-            if '/' in file_path:
-                file_path = file_path.split('/')[-1]
+            file_path = file_path.split(os.path.sep)[-1]
 
             # Parse file base
             to_save_location = f"{file_path.split('.')[0]}.fif"
 
             if self.project_dir:
-                to_save_location = f"{os.getcwd()}/build/{to_save_location}"
+                to_save_location = os.path.abspath(f"{getcwd()}/build/{to_save_location}")
 
-            self.args = list(map(lambda file: f"{os.getcwd()}/{file}", self.args))
+            self.args = list(map(lambda file: os.path.abspath(f"{getcwd()}/{file}"), self.args))
 
-            build_files(self.args, to_save_location, self.kwargs['func_args'], cwd=os.getcwd())
+            build_files(self.args, to_save_location, self.kwargs['func_args'], cwd=getcwd())
 
         else:
             if not self.project_dir:
                 logger.error(
-                    f"🤟 It is not project root [{bl}{os.getcwd()}{rs}] - I can't build project without project")
+                    f"🤟 It is not project root [{bl}{getcwd()}{rs}] - I can't build project without project")
                 sys.exit()
 
-            to_save_location = f"{os.getcwd()}/build"
+            to_save_location = os.path.abspath(f"{getcwd()}/build")
 
             # Build code
-            fift_build(os.getcwd(), cwd=os.getcwd())
+            fift_build(getcwd(), cwd=getcwd())
 
-        build = [i.replace(os.getcwd(), '') for i in self.args]
-        location = to_save_location.replace(os.getcwd(), '')
+        build = [i.replace(getcwd(), '') for i in self.args]
+        location = to_save_location.replace(getcwd(), '')
         logger.info(f"🥌 Build {bl}{build}{rs} {gr}successfully{rs}, check out {gr}.{location}{rs}")
 
         if run_code:

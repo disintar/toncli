@@ -1,10 +1,12 @@
 import configparser
 import os
+import platform
 import shutil
+import tempfile
 
 from appdirs import user_config_dir
 from colorama import Fore, Style
-
+from copy import deepcopy
 from toncli.modules.utils.system.check_executable import safe_get_version, check_executable
 from toncli.modules.utils.system.log import logger
 
@@ -13,15 +15,37 @@ bl = Fore.CYAN
 rs = Style.RESET_ALL
 
 project_root = os.path.realpath(__file__)
-project_root = "/".join(project_root.split("/")[:-4])  # get root folder of toncli/src
+
+project_root = os.path.abspath(os.path.sep.join(project_root.split(os.path.sep)[:-4]))  # get root folder of toncli/src
 
 # Folder to store config files in
 config_folder = user_config_dir('toncli')
 
+name_replace = ['', '']
+
+# fix win encoding
+# todo: find normal fix
+if platform.system() == 'Windows':
+    old_user = project_root.split(os.path.sep)[2]  # Old cyrillic name
+    user = config_folder.split(os.path.sep)[2]  # New name (in tempfile it's encoded)
+    project_root = project_root.replace(old_user, user)  # New path with encoded cyrillic name of user
+    name_replace = [old_user, user]
+
+
+def getcwd():
+    path = os.getcwd()
+
+    # fix win cyrillic
+    if platform.system() == 'Windows':
+        path = path.replace(name_replace[0], name_replace[1])
+
+    return path
+
+
 # Create if not exist
-if not os.path.exists(config_folder):
+if not os.path.exists(os.path.abspath(f"{config_folder}/config.ini")):
     config = configparser.ConfigParser()
-    config.read(f'{project_root}/config.ini')
+    config.read(os.path.abspath(f'{project_root}/config.ini'))
 
     config['executable'] = {
         'func': '',
@@ -40,16 +64,16 @@ if not os.path.exists(config_folder):
 
     os.makedirs(config_folder)
 
-    with open(f'{config_folder}/config.ini', 'w') as config_file:
+    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as config_file:
         config.write(config_file)
 
-    shutil.copytree(f"{project_root}/lib/", f"{config_folder}",
+    shutil.copytree(os.path.abspath(f"{project_root}/lib/"), os.path.abspath(f"{config_folder}"),
                     dirs_exist_ok=True)  # copy all fift / func libs
 
-config_file = f"{config_folder}/config.ini"
+config_file = os.path.abspath(f"{config_folder}/config.ini")
 
 config = configparser.ConfigParser()
-config.read(config_file)
+config.read(os.path.abspath(f"{config_folder}/config.ini"))
 
 if 'toncenter_mainnet' not in config['DEFAULT'] or 'toncenter_testnet' not in config['DEFAULT']:
     config['DEFAULT']['toncenter_mainnet'] = 'https://toncenter.com/api/v2'
@@ -63,12 +87,14 @@ main_config = config['DEFAULT']
 # URI to get config from
 config_uri = {
     'testnet': main_config.get('testnet'),
-    'mainnet': main_config.get('mainnet')
+    'mainnet': main_config.get('mainnet'),
+    'ownnet': main_config.get('ownnet', ''),
 }
 
 toncenter = {
     'mainnet': main_config.get('toncenter_mainnet'),
     'testnet': main_config.get('toncenter_testnet'),
+    'ownnet': main_config.get('toncenter_ownnet', ''),
 }
 
 # Here we need to correctly define executable path
@@ -77,11 +103,13 @@ new_executable, is_executable_changes = check_executable(dict(config['executable
 if is_executable_changes:
     config['executable'] = new_executable
 
-    with open(f'{config_folder}/config.ini', 'w') as config_file:
-        config.write(config_file)
+    with open(os.path.abspath(f'{config_folder}/config.ini'), 'w') as cfg_path:
+        config.write(cfg_path)
 
 executable = {
     'fift': new_executable['fift'],
     'func': new_executable['func'],
     'lite-client': new_executable['lite-client'],
 }
+
+lite_client_tries = 7

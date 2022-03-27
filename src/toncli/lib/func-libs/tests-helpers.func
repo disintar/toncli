@@ -1,0 +1,24 @@
+
+;; tuple creation helper
+forall X -> tuple unsafe_tuple(X x) asm "NOP";
+
+;; Toncli will automaticly download global_config
+;; And pass it to runvm (when running data functions)
+;; So you can get actual global config of network from get_config() function
+cell get_config() asm "CONFIGROOT";
+
+;; c7 config (if you don't know what it is - just use as is)
+tuple get_c7() inline method_id {
+    return unsafe_tuple([unsafe_tuple([
+        0x076ef1ea,           ;; magic
+        0,                    ;; actions
+        0,                    ;; msgs_sent
+        now(),                ;; unixtime
+        1,                    ;; block_lt
+        1,                    ;; trans_lt
+        239,                  ;; randseed
+        unsafe_tuple([1000000000, null()]),  ;; balance_remaining
+        null(),               ;; myself
+        get_config()          ;; global_config
+    ])]);
+}

@@ -28,6 +28,7 @@
 global_config        // global_config
 10 tuple 1 tuple constant c7 // save as c7 cell
 
+{{ amount }}
 msg_value
 in_msg_cell
 in_msg_body
@@ -35,5 +36,5 @@ in_msg_body
 code <s // load func code as slice
 storage // add c4 cell lodaded from lite-client
 c7 // add c7 cell
-runvmctx 2drop // Runvm, in stack now seqno
-.s
+0x75 runvmx  // Runvm, in stack now seqno
+// .s

@@ -24,10 +24,10 @@
     }
 
     set_data(begin_cell()
-    .store_uint(stored_seqno + 1, 32)
-    .store_uint(stored_subwallet, 32)
-    .store_uint(public_key, 256)
-    .end_cell());
+        .store_uint(stored_seqno + 1, 32)
+        .store_uint(stored_subwallet, 32)
+        .store_uint(public_key, 256)
+        .end_cell());
 }
 
 ;; Get methods
@@ -46,7 +46,7 @@ int hello_world() method_id {
     ;; Ok now you need to add integer of your text
     ;; But soon TON Foundation will add string literals to func
     ;; And you will not need to do this
-    ;; hi as integer, try toncli tointeger hi
+    ;; hi as integer, try toncli topinteger hi
     return 26729;
 }
 

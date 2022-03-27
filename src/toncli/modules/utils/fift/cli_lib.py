@@ -32,7 +32,7 @@ def build_cli_lib(to_save_location: Optional[str] = None, render_kwargs: Optiona
 
     rendered = template.render(**render_kwargs)
 
-    with open(to_save_location, 'w') as f:
+    with open(to_save_location, 'w', encoding='utf-8') as f:
         f.write(rendered)
 
     return to_save_location

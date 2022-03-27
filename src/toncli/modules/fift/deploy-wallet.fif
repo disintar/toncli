@@ -25,7 +25,7 @@ begin-options
     "Indicates the amount of extra currencies to be transfered" option-help
   "t" "--timeout" { parse-int =: timeout } short-long-option-arg
     "Sets expiration timeout in seconds (" timeout (.) $+ +" by default)" option-help
-  "B" "--body" { =: body-fift-file } short-long-option-arg
+  "B" "--body" { =: body-boc-file } short-long-option-arg
     "Sets the payload of the transfer message" option-help
   "C" "--comment" { =: comment } short-long-option-arg
     "Sets the comment to be sent in the transfer message" option-help
@@ -54,7 +54,7 @@ load-address
 ."INFO: 👀 Source wallet address = " 2dup 6 .Addr cr
 file-base +".pk" load-keypair nip constant wallet_pk
 
-def? body-fift-file { @' body-fift-file include } { comment simple-transfer-body } cond
+def? body-boc-file { @' body-boc-file file>B B>boc } { comment simple-transfer-body } cond
 constant body-cell
 
 ."INFO: 👋 Send " dest_addr 2dup bounce 7 + .Addr ." = "

@@ -7,7 +7,7 @@
 
 "build/boc/c3.boc" file>B // load file to bytes
  B>boc // deserializes bag of cells
- constant code // save as code
+ constant code // save as cod
 
 // You can do in bash: toncli lc saveconfig ./build/boc/config.boc
 // Ad comment null, and uncomment next line

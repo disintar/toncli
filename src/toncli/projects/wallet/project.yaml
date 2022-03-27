@@ -1,4 +1,4 @@
 contract:
   data: fift/data.fif
   func:
-    - func/code.fc
+    - func/code.func
