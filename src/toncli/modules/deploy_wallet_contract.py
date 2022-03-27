@@ -78,7 +78,7 @@ class DeployWalletContract(AbstractDeployer):
 
         if balance < amount or not is_inited:
             logger.error(
-                f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
+                f"💰 Please, send more TON for deployment to [{gr}{self.addresses[0][1]}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
 
         seqno = self.get_seqno()[0]
