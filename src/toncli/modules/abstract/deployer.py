@@ -147,7 +147,7 @@ class AbstractDeployer:
             # Run tests
             # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
             test_fift(fift_files_locations=[os.path.abspath(contract.data)],
-                      test_file_path=f"run_test.fif.template",
+                      test_file_path=f"fift_tests.fif.template.fif",
                       cwd=self.project_root, data_params=self.data_params)
 
     def check_for_needed_files_to_deploy(self) -> bool:

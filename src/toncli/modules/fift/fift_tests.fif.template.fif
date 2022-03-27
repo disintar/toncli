@@ -1,0 +1,41 @@
+#!/usr/bin/fift -s
+"TonUtil.fif" include
+"Asm.fif" include
+"Color.fif" include
+
+"{{ data_path }}" include
+
+
+// load script-path
+constant data
+
+// TEST DEFINITION
+
+// We need to check if it really only one item in stack
+{
+    depth // get stack depth
+    1 = // check if it equal to 1
+    0= abort"Not valid stack depth need to be 1 😈" // if so raise abort message
+} : test-stack-depth // define as function
+
+// We need to check if is is builder or dict in stack
+// There is no type methods right now - so we will use some tricks
+{
+    <s // try to create slice from builder
+} : test-is-builder
+
+// run script
+data
+
+// Run stack length test
+test-stack-depth
+
+^green
+."INFO: Depth test pass 🏁" cr
+
+// Run type check
+test-is-builder
+
+^cyan
+."INFO: Type test pass 🏁" cr
+^reset
