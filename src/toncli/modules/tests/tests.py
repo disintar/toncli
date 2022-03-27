@@ -20,7 +20,7 @@ class TestsRunner:
     def __init__(self):
         self.project_config = ProjectConf(getcwd())
 
-    def run(self, contracts: List[str]):
+    def run(self, contracts: List[str], verbose: int):
         logger.info(f"🌈 Start tests")
 
         if contracts is not None and len(contracts) > 0:
@@ -39,7 +39,7 @@ class TestsRunner:
         to_save_location = os.path.abspath(f"{getcwd()}/build")
 
         # Build code
-        fift_build(getcwd(), contracts=real_contracts, cwd=getcwd())
+        fift_build(getcwd(), contracts=real_contracts, cwd=getcwd(), use_tests_lib=True)
 
         location = to_save_location.replace(getcwd(), '')
         logger.info(f"🥌 Build {gr}successfully{rs}, check out {gr}.{location}{rs}")
@@ -49,6 +49,7 @@ class TestsRunner:
             render_kwargs = {
                 'code_path': contract.to_save_location,
                 'test_path': contract.to_save_tests_location,
+                'verbose': verbose
             }
 
             # Load template of transaction_debug

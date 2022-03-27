@@ -9,6 +9,8 @@ drop  // drop functions defanition
 constant test_code         // save code cell as constant
 
 
+{{ verbose }} constant verbose
+
 // this is c7 that will be passed to test code
 0x076ef1ea           // magic
 0                    // actions
@@ -69,11 +71,14 @@ variable @is_zero_added
 } while // parse @proclist
 drop // remove other @proclist (or null)
 
-cr
-."INFO: 👸 Test data methods ids: " ^green @tests_data @ (dump) type ^reset cr
-."INFO: 🤳 Test methods ids: " ^green @tests @ (dump) type ^reset cr
-."INFO: 👼 Test names: " ^green @tests_names @ (dump) type ^reset cr
-cr
+verbose 0>
+{   cr
+    ."INFO: 👸 Test data methods ids: " ^green @tests_data @ (dump) type ^reset cr
+    ."INFO: 🤳 Test methods ids: " ^green @tests @ (dump) type ^reset cr
+    ."INFO: 👼 Test names: " ^green @tests_names @ (dump) type ^reset cr
+    cr
+} if
+
 
 // ( -> test name, data f, test f, success)
 {
@@ -99,14 +104,17 @@ cr
     =: test
     =: test-name
 
-    cr
-    ."INFO: Test [" ^green @' test-name type ^reset ."]: " cr
-    ."INFO:  Test function: [" ^green @' function (dump) type ^reset ."] " cr
-    ."INFO:  Test c7: [" ^green @' c7 (dump) type ^reset ."] " cr
-    ."INFO:  Test c4: [" ^green @' c4 (dump) type ^reset ."] " cr
-    ."INFO:  Test stack: [" ^green @' stack (dump) type ^reset ."] " cr
-    ."INFO:  Test gas-limit: [" ^green @' gas-limit (dump) type ^reset ."] " cr
-    cr
+    verbose 0>
+    {
+        cr
+        ."INFO: Test [" ^green @' test-name type ^reset ."]: " cr
+        ."INFO:  Test function: [" ^green @' function (dump) type ^reset ."] " cr
+        ."INFO:  Test c7: [" ^green @' c7 (dump) type ^reset ."] " cr
+        ."INFO:  Test c4: [" ^green @' c4 (dump) type ^reset ."] " cr
+        ."INFO:  Test stack: [" ^green @' stack (dump) type ^reset ."] " cr
+        ."INFO:  Test gas-limit: [" ^green @' gas-limit (dump) type ^reset ."] " cr
+        cr
+    } if
 
     @' stack explode // pass stack to runvm
     drop // drop stack length
@@ -132,9 +140,11 @@ cr
     test_code <s // load func code as slice
     c7 // add c7 cell
     0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
+
     depth 1 >
-    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code " ^cyan (dump) type  ^reset  cr }
-    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" cr drop } cond
+    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type drop ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
+    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
+
 } : run-test
 
 @cnt @

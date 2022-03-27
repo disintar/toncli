@@ -98,3 +98,8 @@ git clone git@github.com:disintar/toncli.git
 cd toncli && pip install -e .
 ```
 
+## Version migration
+
+#### 0.20
+
+The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/toncli` or delete whole directory `~/.config/toncli`

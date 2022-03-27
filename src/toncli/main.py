@@ -299,10 +299,17 @@ You can update them automatically using "toncli update_libs" or disable this war
                                 help='Network to deploy')
 
     #
+    #  WALLET
+    #
+    wallet = subparser.add_parser('wallet')
+
+    #
     #  TESTS
     #
     run_tests = subparser.add_parser('run_tests')
     run_tests.add_argument("--contracts", "-c", type=str,
+                           help='Set contract name from project.yaml to run tests on')
+    run_tests.add_argument("--verbose", "-v", type=int, default=0,
                            help='Set contract name from project.yaml to run tests on')
 
     #
@@ -377,7 +384,7 @@ You can update them automatically using "toncli update_libs" or disable this war
             logger.error(f"🚫 {gr}{getcwd()}{rs} is not project root, there is no file {bl}project.yaml{rs} file")
             sys.exit(0)
 
-        contract = ContractDeployer(network='ownnet')
+        contract = ContractDeployer(network='testnet')
         addrs = contract.get_address()
 
         for name, addr in zip(contract.project_config.contracts, addrs):
@@ -553,7 +560,7 @@ You can update them automatically using "toncli update_libs" or disable this war
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
     elif command == 'run_tests':
         test_runner = TestsRunner()
-        test_runner.run(args.contracts)
+        test_runner.run(args.contracts, verbose=args.verbose)
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()
