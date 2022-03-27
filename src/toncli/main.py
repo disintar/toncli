@@ -115,7 +115,7 @@ Credits: {gr}disintar.io{rs} team
 
     # This is concept of nft https://disintar.io
     # Nft information parse will be added in next versions of CLI
-    print("disintar.io NFT owners today say: 🙈 🙉 🙊")
+    # print("disintar.io NFT owners today say: 🙈 🙉 🙊")
 
     # TODO: add logging verbose
     parser = argparse.ArgumentParser(
