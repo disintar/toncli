@@ -22,7 +22,7 @@ from toncli.modules.utils.lite_client.parser import split_get_output
 from jinja2 import FileSystemLoader, Environment, select_autoescape
 
 from toncli.modules.utils.lite_client.lite_client import LiteClient
-from toncli.modules.utils.system.conf import project_root
+from toncli.modules.utils.system.conf import project_root, getcwd
 
 bl = Fore.CYAN
 gr = Fore.GREEN
@@ -86,7 +86,7 @@ class AbstractDeployer:
 
         for contract, (_, is_inited) in zip(contracts, statuses):
             if not is_inited:
-                deploy_boc = send_boc(self.network, contract.boc, cwd=self.project_root,
+                deploy_boc = send_boc(self.network, os.path.abspath(contract.boc), cwd=os.path.abspath(self.project_root),
                                       update_config=self.update_config, get_output=True)
 
                 if 'error' in deploy_boc:
@@ -104,11 +104,11 @@ class AbstractDeployer:
 
         data = []
         for contract in contracts:
-            data.append(contract_manipulation(contract.to_save_location,
-                                              contract.data,
+            data.append(contract_manipulation(os.path.abspath(contract.to_save_location),
+                                              os.path.abspath(contract.data),
                                               self.workchain,
-                                              contract.boc,
-                                              contract.address,
+                                              os.path.abspath(contract.boc),
+                                              os.path.abspath(contract.address),
                                               cwd=self.project_root,
                                               data_params=self.data_params))
         return data
@@ -122,10 +122,10 @@ class AbstractDeployer:
 
         for contract in contracts:
             # TODO: load address from build/contract.addr
-            if not os.path.exists(contract.address):
+            if not os.path.exists(os.path.abspath(contract.address)):
                 raise ValueError(f"😥 No address_text found in {contract.address}")
 
-            with open(contract.address) as f:
+            with open(os.path.abspath(contract.address), encoding='utf-8') as f:
                 address_text = f.read().split()
 
                 if len(address_text) != 3:
@@ -146,7 +146,7 @@ class AbstractDeployer:
         for contract in contracts:
             # Run tests
             # CWD - Need to specify folder so keys saved to build/ (relative path in fift)
-            test_fift(fift_files_locations=[contract.data],
+            test_fift(fift_files_locations=[os.path.abspath(contract.data)],
                       test_file_path=f"run_test.fif.template",
                       cwd=self.project_root, data_params=self.data_params)
 
@@ -251,7 +251,7 @@ class AbstractDeployer:
 
             if kwargs.body:
                 if kwargs.body[0] != '/':  # not absolute path
-                    args.extend(['-B', f"{os.getcwd()}/{kwargs.body}"])
+                    args.extend(['-B', f"{getcwd()}/{kwargs.body}"])
                 else:  # use absolute path
                     args.extend(['-B', f"{kwargs.body}"])
 
@@ -390,7 +390,7 @@ class AbstractDeployer:
 
                 temp_location: str = tempfile.mkstemp(suffix='.fif')[1]
 
-                with open(temp_location, 'w') as f:
+                with open(temp_location, 'w', encoding='utf-8') as f:
                     f.write(rendered)
 
                 fift = Fift('run', args=[temp_location])

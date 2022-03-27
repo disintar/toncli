@@ -25,10 +25,10 @@ class DeployWalletContract(AbstractDeployer):
         super().__init__()
         self.network = network
         self.workchain = workchain
-        self.project_root = f"{config_folder}/wallet"
+        self.project_root = os.path.abspath(f"{config_folder}/wallet")
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
-        if os.path.exists(f"{self.project_root}/func/files.yaml"):
+        if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
             migrate_project_struction('0.0.14', self.project_root)
 
         # We need to check if wallet for deploying is exist
@@ -57,7 +57,7 @@ class DeployWalletContract(AbstractDeployer):
 
             if len(data):
                 logger.info(
-                    f"🗝 You need to send TON to {gr}Bounceable address{rs} of Deployment wallet to start work\n"
+                    f"🗝 You need to send TON to {gr}Non-bounceable address{rs} of Deployment wallet to start work\n"
                     f"💎 About {gr}2 TON{rs} will be OK for 10-12 contracts\n"
                     f"🧪 Test coins can be found in {bl}@testgiver_ton_bot{rs} / @tondev")
 
@@ -78,11 +78,11 @@ class DeployWalletContract(AbstractDeployer):
 
         if balance < amount or not is_inited:
             logger.error(
-                f"💰 Please, send more TON for deployment to [{gr}{self.address}{rs}] in [{bl}{self.network}{rs}]")
+                f"💰 Please, send more TON for deployment to [{gr}{self.addresses[0][1]}{rs}] in [{bl}{self.network}{rs}]")
             sys.exit()
 
         seqno = self.get_seqno()[0]
-        args = [f'{self.project_root}/fift/usage.fif', 'build/contract', address, '0', str(seqno), str(amount),
+        args = [os.path.abspath(f'{self.project_root}/fift/usage.fif'), 'build/contract', address, '0', str(seqno), str(amount),
                 "--no-bounce"]
 
         fift = Fift('sendboc', args=args, kwargs={'fift_args': "",

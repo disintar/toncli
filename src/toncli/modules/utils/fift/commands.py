@@ -7,7 +7,7 @@ from typing import List, Optional
 from colorama import Fore, Style
 from jinja2 import FileSystemLoader, select_autoescape, Environment
 
-from toncli.modules.utils.system.conf import config_folder, executable, project_root
+from toncli.modules.utils.system.conf import config_folder, executable, project_root, getcwd
 from toncli.modules.utils.system.log import logger
 
 bl = Fore.CYAN
@@ -21,7 +21,13 @@ def fift_execute_command(file: str, args: List[str], pre_args: Optional[List[str
     if not pre_args:
         pre_args = []
 
-    return [executable['fift'], "-I", f"{config_folder}/fift-libs", *pre_args, "-s", file, *args]
+    answer = [os.path.abspath(executable['fift']), "-I",
+              os.path.abspath(f"{config_folder}/fift-libs"),
+              *pre_args, "-s",
+              os.path.abspath(file),
+              *args]
+
+    return answer
 
 
 def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optional[str] = None,
@@ -53,10 +59,10 @@ def test_fift(fift_files_locations: List[str], test_file_path: str, cwd: Optiona
 
         rendered = template.render(data_path=file)
 
-        with open(run_test_temp_location, 'w') as f:
+        with open(run_test_temp_location, 'w', encoding='utf-8') as f:
             f.write(rendered)
 
-        subprocess.run(fift_execute_command(run_test_temp_location, data_params), cwd=os.getcwd() if not cwd else cwd)
+        subprocess.run(fift_execute_command(run_test_temp_location, data_params), cwd=getcwd() if not cwd else cwd)
 
 
 def contract_manipulation(code_path: str, data_path: str, workchain: int, boc_location: str, address_location: str,
@@ -81,18 +87,18 @@ def contract_manipulation(code_path: str, data_path: str, workchain: int, boc_lo
 
     rendered = template.render(data_path=data_path, file_path=boc_temp_location)
 
-    with open(boc_temp_location, 'w') as f:
+    with open(boc_temp_location, 'w', encoding='utf-8') as f:
         f.write(rendered)
 
     command = fift_execute_command(boc_temp_location, data_params)
-    output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
+    output = subprocess.check_output(command, cwd=getcwd() if not cwd else cwd)
     output_data = output.decode()
 
-    contract_manipulation_fift_path = f"{project_root}/modules/fift/contract_manipulation.fif"
+    contract_manipulation_fift_path = os.path.join(project_root, "modules/fift/contract_manipulation.fif")
     command = fift_execute_command(contract_manipulation_fift_path,
                                    [code_path, boc_temp_location, str(workchain), boc_location, address_location])
 
-    output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
+    output = subprocess.check_output(command, cwd=getcwd() if not cwd else cwd)
     output_data = output.decode()
 
     # # TODO: fix, get normal address from python...

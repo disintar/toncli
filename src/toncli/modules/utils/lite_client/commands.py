@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 from colorama import Fore, Style
 from requests import get as http_get
 
-from toncli.modules.utils.system.conf import executable, config_folder, config_uri
+from toncli.modules.utils.system.conf import executable, config_folder, config_uri, getcwd
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import lite_client_tries
 
@@ -34,11 +34,11 @@ def get_network_config_path(network: str, update_config: bool = False) -> str:
         # need to download config file and save it
         r = http_get(config_uri[network], stream=True)
         if r.status_code == 200:
-            with open(f"{config_folder}/{filename}", 'wb') as f:
+            with open(os.path.abspath(f"{config_folder}/{filename}"), 'wb') as f:
                 for chunk in r:
                     f.write(chunk)
 
-    return f"{config_folder}/{filename}"
+    return os.path.abspath(f"{config_folder}/{filename}")
 
 
 def lite_client_execute_command(network: str, args: List[str], update_config=False, ) -> List[str]:
@@ -51,7 +51,7 @@ def lite_client_execute_command(network: str, args: List[str], update_config=Fal
     :return:
     """
     network = get_network_config_path(network, update_config)
-    return [executable['lite-client'], "-v", "3", "--timeout", "3", "-C", network, *args]
+    return [os.path.abspath(executable['lite-client']), "-v", "3", "--timeout", "3", "-C", network, *args]
 
 
 def get_account_status(network: str, address: str, cwd: Optional[str] = None,
@@ -74,7 +74,7 @@ def get_account_status(network: str, address: str, cwd: Optional[str] = None,
     e = None
     while _try < lite_client_tries + 1:
         try:
-            account_info = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd)
+            account_info = subprocess.check_output(command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
             account_info = account_info.decode()
             break
         except Exception as exc:
@@ -113,7 +113,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
         e = None
         while _try < lite_client_tries + 1:
             try:
-                subprocess.run(command, cwd=os.getcwd() if not cwd else cwd)
+                subprocess.run(command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
                 break
             except Exception as exc:
                 e = exc
@@ -127,7 +127,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
         e = None
         while _try < lite_client_tries + 1:
             try:
-                output = subprocess.check_output(command, cwd=os.getcwd() if not cwd else cwd).decode()
+                output = subprocess.check_output(command, cwd=getcwd() if not cwd else os.path.abspath(cwd)).decode()
                 break
             except Exception as exc:
                 e = exc

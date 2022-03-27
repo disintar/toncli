@@ -1,4 +1,5 @@
 import os
+import platform
 import shlex
 import subprocess
 import sys
@@ -8,7 +9,7 @@ from typing import List, Optional
 from colorama import Fore, Style
 
 from toncli.modules.utils.func.func import Func
-from toncli.modules.utils.system.conf import config_folder, executable, lite_client_tries
+from toncli.modules.utils.system.conf import config_folder, executable, lite_client_tries, getcwd
 from toncli.modules.utils.fift.commands import fift_execute_command
 from toncli.modules.utils.lite_client.commands import lite_client_execute_command
 from toncli.modules.utils.system.log import logger
@@ -32,7 +33,7 @@ class Fift:
         :param quiet: Is output of lite-client needed
         :param cwd: Project root
         """
-        self.cwd = cwd if cwd else os.getcwd()
+        self.cwd = cwd if cwd else getcwd()
         self.command = command
         self.quiet = quiet
 
@@ -50,7 +51,7 @@ class Fift:
         self.args = args
 
         # Currently, running command in project root
-        self.project_dir = check_for_needed_files_to_deploy(os.getcwd(), True)
+        self.project_dir = check_for_needed_files_to_deploy(getcwd(), True)
         self.cli_fif_lib = None
 
     def run(self):
@@ -77,33 +78,36 @@ class Fift:
         filename = self.args[0]
 
         # Check that
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             code = f.read()
 
             if 'saveboc' not in code:
                 logger.error(f"🦷 You need to add {bl}saveboc{rs} to your fif file {gr}{filename}{rs}")
                 sys.exit()
 
-        # remove folder
-        if '/' in filename:
-            filename = filename.split('/')[-1]
+        if platform.system() == 'Windows':
+            if '\\' in filename:
+                filename = os.path.split(filename)[-1]
+        else:
+            if '/' in filename:
+                filename = filename.split('/')[-1]
 
         # get file-base
         if '.' in filename:
             filename = filename.split('.')[0]
 
-        if os.path.exists(f'{self.cwd}/build/boc'):
-            path = f'{self.cwd}/build/boc/{filename}.boc'
+        if os.path.exists(os.path.abspath(f'{self.cwd}/build/boc')):
+            path = os.path.abspath(f'{self.cwd}/build/boc/{filename}.boc')
         else:
             # if not project root - create temp directory
             path = tempfile.mkdtemp()
-            path = f"{path}/{filename}.boc"
+            path = os.path.abspath(f"{path}/{filename}.boc")
 
         logger.info(f"💾 Will save BOC to {gr}{path}{rs}")
 
         # If we never created cli.fif in project root
         if self.project_dir:
-            self.cli_fif_lib = build_cli_lib(f'{self.cwd}/build/cli.fif', {  # Generate cli.fif
+            self.cli_fif_lib = build_cli_lib(os.path.abspath(f'{self.cwd}/build/cli.fif'), {  # Generate cli.fif
                 "is_project": '1',
                 "project_root": self.cwd,
                 "build_path": path,
@@ -113,7 +117,7 @@ class Fift:
         elif not self.project_dir:
             self.cli_fif_lib = build_cli_lib(render_kwargs={
                 "is_project": '0',
-                "project_root": f'/tmp',
+                "project_root": tempfile.gettempdir(),
                 "build_path": path
             })
 
@@ -121,18 +125,18 @@ class Fift:
         # Our own cli.fif file need to be added before run
         command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']], pre_args=["-L", self.cli_fif_lib])
 
-        subprocess.run(command, cwd=self.cwd)
+        subprocess.run(command, cwd=os.path.abspath(self.cwd))
 
         # send boc file
         command = lite_client_execute_command(self.kwargs['net'], ['-v', '2', '-c', f'sendfile {path}'],
                                               update_config=self.kwargs['update'])
         output = None
         if self.quiet:
-            output = open(os.devnull, 'w')
+            output = open(os.devnull, 'w', encoding='utf-8')
 
         for _try in range(lite_client_tries):
             try:
-                output = subprocess.check_output(command, cwd=self.cwd)
+                output = subprocess.check_output(command, cwd=os.path.abspath(self.cwd))
                 if 'Connection refused' in output.decode():
                     continue
                 break
@@ -149,7 +153,7 @@ class Fift:
             sys.exit()
 
         if not len(self.kwargs['fift_args']):
-            self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-s"]
+            self.kwargs['fift_args'] = ["-I", os.path.abspath(f"{config_folder}/fift-libs"), "-s"]
         else:
             self.kwargs['fift_args'].append("-s")
 
@@ -166,7 +170,7 @@ class Fift:
         logger.info(f"🖥  Run interactive fift for you ({bl}Ctrl+c{rs} to exit)")
         logger.info(f"🖥  A simple Fift interpreter. Type `bye` to quit, or `words` to get a list of all commands")
         if not len(self.kwargs['fift_args']):
-            self.kwargs['fift_args'] = ["-I", f"{config_folder}/fift-libs", "-i"]
+            self.kwargs['fift_args'] = ["-I", os.path.abspath(f"{config_folder}/fift-libs"), "-i"]
         else:
             self.kwargs['fift_args'].append("-i")
 
