@@ -21,7 +21,7 @@ Easy to deploy and interact with TON smart contracts.
 
 ## Installation
 
-Toncli support Windows / macOS (m1 / intel) / Linux, installation guid can be found: [INSTALLATION.md](/INSTALLATION.md)
+Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be found: [INSTALLATION.md](/INSTALLATION.md)
 
 ### Usage and docs
 New to `toncli`?
