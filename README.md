@@ -15,11 +15,13 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/toncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/toncli&amp;utm_campaign=Badge_Grade)
 [![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
-The Open Network cross-platform smart contract command line interface
+The Open Network cross-platform smart contract command line interface. 
 
-## State
+Easy to deploy and interact with TON smart contracts.
 
-Working!
+## Installation
+
+Toncli support Windows / macOS (m1 / intel) / Linux, installation guid can be found: [INSTALLATION.md](/INSTALLATION.md)
 
 ### Usage and docs
 New to `toncli`?
