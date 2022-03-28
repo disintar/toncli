@@ -4,6 +4,10 @@ Example of using func tests could be founded [here](https://github.com/disintar/
 
 But how it works and how to run it without toncli if needed?
 
+To compile test func code we use [this](https://github.com/disintar/toncli/blob/master/src/toncli/lib/func-libs/tests-helpers.func) mini library.
+
+To run `run_tests.fif` we use special `AsmTests.fif` from [here](https://github.com/disintar/toncli/blob/master/src/toncli/lib/fift-libs/AsmTests.fif)
+
 Let's start with a point where contract code and tests code successfully compiled into Fift ASM. 
 
 Toncli gets paths to those files and paste them to `run_tests.fif` [here](https://github.com/disintar/toncli/blob/5accd1562296b25c73efcae410c76905d18176be/src/toncli/modules/fift/run_test.fif.template#L4) and [here](https://github.com/disintar/toncli/blob/5accd1562296b25c73efcae410c76905d18176be/src/toncli/modules/fift/run_test.fif.template#L8)
