@@ -93,7 +93,6 @@ verbose 0>
 } : get-test
 
 {
-    .s
     4 roll =: temp-prev-c4
     3 roll =: temp-prev-c5
     swap // get function selector
