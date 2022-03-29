@@ -18,7 +18,10 @@ tuple get_c7() inline method_id {
         1,                    ;; trans_lt
         239,                  ;; randseed
         unsafe_tuple([1000000000, null()]),  ;; balance_remaining
-        null(),               ;; myself
+        my_address(),         ;; myself
         get_config()          ;; global_config
     ])]);
 }
+
+cell get_prev_c4() asm "10 GETPARAM UNPAIR DROP";
+cell get_prev_c5() asm "10 GETPARAM UNPAIR SWAP DROP";

@@ -6,6 +6,7 @@
 ### Linux / macOS (intel)
 
 1. Download needed prebuild for your system from [here](https://github.com/newton-blockchain/ton/actions?query=branch%3Amaster+is%3Acompleted)
+   1. You need to be logged-in to GitHub to download pre-builds
 2. Install `Python3.9` or higher
 3. Run `pip install toncli` or `pip3 install toncli`
    1. If you see `WARNING: The script toncli is installed in '/bla/bla/bla/Python/3.9/bin' which is not on PATH.` please manually add absolute `bin` path to PATH env

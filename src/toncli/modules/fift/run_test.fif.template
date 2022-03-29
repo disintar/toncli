@@ -29,6 +29,10 @@ null                 // global_config
 variable @tests_data       // here we will store all data functions
 variable @tests_names      // here we will store test names
 variable @tests            // here we will store all test functions
+variable @prev_c4            // prev test c4
+variable @prev_c5            // prev test c5
+null @prev_c4 !
+null @prev_c5 !
 
 variable @cnt        // here we will store tests list length
 @cnt 0!              // set as 0 by default
@@ -89,10 +93,21 @@ verbose 0>
 } : get-test
 
 {
+    .s
+    4 roll =: temp-prev-c4
+    3 roll =: temp-prev-c5
     swap // get function selector
     test_code <s // load func code as slice
+
     c7 // add c7 cell
-    0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    1 untuple 10 untuple
+    @' temp-prev-c4
+    @' temp-prev-c5
+    2 tuple
+    11 tuple
+    1 tuple
+
+    0x151 runvmx // here we will get function selector, stack values, c4, c7, gas limit
     0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
     5 untuple
     dup null? { drop 1000000000 } if
@@ -145,9 +160,18 @@ verbose 0>
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type drop ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
 
+    @' c4
+    @' c5
 } : run-test
 
 @cnt @
 { dup 0> }
-{ drop get-test run-test @cnt @ }
+{
+    drop
+    @prev_c4 @ // old c4
+    @prev_c5 @ // old c5 data
+    get-test run-test @cnt @
+    swap @prev_c5 ! // save prev test c5
+    swap @prev_c4 ! // save prev test c4
+}
 while  // run all tests
