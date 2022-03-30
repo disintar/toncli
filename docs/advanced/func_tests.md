@@ -27,3 +27,4 @@ Also, it parse verbose level and pass it [here](https://github.com/disintar/tonc
 3. You may use `dump_stack();` for debugging
 4. You may use `-v 1` / `-v 2`  for debugging when running tests
    1. If `-v 2` is used - stack will be dumped, but it's buggy function, so do not panic if something go wrong, jus try to use `-v 1`
+5. You can use special `get_prev_c4` / `get_prev_c5` functions to get `c4` / `c5` cells from prev tests
