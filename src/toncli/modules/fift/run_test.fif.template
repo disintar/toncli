@@ -166,6 +166,11 @@ verbose 0>
     0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
 
     depth 1 >
+    { depth 1 - tuple drop }
+    if
+
+    dup
+    1 >
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type drop ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
 
