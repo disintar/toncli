@@ -507,6 +507,7 @@ You can update them automatically using "toncli update_libs" or disable this war
             args_to_pass = real_args[2:]
 
         # If use run command instead of f run - need to change start arg parse position
+
         func = Func(command, kwargs=kwargs, args=args_to_pass)
         func.run()
     elif command == 'sendboc':
@@ -560,7 +561,7 @@ You can update them automatically using "toncli update_libs" or disable this war
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
     elif command == 'run_tests':
         test_runner = TestsRunner()
-        test_runner.run(args.contracts, verbose=args.verbose)
+        test_runner.run(args.contracts.split(), verbose=args.verbose)
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()

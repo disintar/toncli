@@ -34,7 +34,7 @@ class TestsRunner:
             real_contracts = self.project_config.contracts
 
         if not len(real_contracts):
-            logger.error(f"😥 No contracts from {contracts} are founded in project.yaml")
+            logger.error(f"😥 No contracts [{contracts}] are founded in project.yaml")
 
         to_save_location = os.path.abspath(f"{getcwd()}/build")
 
