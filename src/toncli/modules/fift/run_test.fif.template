@@ -31,6 +31,10 @@ null                 // global_config
 variable @tests_data       // here we will store all data functions
 variable @tests_names      // here we will store test names
 variable @tests            // here we will store all test functions
+variable @prev_c4            // prev test c4
+variable @prev_c5            // prev test c5
+null @prev_c4 !
+null @prev_c5 !
 
 variable @cnt        // here we will store tests list length
 @cnt 0!              // set as 0 by default
@@ -45,8 +49,7 @@ variable @is_zero_added
 {   =: list_cnt
     =: list
     @' list @ dup null? not { @' list_cnt @ untuple } { drop } cond       // decomposes list if it is not null
-    @' list_cnt @ dup 0> { dup roll } { swap } cond                       // get item we want to add on top of stack
-    swap 1 +                                                              // update count
+    @' list_cnt @ 1 +                                                              // update count
     tuple @' list !                                                       // create and update tuple
 } : append
 
@@ -91,10 +94,21 @@ verbose 0>
 } : get-test
 
 {
+    4 roll =: temp-prev-c4
+    3 roll =: temp-prev-c5
     swap // get function selector
     test_code <s // load func code as slice
+
     c7 // add c7 cell
+    1 untuple 10 untuple
+    @' temp-prev-c4
+    @' temp-prev-c5
+    2 tuple
+    11 tuple
+    1 tuple
+
     0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
+
     0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
     5 untuple
     dup null? { drop 1000000000 } if
@@ -105,6 +119,7 @@ verbose 0>
     =: function
     =: test
     =: test-name
+
 
     verbose 0>
     {
@@ -119,18 +134,25 @@ verbose 0>
     } if
 
     @' stack explode // pass stack to runvm
-    drop // drop stack length
-    dup null? =: null_stored // little hack (check if we need to remove null)
+    dup 0 = { null } { drop } cond
     @' function // function selector
     code <s // load func code as slice
     @' c4  // add c4 cell lodaded from lite-client
     @' c7 // add c7 cell
     @' gas-limit
-    verbose 0> { 0x7D } { 0x3D } cond runvmx  // Runvm
-
+    verbose dup 0> {
+        1 >
+        { 0x17D } // with stack trace
+        { 0x7D }  // with vm OP sterr
+        cond
+    }
+    { drop 0x3D }
+    cond
+    runvmx  // Runvm
+    
     =: gas-used =: c5
     =: c4  =: exit-code
-    @' null_stored { depth 1 - roll drop } if // if we store null priv. - need to remove
+    depth 0 = { null } if // if we store null priv. - need to remove
     depth tuple =: stack
 
     @' exit-code
@@ -147,9 +169,18 @@ verbose 0>
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type drop ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
 
+    @' c4
+    @' c5
 } : run-test
 
 @cnt @
 { dup 0> }
-{ drop get-test run-test @cnt @ }
+{
+    drop
+    @prev_c4 @ // old c4
+    @prev_c5 @ // old c5 data
+    get-test run-test @cnt @
+    swap @prev_c5 ! // save prev test c5
+    swap @prev_c4 ! // save prev test c4
+}
 while  // run all tests

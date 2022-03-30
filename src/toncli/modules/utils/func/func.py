@@ -33,13 +33,16 @@ class Func:
         self.args = args if args else []
 
         # Currently, running command in project root
-        self.project_dir = check_for_needed_files_to_deploy(getcwd(), False)
+        self.project_dir = check_for_needed_files_to_deploy(getcwd(), True)
 
     def run(self):
-        if not self.command or self.command == 'build':
+        if self.command == 'build':
             self.build()
+        elif not self.command:
+            command = [executable['func'], *self.kwargs['func_args'], *self.args]
+            subprocess.run(command)
         elif self.command:
-            command = [executable['func'], *self.kwargs['func_args'], self.command, *self.args, *self.kwargs]
+            command = [executable['func'], *self.kwargs['func_args'], self.command, *self.args]
             subprocess.run(command)
         else:
             logger.error("🔎 Can't find such command")
