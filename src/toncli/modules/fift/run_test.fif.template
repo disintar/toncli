@@ -163,7 +163,7 @@ verbose 0>
     @' test // test function selector
     test_code <s // load func code as slice
     c7 // add c7 cell
-    0x151 runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
 
     depth 2 >
     { depth 2 - tuple drop }
