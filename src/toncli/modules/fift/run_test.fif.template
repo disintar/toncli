@@ -152,9 +152,9 @@ verbose 0>
     
     =: gas-used =: c5
     =: c4  =: exit-code
-    depth 1 > { depth 1 - -roll drop } if // if we store null priv. - need to remove
-    depth tuple =: stack
 
+    depth 1 > { depth 1 - roll drop } if // if we store null priv. - need to remove
+    depth tuple =: stack
     @' exit-code
     @' c4
     @' stack
@@ -164,7 +164,7 @@ verbose 0>
     test_code <s // load func code as slice
     c7 // add c7 cell
     0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
-    .s
+
     depth 2 >
     { depth 2 - tuple drop }
     {   depth 2 =
