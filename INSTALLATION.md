@@ -57,6 +57,7 @@ P.S. for a beautiful display of colors and emoticons, it is advised to install t
 ### Linux
 
 1. Follow official [docs](https://ton.org/docs/#/compile) to compile sources
+   1. If you use arch linux you may use [AUR package](https://aur.archlinux.org/packages/ton-git)
 2. Run `pip install toncli` or `pip3 install toncli`
    1. If you see `WARNING: The script toncli is installed in '/bla/bla/bla/Python/3.9/bin' which is not on PATH.` please manually add absolute `bin` path to PATH env
 3. Run `toncli` and pass absolute path to `func` / `fift` / `lite-client` from first step

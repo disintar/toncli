@@ -21,7 +21,7 @@ Easy to deploy and interact with TON smart contracts.
 
 ## Installation
 
-Toncli support Windows / macOS (m1 / intel) / Linux, installation guid can be found: [INSTALLATION.md](/INSTALLATION.md)
+Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be found: [INSTALLATION.md](/INSTALLATION.md)
 
 ### Usage and docs
 New to `toncli`?
@@ -29,6 +29,10 @@ New to `toncli`?
 Try: [Quick start guide](/docs/quick_starat_guide.md)
 
 All other documentation lists in `docs/`
+
+## Configuration
+
+On first start `~/.config/toncli/` (on linux, other systems will have diffrent directory) will be created. If you want to change fift/func libs, network config or other stuff - check it out.
 
 ## Contributor Guide
 
@@ -38,31 +42,30 @@ There is two main tasks and many TODOs.
 
 Main tasks are - not to use lite-client / fift / func. All can be done with python.
 
-There is many TODOs in code - feel free to fix them and create PRs
+There are many TODOs in code - feel free to fix them and create PRs
 
 ## Features and status
 
-| Feature                                                                                         | Status |
-|-------------------------------------------------------------------------------------------------|-----|
-| `fift` / `func` / `lite-server` usage                                                           | ✅   |
-| Easy bootstrap project samples `wallet`                                                         | ✅   |
-| Deploy-wallet for auto send TON to contracts and tests                                          | ✅   |
-| Compile func to `build/` from `func/` with `files.yaml`                                         | ✅   |
-| Auto send TON to init contract address                                                          | ✅   |
-| Deploy to mainnet / testnet                                                                     | ✅   |
-| Project interact after deploy: easily send messages, run getmethods                             | ✅   |
-| Load from hard project structure (example: `src/projects/wallet`)                               | ✅   |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.) | ✅   |
-| Get contract address by `toncli address`                                                        | ✅    |
-| Docs for contract creation for beginners                                                        | ✅    |
-| Project tests with `runvmcode`                                                                  | ✅    |
-| Windows & Linux support                                                                         | ✅    |
-| Gas auto calculation for store & deploy                                                         | ❌   |
-| Add more project samples with advanced usage                                                    | ❌   |
-| Project debug                                                                                   | ❌   |
-| Library support                                                                                 | ❌   |
-| Init Message support  (with signature)                                                          | ❌   |
-| Advanced user-friendly docs on `fift`, `func`                                                   | ❌   |
+| Feature                                                                                                    | Status |
+|------------------------------------------------------------------------------------------------------------|--------|
+| `fift` / `func` / `lite-server` usage                                                                      | ✅      |
+| Easy bootstrap project samples `wallet`                                                                    | ✅      |
+| Deploy-wallet for auto send TON to contracts and tests                                                     | ✅      |
+| Compile func to `build/` from `func/` with `files.yaml`                                                    | ✅      |
+| Auto send TON to init contract address                                                                     | ✅      |
+| Deploy to mainnet / testnet / ownnet                                                                       | ✅      |
+| Project interact after deploy: easily send messages, run getmethods, run fift parsers on getmethods output | ✅      |
+| Load from hard project structure (example: `src/projects/wallet`)                                          | ✅      |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.)            | ✅      |
+| Get contract address by `toncli addrs`                                                                     | ✅      |
+| Docs for contract creation for beginners                                                                   | ✅      |
+| Project tests with `runvmcode`                                                                             | ✅      |
+| Windows & Linux support                                                                                    | ✅      |
+| Gas auto calculation for store & deploy                                                                    | ❌      |
+| Add more project samples with advanced usage                                                               | ❌      |
+| Project debug                                                                                              | ❌      |
+| Library support                                                                                            | ❌      |
+| Init Message support  (with signature)                                                                     | ❌      |
 
 ## Commands
 
@@ -102,11 +105,11 @@ cd toncli && pip install -e .
 
 ## Version migration
 
-#### 0.20
+#### 0.22
 
 The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/toncli` or delete whole directory `~/.config/toncli`
 
 
 ## Help and questions
 
-Feel free to ask questions and help in official telegram chats: [Russion](https://t.me/tondev) / [English](https://t.me/tondev_eng)
+Feel free to ask questions and help in official telegram chats: [Russian](https://t.me/tondev) / [English](https://t.me/tondev_eng)

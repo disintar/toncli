@@ -20,7 +20,6 @@ Also, it parse verbose level and pass it [here](https://github.com/disintar/tonc
 - Second time [run](https://github.com/disintar/toncli/blob/5accd1562296b25c73efcae410c76905d18176be/src/toncli/modules/fift/run_test.fif.template#L127): run contract `code` with all needed params from step (1)
 - Third time [run](https://github.com/disintar/toncli/blob/5accd1562296b25c73efcae410c76905d18176be/src/toncli/modules/fift/run_test.fif.template#L142): get `c4` / `c5` / `gas-used` / `stack` / `exit-code` params from step (2) and pass them to actual [test](https://github.com/disintar/func-tests-playground/blob/a9810ff4c1c639fb4e9cc6541de83c6ad351b921/tests/example.func#L52) 
 
-
 ### Hints
 
 1. If you want to create working functions in tests code, please use `inline method_id` 

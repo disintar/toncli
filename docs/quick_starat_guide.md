@@ -1,29 +1,13 @@
 # toncli Quick start guide
+Provided by [disintar.io](https://disintar.io) team
 
 This quide contains simple steps how-to deploy example smart contract to TON.
 
-## 1. Clone repository
+## 1. Install ton / toncli
 
-```
-git clone --recursive https://github.com/newton-blockchain/ton
-cd ton
-```
+Please, follow [INSTALLATION.md](/INSTALLATION.md)
 
-## 2. Build from sources
-
-1. Compile `fift`, `func`, `lite-client` from [ton](https://github.com/newton-blockchain/ton), official docs can be
-   founded [here](https://ton.org/docs/#/howto/getting-started)
-    1. For Arch Linux we have [AUR package](https://aur.archlinux.org/packages/ton-git/) of ton
-    2. For Apple computers on M1 we have a guide "How to compile them from official
-       repo" [M1 Guide](/docs/apple_m1_compile_fix.md)
-
-2. Add binary files to `PATH` env variable or add them to `/usr/bin`
-
-## 3. Install toncli package
-
-`pip install toncli` needed `Python 3.8` or higher
-
-## 4. Create simple project
+## 2. Create simple project
 
 ### 1. start project
 
@@ -66,3 +50,5 @@ To call a GET method of your contract you can use this command:
 5. [Transaction debug](/docs/advanced/transaction_debug.md)
 6. [Project structure](/docs/advanced/project_structure.md)
 7. [Interesting features](/docs/advanced/intresting_features.md)
+8. [Send internal fift messages](/docs/advanced/send_fift_internal.md)
+8. [How func tests works?](/docs/advanced/func_tests.md)
