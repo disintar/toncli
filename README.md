@@ -105,6 +105,10 @@ cd toncli && pip install -e .
 
 ## Version migration
 
+#### 0.24
+
+Please, use `toncli update_libs`
+
 #### 0.22
 
 The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/toncli` or delete whole directory `~/.config/toncli`

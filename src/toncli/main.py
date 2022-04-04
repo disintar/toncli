@@ -115,7 +115,7 @@ Credits: {gr}disintar.io{rs} team
 
     # This is concept of nft https://disintar.io
     # Nft information parse will be added in next versions of CLI
-    # print("disintar.io NFT owners today say: 🙈 🙉 🙊")
+    print("disintar.io NFT owners today say: 🙈 🙉 🙊")
 
     # TODO: add logging verbose
     parser = argparse.ArgumentParser(
@@ -561,7 +561,7 @@ You can update them automatically using "toncli update_libs" or disable this war
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
     elif command == 'run_tests':
         test_runner = TestsRunner()
-        test_runner.run(args.contracts.split(), verbose=args.verbose)
+        test_runner.run(args.contracts.split() if args.contracts else None, verbose=args.verbose)
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()

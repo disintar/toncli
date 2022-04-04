@@ -134,7 +134,7 @@ verbose 0>
     } if
 
     @' stack explode // pass stack to runvm
-    dup 0 = { null } { drop } cond
+    0 = { null } if
     @' function // function selector
     code <s // load func code as slice
     @' c4  // add c4 cell lodaded from lite-client
@@ -152,9 +152,9 @@ verbose 0>
     
     =: gas-used =: c5
     =: c4  =: exit-code
-    depth 0 = { null } if // if we store null priv. - need to remove
-    depth tuple =: stack
 
+    @' stack count 0 = { depth 1 - roll drop } if // if we store null priv. - need to remove
+    depth tuple  =: stack
     @' exit-code
     @' c4
     @' stack
@@ -165,8 +165,17 @@ verbose 0>
     c7 // add c7 cell
     0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
 
-    depth 1 >
-    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type drop ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
+    depth 2 >
+    { depth 2 - tuple drop }
+    {   depth 2 =
+        { swap drop }
+        if
+    }
+    cond
+
+    dup
+    1 >
+    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
 
     @' c4
