@@ -236,6 +236,6 @@ verbose 0>
     swap @prev_c5 ! // save prev test c5
     swap @prev_c4 ! // save prev test c4
 
-    swap write-tuple-to-file
+    swap drop // write-tuple-to-file
 }
 while  // run all tests
