@@ -94,6 +94,32 @@ verbose 0>
 } : get-test
 
 {
+    explode
+    dup 1 > {
+        1 -
+
+        swap (dump) swap // first item to string
+
+        { dup 0> }
+        {
+            =: count
+            swap (dump) " " $+ swap $+
+            @' count 1 -
+        }
+        while
+
+        drop // drop counter
+        "/tmp/test-output" file>B B{0a} B+ B>$ swap $+
+        $>B "/tmp/test-output" B>file
+    } {
+        0 > {
+            (dump) $>B "/tmp/test-output" B>file
+        } if
+    } cond
+
+} : write-tuple-to-file
+
+{
     4 roll =: temp-prev-c4
     3 roll =: temp-prev-c5
     swap // get function selector
@@ -107,7 +133,14 @@ verbose 0>
     11 tuple
     1 tuple
 
-    0x11 runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    verbose dup 2 > {
+        3 > {
+            0x151
+        } {
+            0x51
+        } cond
+    } { drop 0x11 } cond
+    runvmx // here we will get function selector, stack values, c4, c7, gas limit
 
     0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
     5 untuple
@@ -149,7 +182,7 @@ verbose 0>
     { drop 0x3D }
     cond
     runvmx  // Runvm
-    
+
     =: gas-used =: c5
     =: c4  =: exit-code
 
@@ -172,15 +205,26 @@ verbose 0>
         if
     }
     cond
+    =: exit-code
 
+    @' exit-code
     dup
     1 >
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
     { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
 
+
+    @' test-name
+    @' exit-code
+    @' gas-used
+    3 tuple
+
     @' c4
     @' c5
+
 } : run-test
+
+
 
 @cnt @
 { dup 0> }
@@ -191,5 +235,7 @@ verbose 0>
     get-test run-test @cnt @
     swap @prev_c5 ! // save prev test c5
     swap @prev_c4 ! // save prev test c4
+
+    swap write-tuple-to-file
 }
 while  // run all tests
