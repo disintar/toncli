@@ -1,6 +1,7 @@
 import configparser
 import os
 import platform
+import re
 import shutil
 import tempfile
 
@@ -26,10 +27,12 @@ name_replace = ['', '']
 # fix win encoding
 # todo: find normal fix
 if platform.system() == 'Windows':
-    old_user = project_root.split(os.path.sep)[2]  # Old cyrillic name
+    old_user = os.getlogin()  # Old cyrillic name
+    has_cyrillic = bool(re.search('[а-яА-Я]', old_user))
     user = config_folder.split(os.path.sep)[2]  # New name (in tempfile it's encoded)
     project_root = project_root.replace(old_user, user)  # New path with encoded cyrillic name of user
-    name_replace = [old_user, user]
+    if has_cyrillic:
+        name_replace = [old_user, user]
 
 
 def getcwd():
