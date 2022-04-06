@@ -11,6 +11,8 @@ constant test_code         // save code cell as constant
 
 
 {{ verbose }} constant verbose
+{{ output_results }} constant output-results
+
 "EQB36_EfYjFYMV8p_cxSYX61bA0FZ4B65ZNN6L8INY-5gL6w" true parse-load-address drop 2constant address
 
 // this is c7 that will be passed to test code
@@ -109,11 +111,14 @@ verbose 0>
         while
 
         drop // drop counter
-        "/tmp/test-output" file>B B{0a} B+ B>$ swap $+
-        $>B "/tmp/test-output" B>file
+        "{{ output_path }}" file-exists?
+        { "{{ output_path }}" file>B B{0a} B+ B>$ }
+        { B{0a} B>$ } cond
+        swap $+
+        $>B "{{ output_path }}" B>file
     } {
         0 > {
-            (dump) $>B "/tmp/test-output" B>file
+            (dump) $>B "{{ output_path }}" B>file
         } if
     } cond
 
@@ -227,7 +232,6 @@ verbose 0>
 
     @' c4
     @' c5
-
 } : run-test
 
 
@@ -238,10 +242,12 @@ verbose 0>
     drop
     @prev_c4 @ // old c4
     @prev_c5 @ // old c5 data
-    get-test run-test @cnt @
-    swap @prev_c5 ! // save prev test c5
-    swap @prev_c4 ! // save prev test c4
+    get-test run-test
+    @prev_c5 ! // save prev test c5
+    @prev_c4 ! // save prev test c4
 
-    swap drop // write-tuple-to-file
+    output-results 1 =
+    { write-tuple-to-file } { drop } cond
+    @cnt @
 }
 while  // run all tests

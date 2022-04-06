@@ -20,7 +20,7 @@ class TestsRunner:
     def __init__(self):
         self.project_config = ProjectConf(getcwd())
 
-    def run(self, contracts: List[str], verbose: int):
+    def run(self, contracts: List[str], verbose: int, output_results: bool = False):
         logger.info(f"🌈 Start tests")
 
         if contracts is not None and len(contracts) > 0:
@@ -49,6 +49,8 @@ class TestsRunner:
             render_kwargs = {
                 'code_path': contract.to_save_location,
                 'test_path': contract.to_save_tests_location,
+                'output_results': int(output_results),
+                'output_path': os.path.abspath(f"{getcwd()}/tests_output"),
                 'verbose': verbose
             }
 

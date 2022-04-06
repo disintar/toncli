@@ -311,6 +311,8 @@ You can update them automatically using "toncli update_libs" or disable this war
                            help='Set contract name from project.yaml to run tests on')
     run_tests.add_argument("--verbose", "-v", type=int, default=0,
                            help='Set contract name from project.yaml to run tests on')
+    run_tests.add_argument("--output-results", "-o", action='store_true',
+                           help='Set contract name from project.yaml to run tests on')
 
     #
     #  UPDATE LIBS
@@ -561,7 +563,8 @@ You can update them automatically using "toncli update_libs" or disable this war
         logger.info(f"Succesfully copied fift and func libs\nfrom {global_lib_path}\nto {local_lib_path}")
     elif command == 'run_tests':
         test_runner = TestsRunner()
-        test_runner.run(args.contracts.split() if args.contracts else None, verbose=args.verbose)
+        test_runner.run(args.contracts.split() if args.contracts else None, verbose=args.verbose,
+                        output_results=args.output_results)
     else:
         logger.error("🔎 Can't find such command")
         sys.exit()
