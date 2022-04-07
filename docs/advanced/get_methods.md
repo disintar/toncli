@@ -70,7 +70,7 @@ So we can run get method `get_hi_from_cell` and then parse output using this fif
 Output may look like this:
 
 ```
-INFO: 🚀 You want to interact with your contracts ['contract'] in testnet - that's grate!
+INFO: 🚀 You want to interact with your contracts ['contract'] in testnet - that's great!
 INFO: 🦘 Found existing deploy-wallet [kQDl5ZpiwlFCb4Bj4sKIvU15rh9Bq2MmCQmw5FrNSPj-9YQ-] (Balance: 4.939916988💎, Is inited: True) in /home/tvorogme/.config/toncli
 INFO: 👯 [contract] [kQA33B83t67G8nuxLvU7RrWL7kK08Uf-SVVrYvamGgwrb8Qj] runmethod ['get_hi_from_cell']
 INFO: 🧐 Output: [ 0 C{BC4CA942A6A9CDD5C6CDB4AD1A6844D117E93ED49C7CBAEFEAAB6DC1A84975F3}  ]
