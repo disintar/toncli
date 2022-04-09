@@ -31,7 +31,7 @@ class ContractDeployer(AbstractDeployer):
 
         self.project_config = ProjectConf(self.project_root)
         logger.info(
-            f"🚀 You want to {bl}interact{rs} with your contracts {gr}{[i.name for i in self.project_config.contracts]}{rs} in {gr}{network}{rs} - that's grate!")
+            f"🚀 You want to {bl}interact{rs} with your contracts {gr}{[i.name for i in self.project_config.contracts]}{rs} in {gr}{network}{rs} - that's great!")
         self.ton = ton  # ton to send to smart contract
         self.workchain = workchain  # workchain deploy to
 
