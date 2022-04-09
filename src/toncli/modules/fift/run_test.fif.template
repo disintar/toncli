@@ -190,7 +190,6 @@ verbose 0>
 
     =: gas-used =: c5
     =: c4  =: exit-code
-
     @' stack count 0 = { depth 1 - roll drop } if // if we store null priv. - need to remove
     depth tuple  =: stack
     @' exit-code
@@ -200,7 +199,15 @@ verbose 0>
     @' gas-used
     @' test // test function selector
     test_code <s // load func code as slice
+
     c7 // add c7 cell
+    1 untuple 10 untuple
+    @' temp-prev-c4
+    @' temp-prev-c5
+    2 tuple
+    11 tuple
+    1 tuple
+
     verbose dup 2 > {
         3 > {
             0x151
