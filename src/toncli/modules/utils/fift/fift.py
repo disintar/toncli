@@ -146,7 +146,7 @@ class Fift:
                 else:
                     logger.error(f"😢 Error in lite-client execution: {' '.join(command)}")
 
-    def run_script(self):
+    def run_script(self, get_output=False):
         """Runs fift in script mode on file"""
         if not len(self.args):
             logger.error("👉 You need to specify file path to run")
@@ -163,7 +163,7 @@ class Fift:
 
         command = [executable['fift'], *self.kwargs['fift_args'], *self.args]
 
-        subprocess.run(command)
+        return subprocess.run(command, capture_output=get_output)
 
     def run_interactive(self):
         """Run interactive fift"""

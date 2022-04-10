@@ -177,14 +177,18 @@ verbose 0>
     code <s // load func code as slice
     @' c4  // add c4 cell lodaded from lite-client
     @' c7 // add c7 cell
-    @' gas-limit
+    @' gas-limit dup tuple? { explode drop } if
     verbose dup 0> {
         1 >
-        { 0x17D } // with stack trace
-        { 0x7D }  // with vm OP sterr
+        { @' gas-limit tuple? { 0x1FD }  // with stack trace + hard gas limit
+                { 0x17D } cond } // with stack trace
+        { @' gas-limit tuple? { 0xFD }  // with vm OP sterr + hard gas limit
+                { 0x7D } cond } // with vm OP sterr
         cond
     }
-    { drop 0x3D }
+    { drop @' gas-limit tuple? { 0xBD } // with hard gas limit
+                { 0x3D } cond // without hard gas limit
+    }
     cond
     runvmx  // Runvm
 
