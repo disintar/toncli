@@ -123,7 +123,8 @@ class Fift:
 
         # generate BOC file
         # Our own cli.fif file need to be added before run
-        command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']], pre_args=["-L", self.cli_fif_lib])
+        command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']],
+                                       pre_args=["-L", self.cli_fif_lib])
 
         subprocess.run(command, cwd=os.path.abspath(self.cwd))
 
@@ -163,7 +164,14 @@ class Fift:
 
         command = [executable['fift'], *self.kwargs['fift_args'], *self.args]
 
-        return subprocess.run(command, capture_output=get_output)
+        if get_output:
+            proc = subprocess.Popen(command,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT,
+                                    text=True)
+            return proc
+        else:
+            return subprocess.run(command)
 
     def run_interactive(self):
         """Run interactive fift"""

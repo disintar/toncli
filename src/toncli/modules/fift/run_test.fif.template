@@ -35,8 +35,10 @@ variable @tests_names      // here we will store test names
 variable @tests            // here we will store all test functions
 variable @prev_c4            // prev test c4
 variable @prev_c5            // prev test c5
+variable @extra            // prev extra
 null @prev_c4 !
 null @prev_c5 !
+null @extra !
 
 variable @cnt        // here we will store tests list length
 @cnt 0!              // set as 0 by default
