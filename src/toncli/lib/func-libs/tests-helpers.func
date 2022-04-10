@@ -25,3 +25,6 @@ tuple get_c7() inline method_id {
 
 cell get_prev_c4() asm "10 GETPARAM UNPAIR DROP";
 cell get_prev_c5() asm "10 GETPARAM UNPAIR SWAP DROP";
+
+cell get_extra() asm "c4 PUSH";
+() set_extra(cell c) impure asm "c4 POP";

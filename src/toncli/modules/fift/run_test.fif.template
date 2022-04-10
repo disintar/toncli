@@ -38,7 +38,7 @@ variable @prev_c5            // prev test c5
 variable @extra            // prev extra
 null @prev_c4 !
 null @prev_c5 !
-null @extra !
+<b b> @extra ! // extra over all tests
 
 variable @cnt        // here we will store tests list length
 @cnt 0!              // set as 0 by default
@@ -129,9 +129,11 @@ verbose 0>
 {
     4 roll =: temp-prev-c4
     3 roll =: temp-prev-c5
+    3 roll =: extra
     swap // get function selector
     test_code <s // load func code as slice
 
+    @' extra // set c4 as extra
     c7 // add c7 cell
     1 untuple 10 untuple
     @' temp-prev-c4
@@ -142,12 +144,13 @@ verbose 0>
 
     verbose dup 2 > {
         3 > {
-            0x151
+            0x155
         } {
-            0x51
+            0x55
         } cond
-    } { drop 0x11 } cond
+    } { drop 0x15 } cond
     runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    =: extra
 
     0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
     5 untuple
@@ -206,6 +209,7 @@ verbose 0>
     @' test // test function selector
     test_code <s // load func code as slice
 
+    @' extra // c4 with extra over all cells
     c7 // add c7 cell
     1 untuple 10 untuple
     @' temp-prev-c4
@@ -216,11 +220,13 @@ verbose 0>
 
     verbose dup 2 > {
         3 > {
-            0x151
+            0x155
         } {
-            0x51
+            0x55
         } cond
-    } { drop 0x11 } cond runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    } { drop 0x15 } cond
+    runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    =: extra
 
     depth 2 >
     { depth 2 - tuple drop }
@@ -245,6 +251,7 @@ verbose 0>
 
     @' c4
     @' c5
+    @' extra
 } : run-test
 
 
@@ -253,9 +260,11 @@ verbose 0>
 { dup 0> }
 {
     drop
+    @extra @ // extra
     @prev_c4 @ // old c4
     @prev_c5 @ // old c5 data
     get-test run-test
+    @extra !
     @prev_c5 ! // save prev test c5
     @prev_c4 ! // save prev test c4
 
