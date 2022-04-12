@@ -27,4 +27,7 @@ Also, it parse verbose level and pass it [here](https://github.com/disintar/tonc
 3. You may use `dump_stack();` for debugging
 4. You may use `-v 1` / `-v 2`  for debugging when running tests
    1. If `-v 2` is used - stack will be dumped, but it's buggy function, so do not panic if something go wrong, just try to use `-v 1`
+   2. `-v 3` / `-v 4` used for debugging tests functions (tvm op / stack dump)
 5. You can use special `get_prev_c4` / `get_prev_c5` functions to get `c4` / `c5` cells from prev tests
+6. Last gas parameter can be tuple or int. If int - just set gas limit. If tuple of 2 ints - will set gas limit and hard gas limit
+   1. This can help when you debug `accept_message()` for example 

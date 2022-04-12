@@ -60,7 +60,7 @@ Now you can run get method:
 ```
 (base) tvorogme in /tmp/multi-wallet λ toncli get seqno                                           
 disintar.io NFT owners today say: 🙈 🙉 🙊
-INFO: 🚀 You want to interact with your contracts ['contract', 'test'] in testnet - that's grate!
+INFO: 🚀 You want to interact with your contracts ['contract', 'test'] in testnet - that's great!
 INFO: 🦘 Found existing deploy-wallet [kQDl5ZpiwlFCb4Bj4sKIvU15rh9Bq2MmCQmw5FrNSPj-9YQ-] (Balance: 4.717844264💎, Is inited: True) in /home/tvorogme/.config/toncli
 INFO: 👯 [contract] [kQA7sZBAxviytnMgyzXO02LSHfbOx4LB50UDfx9Ldnv1D9gt] runmethod ['seqno']
 INFO: 🧐 Output: [ 0  ]
@@ -75,7 +75,7 @@ Or for one contract only:
 ```
 (base) tvorogme in /tmp/multi-wallet λ toncli get seqno --contracts test
 disintar.io NFT owners today say: 🙈 🙉 🙊
-INFO: 🚀 You want to interact with your contracts ['contract', 'test'] in testnet - that's grate!
+INFO: 🚀 You want to interact with your contracts ['contract', 'test'] in testnet - that's great!
 INFO: 🦘 Found existing deploy-wallet [kQDl5ZpiwlFCb4Bj4sKIvU15rh9Bq2MmCQmw5FrNSPj-9YQ-] (Balance: 4.717844264💎, Is inited: True) in /home/tvorogme/.config/toncli
 INFO: 👯 [test] [kQCuGN4Varstnk0serOGa2yhBG39sY7ToG8xsxK3FhEAPAeE] runmethod ['seqno']
 INFO: 🧐 Output: [ 0  ]

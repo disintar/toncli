@@ -1,5 +1,32 @@
 ## Change Log
 
+### 0.0.32
+
+- [x] Add `sendboc` command, so if `.boc` file pass - will send it via lite-cliente, if `.fif` file pass - will
+  invoke `tncli fift sendboc` so fift script will be run, and then boc file on output will be sended
+- [x] Add `--data-params` to build command, to auto-generate data cells 
+- [x] Update `stdlib.fc` to support nft
+- [x] Critical fix: `self.wait_for_deploy(contracts=real_contracts)` instead of `self.wait_for_deploy(contracts=contracts)`
+- [x] Add `.gitignore` to protect contract keys leaks
+- [x] Add cell slice parser in lite-client
+- [x] Add parse address to `TonUtils.fif`
+- [x] Fix custom path to `fift` / `func` / `lite-client` on startup
+- [x] Add command wallet to check wallets addresses 
+- [x] Force `fift` / `func` libs update
+- [x] More stability in lite-client interaction
+- [x] Send `exteranal_message` to contract without need to provide wrapper of `external_message`, just pass body bytes (
+  with support of multiple contracts)
+- [x] Send `internal_message` from deploy wallet in one command
+- [x] NFT Example deploy
+- [x] Add retry parameter to `lite-client`, try several times to do query
+- [x] Add windows support
+- [x] Func tests
+- [x] Custom `stdlib-tests.fc` and `asm-tests.fif` for tests
+- [x] Documentation update
+- [x] Stdlib fixes
+
+---
+
 ### 0.0.16
 
 **Minor fixes**
@@ -27,5 +54,5 @@
 
 **Documentation improvements**
 
-- [ ] Provide documentation for `Easy contract manipulation`
-- [ ] Provide documentation for `Advanced contract manipulation`
+- [x] Provide documentation for `Easy contract manipulation`
+- [x] Provide documentation for `Advanced contract manipulation`

@@ -123,7 +123,8 @@ class Fift:
 
         # generate BOC file
         # Our own cli.fif file need to be added before run
-        command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']], pre_args=["-L", self.cli_fif_lib])
+        command = fift_execute_command(file=self.args[0], args=[*self.args[1:], *self.kwargs['fift_args']],
+                                       pre_args=["-L", self.cli_fif_lib])
 
         subprocess.run(command, cwd=os.path.abspath(self.cwd))
 
@@ -146,7 +147,7 @@ class Fift:
                 else:
                     logger.error(f"😢 Error in lite-client execution: {' '.join(command)}")
 
-    def run_script(self):
+    def run_script(self, get_output=False):
         """Runs fift in script mode on file"""
         if not len(self.args):
             logger.error("👉 You need to specify file path to run")
@@ -163,7 +164,14 @@ class Fift:
 
         command = [executable['fift'], *self.kwargs['fift_args'], *self.args]
 
-        subprocess.run(command)
+        if get_output:
+            proc = subprocess.Popen(command,
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT,
+                                    text=True)
+            return proc
+        else:
+            return subprocess.run(command)
 
     def run_interactive(self):
         """Run interactive fift"""
