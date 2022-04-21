@@ -16,10 +16,11 @@ gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 
-def build(project_root: str,
+def build_test(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
-          contracts: List[TonProjectConfig] = None) -> Optional[str]:
+          contracts: List[TonProjectConfig] = None,
+          use_tests_lib: bool = False) -> Optional[str]:
     """
     Build func file(s) and save result fift file to location
 
@@ -37,18 +38,26 @@ def build(project_root: str,
         func_args = []
 
     output = []
+    test_files = []
     for contract in contracts:
-        output.append(
-            build_files(contract.func_files_locations, contract.to_save_location, func_args, cwd))
+        if len(contract.func_tests_files_locations) and use_tests_lib:
+            for root, dirs, files in os.walk(f"{config_folder}/test-libs/"):
+                for file in files:
+                    if file.endswith((".func", ".fc")):
+                        test_files.append(os.path.join(root, file))
+
+            output.append(
+                build_test_files([*test_files, *contract.func_tests_files_locations],
+                            contract.to_save_tests_location, [], cwd))
 
     return "\n".join(list(map(str, output)))
 
 
-def build_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,
+def build_test_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,
                 cwd: Optional[str] = None):
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
                      os.path.abspath(to_save_location), "-SPA",
-                     os.path.abspath(f"{config_folder}/func-libs/stdlib.func"),
+                     os.path.abspath(f"{config_folder}/func-libs/stdlib-tests.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
 
     get_output = subprocess.check_output(build_command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
