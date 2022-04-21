@@ -5,8 +5,6 @@ import textwrap
 import shlex
 
 import configparser
-import pkg_resources
-import requests
 
 import os.path
 

@@ -1,6 +1,4 @@
-"""
-    Build func file(s) and save result fift file to location
-    
+""" Build func file(s) and save result fift file to location
     build_test method params are :
     :param contracts: contracts to build
     :param func_args: add arguments to func
@@ -8,7 +6,6 @@
     :param cwd: If you need to change root of running script pass it here
     :return:
 """
-
 import os
 import subprocess
 from typing import Optional, List
@@ -58,7 +55,7 @@ def build_test_files(func_files_locations: List[str], to_save_location: str, fun
                      os.path.abspath(f"{config_folder}/func-libs/stdlib-tests.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
 
-    get_output = subprocess.check_output(build_command, cwd=getcwd() if not cwd else os.path.abspath(cwd))
+    get_output = subprocess.check_output(build_command, cwd=getcwd() if not cwd else os.path.abspath(cwd), shell=False)
 
     if get_output:
         return get_output.decode()

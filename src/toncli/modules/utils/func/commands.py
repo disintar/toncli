@@ -1,6 +1,4 @@
-"""
-    Build func file(s) and save result fift file to location
-    
+""" Build func file(s) and save result fift file to location
     build_test method params are :
     :param contracts: contracts to build
     :param func_args: add arguments to func
@@ -8,7 +6,6 @@
     :param cwd: If you need to change root of running script pass it here
     :return:
 """
-
 import os
 import subprocess
 from typing import Optional, List
@@ -27,7 +24,7 @@ def build(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
           contracts: List[TonProjectConfig] = None) -> Optional[str]:
-          
+
     if not contracts:
         project_config = ProjectConf(project_root)
         contracts = project_config.contracts
