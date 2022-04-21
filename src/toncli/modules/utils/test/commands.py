@@ -1,11 +1,5 @@
 """
-Build func file(s) and save result fift file to location
-build_test method params are :
-    :param contracts: contracts to build
-    :param func_args: add arguments to func
-    :param project_root: Files to build in needed order
-    :param cwd: If you need to change root of running script pass it here
-    :return:
+Build file(s) and save result fift file to location
 """
 import os
 import subprocess
@@ -24,6 +18,14 @@ def build_test(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
           contracts: List[TonProjectConfig] = None) -> Optional[str]:
+    """
+    build_test method params are :
+        :param contracts: contracts to build
+        :param func_args: add arguments to func
+        :param project_root: Files to build in needed order
+        :param cwd: If you need to change root of running script pass it here
+        :return:
+    """
     if not contracts:
         project_config = ProjectConf(project_root)
         contracts = project_config.contracts
@@ -46,8 +48,18 @@ def build_test(project_root: str,
 
     return "\n".join(list(map(str, output)))
 
-def build_test_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,
+def build_test_files(func_files_locations: List[str],
+                to_save_location: str,
+                func_args: List[str] = None,
                 cwd: Optional[str] = None):
+    """
+    build_test_files method params are :
+        :func_files_locations: location of the func files
+        :param to_save_location: location to save the files
+        :param func_args: add arguments to func
+        :param cwd: If you need to change root of running script pass it here
+        :return:
+    """
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
                      os.path.abspath(to_save_location), "-SPA",
                      os.path.abspath(f"{config_folder}/func-libs/stdlib-tests.func"),
