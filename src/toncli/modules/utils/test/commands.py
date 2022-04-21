@@ -1,14 +1,21 @@
+"""
+    Build func file(s) and save result fift file to location
+    
+    build_test method params are :
+    :param contracts: contracts to build
+    :param func_args: add arguments to func
+    :param project_root: Files to build in needed order
+    :param cwd: If you need to change root of running script pass it here
+    :return:
+"""
+
 import os
 import subprocess
-import sys
 from typing import Optional, List
 
-import yaml
 from colorama import Fore, Style
 
 from toncli.modules.utils.system.conf import config_folder, executable, getcwd
-from toncli.modules.utils.system.log import logger
-from toncli.modules.utils.system.project import migrate_project_struction
 from toncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
 
 bl = Fore.CYAN
@@ -19,17 +26,8 @@ rs = Style.RESET_ALL
 def build_test(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
-          contracts: List[TonProjectConfig] = None,
-          use_tests_lib: bool = False) -> Optional[str]:
-    """
-    Build func file(s) and save result fift file to location
-
-    :param contracts: contracts to build
-    :param func_args: add arguments to func
-    :param project_root: Files to build in needed order
-    :param cwd: If you need to change root of running script pass it here
-    :return:
-    """
+          contracts: List[TonProjectConfig] = None) -> Optional[str]:
+    
     if not contracts:
         project_config = ProjectConf(project_root)
         contracts = project_config.contracts
@@ -40,8 +38,8 @@ def build_test(project_root: str,
     output = []
     test_files = []
     for contract in contracts:
-        if len(contract.func_tests_files_locations) and use_tests_lib:
-            for root, dirs, files in os.walk(f"{config_folder}/test-libs/"):
+        if len(contract.func_tests_files_locations):
+            for root, _, files in os.walk(f"{config_folder}/test-libs/"):
                 for file in files:
                     if file.endswith((".func", ".fc")):
                         test_files.append(os.path.join(root, file))

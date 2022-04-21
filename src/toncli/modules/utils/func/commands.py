@@ -1,14 +1,21 @@
+"""
+    Build func file(s) and save result fift file to location
+    
+    build_test method params are :
+    :param contracts: contracts to build
+    :param func_args: add arguments to func
+    :param project_root: Files to build in needed order
+    :param cwd: If you need to change root of running script pass it here
+    :return:
+"""
+
 import os
 import subprocess
-import sys
 from typing import Optional, List
 
-import yaml
 from colorama import Fore, Style
 
 from toncli.modules.utils.system.conf import config_folder, executable, getcwd
-from toncli.modules.utils.system.log import logger
-from toncli.modules.utils.system.project import migrate_project_struction
 from toncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
 
 bl = Fore.CYAN
@@ -20,15 +27,7 @@ def build(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
           contracts: List[TonProjectConfig] = None) -> Optional[str]:
-    """
-    Build func file(s) and save result fift file to location
-
-    :param contracts: contracts to build
-    :param func_args: add arguments to func
-    :param project_root: Files to build in needed order
-    :param cwd: If you need to change root of running script pass it here
-    :return:
-    """
+          
     if not contracts:
         project_config = ProjectConf(project_root)
         contracts = project_config.contracts

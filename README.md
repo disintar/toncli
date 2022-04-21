@@ -103,7 +103,8 @@ git clone git@github.com:disintar/toncli.git
 cd toncli && pip install -e .
 ```
 
-If you wish to update toncli locally you can use ```pip install -e path/to/toncli/rootfolder/``` command anytime after you make changes to the toncli source code.
+If you wish to update toncli locally you can use ```pip install -e path/to/toncli/rootfolder/```
+command anytime after you make changes to the toncli source code.
 
 ## Version migration
 
