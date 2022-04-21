@@ -1,5 +1,6 @@
-""" Build func file(s) and save result fift file to location
-    build_test method params are :
+"""
+Build func file(s) and save result fift file to location
+build_test method params are :
     :param contracts: contracts to build
     :param func_args: add arguments to func
     :param project_root: Files to build in needed order
@@ -19,12 +20,10 @@ bl = Fore.CYAN
 gr = Fore.GREEN
 rs = Style.RESET_ALL
 
-
 def build_test(project_root: str,
           cwd: Optional[str] = None,
           func_args: List[str] = None,
           contracts: List[TonProjectConfig] = None) -> Optional[str]:
-    
     if not contracts:
         project_config = ProjectConf(project_root)
         contracts = project_config.contracts
@@ -47,7 +46,6 @@ def build_test(project_root: str,
 
     return "\n".join(list(map(str, output)))
 
-
 def build_test_files(func_files_locations: List[str], to_save_location: str, func_args: List[str] = None,
                 cwd: Optional[str] = None):
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
@@ -55,7 +53,9 @@ def build_test_files(func_files_locations: List[str], to_save_location: str, fun
                      os.path.abspath(f"{config_folder}/func-libs/stdlib-tests.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
 
-    get_output = subprocess.check_output(build_command, cwd=getcwd() if not cwd else os.path.abspath(cwd), shell=False)
+    get_output = subprocess.check_output(build_command,
+                                        cwd=getcwd() if not cwd else os.path.abspath(cwd),
+                                        shell=False)
 
     if get_output:
         return get_output.decode()
