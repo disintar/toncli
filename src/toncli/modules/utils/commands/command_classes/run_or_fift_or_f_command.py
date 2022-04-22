@@ -4,7 +4,7 @@ from toncli.modules.utils.system.argparse_fix import argv_fix
 from toncli.modules.utils.fift.fift import Fift
 
 class RunOrFiftOrFCommand():
-    def __init__(self, string_kwargs, parser: ArgumentParser):
+    def __init__(self, command, string_kwargs, parser: ArgumentParser):
         if(len(sys.argv) >= 2):
             real_args, kwargs = argv_fix(sys.argv, string_kwargs)
             args = parser.parse_args(['fift', *kwargs])

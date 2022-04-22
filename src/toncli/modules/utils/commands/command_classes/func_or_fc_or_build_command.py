@@ -4,7 +4,7 @@ from toncli.modules.utils.func.func import Func
 from toncli.modules.utils.system.argparse_fix import argv_fix
 
 class FuncOrFcOrBuildCommand():
-    def __init__(self, string_kwargs, parser: ArgumentParser):
+    def __init__(self, command, string_kwargs, parser: ArgumentParser):
         real_args, kwargs = argv_fix(sys.argv, string_kwargs)
         args = parser.parse_args(['func', *kwargs])
 

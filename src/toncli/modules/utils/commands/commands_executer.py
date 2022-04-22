@@ -1,4 +1,5 @@
 import sys
+from toncli.modules.utils.commands.command_classes.lite_client_or_lc_command import LiteClientOrLcCommand
 from toncli.modules.utils.system.log import logger
 from argparse import ArgumentParser
 from toncli.modules.utils.commands.command_classes.addrs_command import AddrsCommand
@@ -18,6 +19,7 @@ from toncli.modules.utils.commands.command_classes.update_libs_command import Up
 from toncli.modules.utils.commands.command_classes.wallet_command import WalletCommand
 
 class CommandsExecuter():
+    command= ""
     string_kwargs= []
     parser: ArgumentParser
 
@@ -26,6 +28,7 @@ class CommandsExecuter():
             parser.print_help()
             sys.exit(0)
 
+        self.command = command
         self.string_kwargs = string_kwargs
         self.parser = parser
         if(command in self.command_mapper):
@@ -69,13 +72,13 @@ class CommandsExecuter():
         return ToIntegerCommand(self.string_kwargs)
 
     def func_or_fc_or_build_command(self):
-        return FuncOrFcOrBuildCommand(self.string_kwargs, self.parser)
+        return FuncOrFcOrBuildCommand(self.command, self.string_kwargs, self.parser)
     
     def lite_client_or_lc_command(self):
-        return FuncOrFcOrBuildCommand(self.string_kwargs, self.parser)
+        return LiteClientOrLcCommand(self.string_kwargs, self.parser)
 
     def run_or_fift_or_f_command(self):
-        return RunOrFiftOrFCommand(self.string_kwargs, self.parser)
+        return RunOrFiftOrFCommand(self.command, self.string_kwargs, self.parser)
 
     def build_cli_libs_command(self):
         return BuildCliLibsCommand()
