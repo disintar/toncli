@@ -67,13 +67,13 @@ class CommandsExecuter():
 
     def start_command(self):
         return StartCommand(self.parser)
-    
+
     def tointeger_command(self):
         return ToIntegerCommand(self.string_kwargs)
 
     def func_or_fc_or_build_command(self):
         return FuncOrFcOrBuildCommand(self.command, self.string_kwargs, self.parser)
-    
+
     def lite_client_or_lc_command(self):
         return LiteClientOrLcCommand(self.string_kwargs, self.parser)
 

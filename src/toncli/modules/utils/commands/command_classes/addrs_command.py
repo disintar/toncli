@@ -6,6 +6,7 @@ from toncli.modules.deploy_contract import ContractDeployer
 from toncli.modules.utils.system.conf import getcwd
 from toncli.modules.utils.system.log import logger
 
+bl = Fore.CYAN
 gr = Fore.GREEN
 rs = Style.RESET_ALL
 
