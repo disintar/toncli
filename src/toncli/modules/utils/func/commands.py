@@ -2,7 +2,7 @@
 Build func file(s) and save result fift file to location
 """
 import os
-import subprocess
+from subprocess import check_output
 from typing import Optional, List
 
 from colorama import Fore, Style
@@ -54,7 +54,7 @@ def build_files(func_files_locations: List[str], to_save_location: str, func_arg
                      os.path.abspath(to_save_location), "-SPA",
                      os.path.abspath(f"{config_folder}/func-libs/stdlib.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
-    get_output = subprocess.check_output(build_command,
+    get_output = check_output(build_command,
                                         cwd=getcwd() if not cwd else os.path.abspath(cwd),
                                         shell=False)
 
