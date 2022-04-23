@@ -30,9 +30,7 @@ null                 // global_config
 
 
 // TODO: just use Lists.fif
-variable @tests_data       // here we will store all data functions
-variable @tests_names      // here we will store test names
-variable @tests            // here we will store all test functions
+variable @tests            // here we will store all test functions in a format [function_name, method_id]
 variable @prev_c4            // prev test c4
 variable @prev_c5            // prev test c5
 variable @extra            // prev extra
@@ -60,41 +58,45 @@ variable @is_zero_added
 { @cnt @ 1 + @cnt ! } : next-cnt // increase count in box by 1
 { @cnt @ 1 - @cnt ! } : prev-cnt
 
+// (test_name -> bool)
+{
+    // This is a hacky way to check if name starts with "__test".
+    // Hope nobody uses ascii codes bigger than '~' in function names.
+    dup "__test" $cmp 0>
+    swap "__test~" $cmp 0<
+    and
+} : is-valid-test-name
+
 {
     dup null? not
-    @is_zero_added @ 1 = xor // fix main function duplication
-}                // check if not null
+}                // check if @proclist is not empty
 {
    unpair swap unpair            // get pair (function_name, method_id)
-   dup
-   2 mod                         // check is function test or data
-   0=  {                         // if data
-        dup 0= {  1 @is_zero_added ! } if
-        @tests_data @cnt append  // add data function method_id
-        drop                     // drop function name
-        next-cnt                 // finally update count by 1
-   } {                           // if test function
-        @tests @cnt append       // add test functuin method_id
-        @tests_names @cnt append // add test name
-   } cond
+
+  =: method_id
+  =: function_name
+
+  @' function_name is-valid-test-name {
+    @' function_name @' method_id 2 tuple
+    @tests @cnt append
+    next-cnt
+  } if
 } while // parse @proclist
-drop // remove other @proclist (or null)
+drop // remove null left from @proclist
 
 verbose 0>
 {   cr
-    ."INFO: 👸 Test data methods ids: " ^green @tests_data @ (dump) type ^reset cr
-    ."INFO: 🤳 Test methods ids: " ^green @tests @ (dump) type ^reset cr
-    ."INFO: 👼 Test names: " ^green @tests_names @ (dump) type ^reset cr
+    ."INFO: 🤳 Tests: " ^green @tests @ (dump) type ^reset cr
     cr
 } if
 
 
-// ( -> test name, data f, test f, success)
+// ( -> [test name, method_id] )
 {
-    @tests_names @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests_names ! } { drop } cond // [0, 1, 2] => 0 [1, 2] => 0 (saved to box)
-    @tests_data @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests_data ! } { drop } cond
-    @tests @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests ! } { drop } cond
+    @tests @ @cnt @ untuple
     prev-cnt
+    @cnt @ tuple
+    @tests !
 } : get-test
 
 {
@@ -126,11 +128,15 @@ verbose 0>
 
 } : write-tuple-to-file
 
+// (extra, prev_c4, prev_c5, [function_name, method_id] -> extra, prev_c5, prev_c4, results?)
 {
-    4 roll =: temp-prev-c4
-    3 roll =: temp-prev-c5
-    3 roll =: extra
-    swap // get function selector
+    =: test-info
+    =: temp-prev-c5
+    =: temp-prev-c4
+    =: extra
+
+    @' test-info first =: test-name // TODO: this is actually get-data name
+    @' test-info second // get function selector
     test_code <s // load func code as slice
 
     @' extra // set c4 as extra
@@ -153,16 +159,14 @@ verbose 0>
     =: extra
 
     0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
-    5 untuple
+    6 untuple
     dup null? { drop 1000000000 } if
     =: gas-limit
     =: c7
     =: c4
     =: stack
+    =: checker_function
     =: function
-    =: test
-    =: test-name
-
 
     verbose 0>
     {
@@ -206,7 +210,9 @@ verbose 0>
     @' stack
     @' c5
     @' gas-used
-    @' test // test function selector
+
+    @' checker_function
+    787 // TODO: shouldn't be a hardcoded function
     test_code <s // load func code as slice
 
     @' extra // c4 with extra over all cells
@@ -256,10 +262,8 @@ verbose 0>
 
 
 
-@cnt @
-{ dup 0> }
+{ @cnt @ 0> }
 {
-    drop
     @extra @ // extra
     @prev_c4 @ // old c4
     @prev_c5 @ // old c5 data
@@ -270,6 +274,5 @@ verbose 0>
 
     output-results 1 =
     { write-tuple-to-file } { drop } cond
-    @cnt @
 }
 while  // run all tests
