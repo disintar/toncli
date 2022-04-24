@@ -212,8 +212,9 @@ verbose 0>
     @' gas-used
 
     @' checker_function
-    787 // TODO: shouldn't be a hardcoded function
     test_code <s // load func code as slice
+    // save test_code into c3 (so checker could recursively call other functions), and execute checker
+    <{ BLESS c3 POP EXECUTE }>s
 
     @' extra // c4 with extra over all cells
     c7 // add c7 cell
