@@ -1,5 +1,7 @@
 import sys
+from toncli.modules.utils.commands.command_classes.help_or_h_command import HelpOrHCommand
 from toncli.modules.utils.commands.command_classes.lite_client_or_lc_command import LiteClientOrLcCommand
+from toncli.modules.utils.system.argparse_fix import argv_fix
 from toncli.modules.utils.system.log import logger
 from argparse import ArgumentParser
 from toncli.modules.utils.commands.command_classes.addrs_command import AddrsCommand
@@ -24,10 +26,13 @@ class CommandsExecuter():
     parser: ArgumentParser
 
     def __init__(self, command, string_kwargs, parser):
-        if len(sys.argv) == 0 and not command:
+        
+        _, kwargs = argv_fix(sys.argv, string_kwargs)
+
+        if len(kwargs) == 0 and not command:
             parser.print_help()
             sys.exit(0)
-
+        
         self.command = command
         self.string_kwargs = string_kwargs
         self.parser = parser
@@ -86,7 +91,12 @@ class CommandsExecuter():
     def local_version_command(self):
         return LocalVersionCommand()
 
+    def help_or_h_command(self):
+        return HelpOrHCommand(self.parser)
+
     command_mapper = {
+        "-h": help_or_h_command,
+        "help": help_or_h_command,
         "-v": local_version_command,
         "build_cli_libs" : build_cli_libs_command,
         "run" : run_or_fift_or_f_command,
