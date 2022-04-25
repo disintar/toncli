@@ -98,6 +98,7 @@ class CommandsExecuter():
         "-h": help_or_h_command,
         "help": help_or_h_command,
         "-v": local_version_command,
+        "version": local_version_command,
         "build_cli_libs" : build_cli_libs_command,
         "run" : run_or_fift_or_f_command,
         "fift" : run_or_fift_or_f_command,
