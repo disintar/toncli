@@ -2,10 +2,6 @@
 "TonUtil.fif" include
 "Color.fif" include
 
-"{{ code_path }}" include
-constant code               // this is smc code
-drop  // drop functions defanition
-
 "{{ test_path }}" include     // it will return (@proclist, code cell)
 constant test_code         // save code cell as constant
 
@@ -183,7 +179,7 @@ verbose 0>
 
     ." Total gas used (including testing code): [" ^green @' total_gas_used (dump) type ^reset ."]" cr
 
-    @' exit_code 1 >
+    @' exit_code 1 <=
     {
         // only save c4 and c5 if run was finished successfully
         @' next_c4 @prev_c4 !
