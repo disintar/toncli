@@ -1171,6 +1171,11 @@ x{FE3} @Defop(s) PRINT
 { 1 DEBUGSTRI } : PRINTSTR
 x{FEF000} @Defop LOGFLUSH
 
+// local toncli primitives
+x{FEEF10} @Defop GASLIMITSTEMP
+x{FEEF11} @Defop PRIVTOPUB
+x{FEEF12} @Defop SIGN
+
 //
 // codepage primitives
 x{FF00} @Defop SETCP0

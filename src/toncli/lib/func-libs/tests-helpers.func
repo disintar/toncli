@@ -28,3 +28,24 @@ cell get_prev_c5() asm "10 GETPARAM UNPAIR SWAP DROP";
 
 cell get_extra() asm "c4 PUSH";
 () set_extra(cell c) impure asm "c4 POP";
+
+
+;; (fun, [args] -> (exit_code, gas_used, [return values]))
+forall F, A, R -> (int, int, R) invoke_method(F fun, A args) impure asm
+  "GASLIMITSTEMP SWAP DROP ROTREV"   ;; (gas_rem, fun, agrs)
+  "255 PUSHINT EXPLODEVAR"           ;; (gas_rem, fun, arg_1, arg_2, ..., arg_n, n)
+  "DUP INC ROLLX"                    ;; (gas_rem, arg_1, arg_2, ..., arg_n, n, fun)
+  "<{"
+    "<{"                             ;; <- normal execution
+      "EXECUTE"
+      "DEPTH TUPLEVAR"               ;; ([res_1, res_2, ..., res_k])
+      "ZERO SWAP"                    ;; (exit_code = 0, gas_used = 0, [res..])
+    "}> PUSHCONT"
+    "<{ SWAP DROP NIL }> PUSHCONT"   ;; <- exception handler
+    "TRY"
+  "}> PUSHCONT"                      ;; (gas_rem, args.., n, fun, func_with_exception_wrapper)
+  "ROT INC -1 PUSHINT"               ;; (gas_rem, args.., fun, func_with_exception_wrapper, n + 1, -1)
+  "CALLXVARARGS"                     ;; (gas_rem, exit_code, [res..])
+  "ROT GASLIMITSTEMP SWAP DROP SUB"  ;; (exit_code, [res..], gas used)
+  "SWAP"                             ;; (exit_code, gas_used, [res..])
+;
