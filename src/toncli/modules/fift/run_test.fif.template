@@ -2,6 +2,8 @@
 "TonUtil.fif" include
 "Color.fif" include
 
+asm-no-remove-unused
+
 "{{ test_path }}" include     // it will return (@proclist, code cell)
 constant test_code         // save code cell as constant
 
