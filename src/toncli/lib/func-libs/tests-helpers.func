@@ -39,7 +39,7 @@ forall F, A, R -> (int, int, R) invoke_method(F fun, A args) impure asm
     "<{"                             ;; <- normal execution
       "EXECUTE"
       "DEPTH TUPLEVAR"               ;; ([res_1, res_2, ..., res_k])
-      "ZERO SWAP"                    ;; (exit_code = 0, gas_used = 0, [res..])
+      "ZERO SWAP"                    ;; (exit_code = 0, [res..])
     "}> PUSHCONT"
     "<{ SWAP DROP NIL }> PUSHCONT"   ;; <- exception handler
     "TRY"
