@@ -166,6 +166,7 @@ verbose 0>
     1000000000      // gas limit
     calc-vm-mode
     runvmx
+    // TODO: check what happens if it returns more elements
     // be careful and don't add ".s" here, it could crash fift as c4/c5 could be null pointers
     =: total_gas_used
     =: next_c5
@@ -189,7 +190,7 @@ verbose 0>
 
     @' test_name
     @' exit_code
-    @' total_gas_used // TODO: should not be 'total'
+    @' total_gas_used
     3 tuple
 } : run-test
 
