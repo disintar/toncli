@@ -46,7 +46,9 @@ def build(project_root: str,
 
         if len(contract.func_tests_files_locations) and use_tests_lib:
             output.append(
-                build_files([f"{config_folder}/func-libs/tests-helpers.func", *contract.func_tests_files_locations],
+                build_files([f"{config_folder}/func-libs/tests-helpers.func",
+                             *contract.func_files_locations,
+                             *contract.func_tests_files_locations],
                             contract.to_save_tests_location, [], cwd,
                             use_tests_lib=True))
 
