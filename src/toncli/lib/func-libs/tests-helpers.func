@@ -33,6 +33,7 @@ cell get_extra() asm "c4 PUSH";
 ;; prefer using 'invoke_method' or 'invoke_method_expect_fail'
 ;; (fun, [args] -> (exit_code, gas_used, [return values]))
 forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
+  "NEWC ENDC c5 POP"                 ;; clear actions cell
   "RESETLOADEDCELLS"                 ;; <- make sure first cell load cost 100 gas, not 25
   "GASLIMITSTEMP SWAP DROP ROTREV"   ;; (gas_rem, fun, agrs)
   "255 PUSHINT EXPLODEVAR"           ;; (gas_rem, fun, arg_1, arg_2, ..., arg_n, n)
@@ -56,7 +57,7 @@ forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
 ;; (fun, [args] -> gas_used, [return values])
 forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
     var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
-    throw_if(100, (exit_code != 0) & (exit_code != 1));
+    throw_if(200, (exit_code != 0) & (exit_code != 1));
     return (gas_used, return_values);
 }
 
@@ -64,6 +65,22 @@ forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
 ;; (fun, [args] -> gas_used)
 forall F, A -> int invoke_method_expect_fail(F fun, A args) impure {
     var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
-    throw_if(100, (exit_code == 0) | (exit_code == 1));
+    throw_if(201, (exit_code == 0) | (exit_code == 1));
     return gas_used;
+}
+
+() set_now(int now) impure asm
+    "c7 PUSH DUP FIRST" ;; (now, c7, config)
+    "ROT"               ;; (c7, config, now)
+    "3 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
+int priv_to_pub(int priv_key) asm "PRIVTOPUB";
+slice sign(int hash, int priv_key) asm "SIGN";
+
+slice get_actions() impure asm "c5 PUSH CTOS";
+() assert_no_actions() impure inline {
+    throw_if(202, ~ slice_empty?(get_actions()));
 }
