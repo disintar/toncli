@@ -30,8 +30,10 @@ cell get_extra() asm "c4 PUSH";
 () set_extra(cell c) impure asm "c4 POP";
 
 
+;; prefer using 'invoke_method' or 'invoke_method_expect_fail'
 ;; (fun, [args] -> (exit_code, gas_used, [return values]))
-forall F, A, R -> (int, int, R) invoke_method(F fun, A args) impure asm
+forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
+  "RESETLOADEDCELLS"                 ;; <- make sure first cell load cost 100 gas, not 25
   "GASLIMITSTEMP SWAP DROP ROTREV"   ;; (gas_rem, fun, agrs)
   "255 PUSHINT EXPLODEVAR"           ;; (gas_rem, fun, arg_1, arg_2, ..., arg_n, n)
   "DUP INC ROLLX"                    ;; (gas_rem, arg_1, arg_2, ..., arg_n, n, fun)
@@ -49,3 +51,19 @@ forall F, A, R -> (int, int, R) invoke_method(F fun, A args) impure asm
   "ROT GASLIMITSTEMP SWAP DROP SUB"  ;; (exit_code, [res..], gas used)
   "SWAP"                             ;; (exit_code, gas_used, [res..])
 ;
+
+;; same as 'invoke_method_full', but raises if exit_code is not 0 or 1
+;; (fun, [args] -> gas_used, [return values])
+forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
+    var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
+    throw_if(100, (exit_code != 0) & (exit_code != 1));
+    return (gas_used, return_values);
+}
+
+;; same as 'invoke_method_full', but raises if exit_code is 0 or 1
+;; (fun, [args] -> gas_used)
+forall F, A -> int invoke_method_expect_fail(F fun, A args) impure {
+    var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
+    throw_if(100, (exit_code == 0) | (exit_code == 1));
+    return gas_used;
+}
