@@ -159,6 +159,14 @@ verbose 0>
 {
     =: test_info
 
+    depth 0<> {
+        cr ^red ."!!!" cr
+        ."Before running tvm we expect the stack to be fully empty, so tvm can't mess up the test suite." cr
+        ."If you modified 'run_test.fif', please save things to variables before running vm." cr
+        ."!!!" cr ^reset
+        quit
+    } if
+
     @' test_info first =: test_name
     @' test_info second // get test function selector
     test_code <s // load func code as slice
@@ -175,11 +183,14 @@ verbose 0>
     =: next_c4
     =: exit_code
 
+    depth tuple =: test_result
+    // after that operation stack should be empty
+
     ."INFO: Test [" ^green @' test_name type ^reset ."] status: ["
 
     @' exit_code 1 >
     { ^red ."FAIL" ^reset ."], code: [" ^cyan @' exit_code (dump) type ^reset ."]"  }
-    { ^green ."SUCCESS" ^reset ."] Test result: [" ^green (dump) type ^reset ."]" } cond
+    { ^green ."SUCCESS" ^reset ."] Test result: [" ^green @' test_result (dump)  type ^reset ."]" } cond
 
     ." Total gas used (including testing code): [" ^green @' total_gas_used (dump) type ^reset ."]" cr
 
