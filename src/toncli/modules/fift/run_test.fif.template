@@ -118,14 +118,16 @@ verbose 0>
 
 } : write-tuple-to-file
 
-// we put [c4, c5] in the end of c7, so developers could use get_prev_c4() and get_prev_c5() functions
+// we put [c4, c5] as 10-th element of config stored in c7, so developers could use get_prev_c4() and get_prev_c5() functions
+// we put 0 as 11-th element of config stored in c7. So we can store gas-remaining there later.
 {
     c7
     1 untuple 10 untuple
     @prev_c4 @
     @prev_c5 @
     2 tuple
-    11 tuple
+    0
+    12 tuple
     1 tuple
 } : add-c4-c5-to-c7
 

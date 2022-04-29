@@ -33,24 +33,43 @@ cell get_extra() asm "c4 PUSH";
 ;; prefer using 'invoke_method' or 'invoke_method_expect_fail'
 ;; (fun, [args] -> (exit_code, gas_used, [return values]))
 forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
+  "{"                                ;; <- this function saves gas-remaining to 11-th element of c7's config
+    "c7 PUSH DUP FIRST"              ;; (c7, config)
+    "GASLIMITSTEMP SWAP DROP"        ;; (c7, config, gas_remaining)
+    "11 SETINDEX 0 SETINDEX c7 POP"  ;; <- new c7 saved
+  "} : save-gas-remaining"
+
+  "{"                                ;; <- assumes 'save-gas-remaining' was called before
+    "GASLIMITSTEMP SWAP DROP"
+    "11 GETPARAM SWAP SUB"
+    ;; we additionally executed [GASLIMITSTEMP, SWAP, DROP, SETINDEX, SETINDEX, POP],
+    ;; before actually calling 'EXECUTE'
+    ;; so we need to subtract   (     18      +  18 +  26 +  (12+26) + (1+26) + 18)
+    ;; from consumed gas value
+    "145 PUSHINT SUB"
+  "} : compute-gas-used"
+
   "NEWC ENDC c5 POP"                 ;; clear actions cell
   "RESETLOADEDCELLS"                 ;; <- make sure first cell load cost 100 gas, not 25
-  "GASLIMITSTEMP SWAP DROP ROTREV"   ;; (gas_rem, fun, agrs)
-  "255 PUSHINT EXPLODEVAR"           ;; (gas_rem, fun, arg_1, arg_2, ..., arg_n, n)
-  "DUP INC ROLLX"                    ;; (gas_rem, arg_1, arg_2, ..., arg_n, n, fun)
+  "255 PUSHINT EXPLODEVAR"           ;; (fun, arg_1, arg_2, ..., arg_n, n)
+  "DUP INC ROLLX"                    ;; (arg_1, arg_2, ..., arg_n, n, fun)
   "<{"
     "<{"                             ;; <- normal execution
+      "save-gas-remaining"
       "EXECUTE"
-      "DEPTH TUPLEVAR"               ;; ([res_1, res_2, ..., res_k])
-      "ZERO SWAP"                    ;; (exit_code = 0, [res..])
+      "compute-gas-used"             ;; <- it is important to call it just after EXECUTE, so we don't count additional commands
+      "DEPTH DEC ROLLREVX"           ;; (gas_used, res_1, res_2, ..., res_k)
+      "DEPTH DEC TUPLEVAR"           ;; (gas_used, [res_1, res_2, ..., res_k])
+      "ZERO ROTREV"                  ;; (exit_code = 0, gas_used, [res..])
     "}> PUSHCONT"
-    "<{ SWAP DROP NIL }> PUSHCONT"   ;; <- exception handler
+    "<{"                             ;; <- exception handler
+      "compute-gas-used"             ;; (exception_info, exit_code, gas_used)
+      "ROT DROP NIL"                 ;; (exit_code, gas_used, [])
+    "}> PUSHCONT"
     "TRY"
-  "}> PUSHCONT"                      ;; (gas_rem, args.., n, fun, func_with_exception_wrapper)
-  "ROT INC -1 PUSHINT"               ;; (gas_rem, args.., fun, func_with_exception_wrapper, n + 1, -1)
-  "CALLXVARARGS"                     ;; (gas_rem, exit_code, [res..])
-  "ROT GASLIMITSTEMP SWAP DROP SUB"  ;; (exit_code, [res..], gas used)
-  "SWAP"                             ;; (exit_code, gas_used, [res..])
+  "}> PUSHCONT"                      ;; (args.., n, fun, func_with_exception_wrapper)
+  "ROT INC -1 PUSHINT"               ;; (args.., fun, func_with_exception_wrapper, n + 1, -1)
+  "CALLXVARARGS"                     ;; (exit_code, gas_used, [res..])
 ;
 
 ;; same as 'invoke_method_full', but raises if exit_code is not 0 or 1
