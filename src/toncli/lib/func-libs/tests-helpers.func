@@ -32,6 +32,32 @@ cell get_extra() asm "c4 PUSH";
 
 ;; prefer using 'invoke_method' or 'invoke_method_expect_fail'
 ;; (fun, [args] -> (exit_code, gas_used, [return values]))
+{-
+    Some technical details about this function.
+
+    It invokes the function 'fun' with arguments 'agrs', and tries to make it as safe as possible.
+
+    Which means it makes sure current stack could not be corrupted by called function, and
+    exceptions are catched.
+
+    It also calculates gas used by the called function.
+
+    It is not completely safe (as runvm in fift). E.g. we store current gas value inside c7, so
+    a bad smart contract could change it. Called function potentially could also completely change
+    continuation, and actual testing code will not be executed.
+
+    How is gas calculated?
+    We use 'GASLIMITSTEMP' function (only available in a test version of fift) just before, and
+    just after 'EXECUTE' (so we can compute the difference). We store it as the 11-th element of
+    the 0-th element of c7 (and hope 'fun' will not change it). We also subtract some constant
+    amount of gas from it (which we spend on saving value to c7).
+
+    How do we make sure the stack is not corrupted?
+    We actually want to use 'TRYARGS' function, which both catches potential exceptions and
+    makes sure only len(args) elements are present on the stack during 'fun' execution. Unfortunately,
+    we don't know len(args) in compile-time, so we need to first use 'CALLXVARARGS', which
+    creates a new stack only with needed arguments, and only after that use 'TRY'.
+-}
 forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
   "{"                                ;; <- this function saves gas-remaining to 11-th element of c7's config
     "c7 PUSH DUP FIRST"              ;; (c7, config)
