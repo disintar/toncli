@@ -102,7 +102,7 @@ forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
 ;; (fun, [args] -> gas_used, [return values])
 forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
     var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
-    throw_if(200, (exit_code != 0) & (exit_code != 1));
+    throw_if(exit_code, (exit_code != 0) & (exit_code != 1));
     return (gas_used, return_values);
 }
 
