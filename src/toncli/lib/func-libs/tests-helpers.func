@@ -122,6 +122,22 @@ forall F, A -> int invoke_method_expect_fail(F fun, A args) impure {
     "c7 POP"
 ;
 
+() set_global_config(cell global_config) impure asm
+    "c7 PUSH DUP FIRST" ;; (global config, c7, config)
+    "ROT"               ;; (c7, config, global config)
+    "9 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
+() set_balance([int, cell]) impure asm
+    "c7 PUSH DUP FIRST" ;; (balance, c7, config)
+    "ROT"               ;; (c7, config, balance)
+    "7 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
 int priv_to_pub(int priv_key) asm "PRIVTOPUB";
 slice sign(int hash, int priv_key) asm "SIGN";
 
