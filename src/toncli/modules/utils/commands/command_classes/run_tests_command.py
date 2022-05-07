@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 import sys
-from toncli.modules.tests.tests import TestsRunner
+from toncli.modules.utils.test.tests import TestsRunner
 from toncli.modules.utils.system.argparse_fix import argv_fix
 
 class RunTestsCommand():
