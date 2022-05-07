@@ -28,8 +28,10 @@ def check_2_libs_actual():
     local_fift_hashes = get_dir_hashes(os.path.abspath(f"{local_path}/fift-libs"))
     global_func_hashes = get_dir_hashes(os.path.abspath(f"{global_path}/func-libs"))
     local_func_hashes = get_dir_hashes(os.path.abspath(f"{local_path}/func-libs"))
+    global_test_hashes = get_dir_hashes(os.path.abspath(f"{global_path}/test-libs"))
+    local_test_hashes = get_dir_hashes(os.path.abspath(f"{local_path}/test-libs"))
 
-    return global_fift_hashes == local_fift_hashes and global_func_hashes == local_func_hashes
+    return global_fift_hashes == local_fift_hashes and global_func_hashes == local_func_hashes and global_test_hashes == local_test_hashes
 
 
 def get_libs_paths():
