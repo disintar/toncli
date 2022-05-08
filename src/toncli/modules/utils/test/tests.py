@@ -7,6 +7,7 @@ from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import getcwd, project_root
 from toncli.modules.utils.system.project_conf import ProjectConf
+from toncli.modules.utils.test.commands import build_test
 from colorama import Fore, Style
 from jinja2 import FileSystemLoader, select_autoescape, Environment
 
