@@ -8,8 +8,9 @@ from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import getcwd, project_root
 from toncli.modules.utils.system.project_conf import ProjectConf
 from colorama import Fore, Style
-from toncli.modules.utils.func.commands import build as fift_build
 from jinja2 import FileSystemLoader, select_autoescape, Environment
+
+from toncli.modules.utils.test.commands import build_test
 
 bl = Fore.CYAN
 rd = Fore.RED
@@ -40,7 +41,7 @@ class TestsRunner:
         to_save_location = os.path.abspath(f"{getcwd()}/build")
 
         # Build code
-        fift_build(getcwd(), contracts=real_contracts, cwd=getcwd(), use_tests_lib=True)
+        build_test(getcwd(), contracts=real_contracts, cwd=getcwd())
 
         location = to_save_location.replace(getcwd(), '')
         logger.info(f"🥌 Build {gr}successfully{rs}, check out {gr}.{location}{rs}")
