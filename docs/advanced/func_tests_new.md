@@ -7,6 +7,9 @@ You also need to make sure you use new versions of [Asm.fif](/src/toncli/lib/fif
 
 **TODO: write install instructions?**
 
+**Note:** if you try to run tests written in an old way with a new toncli version, you will probably see an error 
+like `PROC:<{:procedure already defined`. You need to either rewrite tests in a new way (which is preferred!) or pass `--old` flags as argument of `toncli run_tests`.  
+
 ## What is new?
 * No need to manually specify method_ids for test functions.
 * No need to hardcode function selectors of contract's functions.

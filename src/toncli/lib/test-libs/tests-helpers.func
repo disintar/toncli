@@ -100,7 +100,7 @@ forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
 
 ;; same as 'invoke_method_full', but raises if exit_code is not 0 or 1
 ;; (fun, [args] -> gas_used, [return values])
-forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
+forall F, A, R -> (int, R) invoke_method(F fun, A args) impure method_id {
     var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
     throw_if(exit_code, (exit_code != 0) & (exit_code != 1));
     return (gas_used, return_values);
@@ -108,7 +108,7 @@ forall F, A, R -> (int, R) invoke_method(F fun, A args) impure {
 
 ;; same as 'invoke_method_full', but raises if exit_code is 0 or 1
 ;; (fun, [args] -> gas_used)
-forall F, A -> int invoke_method_expect_fail(F fun, A args) impure {
+forall F, A -> int invoke_method_expect_fail(F fun, A args) impure method_id {
     var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
     throw_if(201, (exit_code == 0) | (exit_code == 1));
     return gas_used;
@@ -142,6 +142,6 @@ int priv_to_pub(int priv_key) asm "PRIVTOPUB";
 slice sign(int hash, int priv_key) asm "SIGN";
 
 slice get_actions() impure asm "c5 PUSH CTOS";
-() assert_no_actions() impure inline {
+() assert_no_actions() impure inline method_id {
     throw_if(202, ~ slice_empty?(get_actions()));
 }

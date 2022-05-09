@@ -11,4 +11,5 @@ class RunTestsCommand():
         test_runner = TestsRunner()
         test_runner.run(args.contracts.split() if args.contracts else None,
                         verbose=args.verbose,
-                        output_results=args.output_results)
+                        output_results=args.output_results,
+                        run_tests_old_way=args.old)
