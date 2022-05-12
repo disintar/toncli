@@ -50,9 +50,15 @@ def build_files(func_files_locations: List[str], to_save_location: str, func_arg
         :param cwd: If you need to change root of running script pass it here
         :return:
     """
+    func_files = []
+    for root, _, files in os.walk(f"{config_folder}/func-libs/"):
+        for file in files:
+            if file.endswith((".func", ".fc")):
+                func_files.append(os.path.join(root, file))
+
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
                      os.path.abspath(to_save_location), "-SPA",
-                     os.path.abspath(f"{config_folder}/func-libs/stdlib.func"),
+                     *[os.path.abspath(i) for i in func_files],
                      *[os.path.abspath(i) for i in func_files_locations]]
     get_output = check_output(build_command,
                                         cwd=getcwd() if not cwd else os.path.abspath(cwd),

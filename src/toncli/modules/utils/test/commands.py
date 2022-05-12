@@ -34,16 +34,21 @@ def build_test(project_root: str,
         func_args = []
 
     output = []
-    test_files = []
+    func_and_test_files = []
     for contract in contracts:
         if len(contract.func_tests_files_locations):
+            for root, _, files in os.walk(f"{config_folder}/func-libs/"):
+                for file in files:
+                    if file.endswith((".func", ".fc")):
+                        func_and_test_files.append(os.path.join(root, file))
+            
             for root, _, files in os.walk(f"{config_folder}/test-libs/"):
                 for file in files:
                     if file.endswith((".func", ".fc")):
-                        test_files.append(os.path.join(root, file))
-
+                        func_and_test_files.append(os.path.join(root, file))
+            
             output.append(
-                build_test_files([*test_files, *contract.func_files_locations, *contract.func_tests_files_locations],
+                build_test_files([*func_and_test_files, *contract.func_files_locations, *contract.func_tests_files_locations],
                             contract.to_save_tests_location, [], cwd))
 
     return "\n".join(list(map(str, output)))
@@ -62,7 +67,6 @@ def build_test_files(func_files_locations: List[str],
     """
     build_command = [os.path.abspath(executable['func']), *func_args, "-o",
                      os.path.abspath(to_save_location), "-SPA",
-                     os.path.abspath(f"{config_folder}/func-libs/stdlib-tests.func"),
                      *[os.path.abspath(i) for i in func_files_locations]]
 
     get_output = check_output(build_command,
