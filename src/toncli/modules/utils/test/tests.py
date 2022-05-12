@@ -7,7 +7,6 @@ from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import getcwd, project_root
 from toncli.modules.utils.system.project_conf import ProjectConf
-from toncli.modules.utils.test.commands import build_test
 from colorama import Fore, Style
 from jinja2 import FileSystemLoader, select_autoescape, Environment
 
@@ -23,7 +22,7 @@ class TestsRunner:
     def __init__(self):
         self.project_config = ProjectConf(getcwd())
 
-    def run(self, contracts: List[str], verbose: int, output_results: bool = False):
+    def run(self, contracts: List[str], verbose: int, output_results: bool = False, run_tests_old_way: bool = False):
         logger.info(f"🌈 Start tests")
 
         if contracts is not None and len(contracts) > 0:
@@ -42,7 +41,7 @@ class TestsRunner:
         to_save_location = os.path.abspath(f"{getcwd()}/build")
 
         # Build code
-        build_test(getcwd(), contracts=real_contracts, cwd=getcwd())
+        build_test(getcwd(), contracts=real_contracts, cwd=getcwd(), compile_tests_with_contract=not run_tests_old_way)
 
         location = to_save_location.replace(getcwd(), '')
         logger.info(f"🥌 Build {gr}successfully{rs}, check out {gr}.{location}{rs}")
@@ -71,7 +70,8 @@ class TestsRunner:
                 autoescape=select_autoescape()
             )
 
-            template = env.get_template("run_test.fif.template")
+            template_name = "run_test_old.fif.template" if run_tests_old_way else "run_test.fif.template"
+            template = env.get_template(template_name)
 
             rendered = template.render(**render_kwargs)
             temp_location: str = tempfile.mkstemp(suffix='.fif')[1]

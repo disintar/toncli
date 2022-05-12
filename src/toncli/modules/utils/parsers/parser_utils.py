@@ -107,7 +107,7 @@ class ParserUtil():
         self.subparser.add_parser('build', help="Same as func build",
                             formatter_class=argparse.RawDescriptionHelpFormatter,
                             description=textwrap.dedent(TextUtils.FIFT_HELP))
-    
+
     def set_fift_parser(self):
         parser_fift = self.subparser.add_parser('fift', help=TextUtils.FIFT_HELP,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -127,7 +127,7 @@ class ParserUtil():
                                 default='',
                                 help='Pass args and kwargs to lite-client command in sendboc mode, '
                                     'e.g.: -la "-v 4" - set verbose level')
-    
+
     def set_liteclient_parser(self):
         parser_lite_client = self.subparser.add_parser('lite-client', help=TextUtils.LITE_CLIENT_HELP,
                                               formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -142,28 +142,32 @@ class ParserUtil():
         parser_lite_client.add_argument("--lite-client-post-args", "-lpa", type=str,
                                         default='',
                                         help='Pass args to lite-client command at the end')
-    
+
     def set_sendboc_parser(self):
         parser_sendboc = self.subparser.add_parser('sendboc')
         parser_sendboc.add_argument('file', type=argparse.FileType('r'))
         parser_sendboc.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                                     help='Network to deploy')
-    
+
     def set_wallet_parser(self):
         self.subparser.add_parser('wallet')
 
     def set_runtests_parser(self):
         run_tests = self.subparser.add_parser('run_tests')
         run_tests.add_argument("--contracts", "-c", type=str,
-                            help='Set contract name from project.yaml to run tests on')
+                               help='Set contract name from project.yaml to run tests on')
         run_tests.add_argument("--verbose", "-v", type=int, default=0,
-                            help='Set contract name from project.yaml to run tests on')
+                               help='Prints more debug information')
         run_tests.add_argument("--output-results", "-o", action='store_true',
-                            help='Set contract name from project.yaml to run tests on')
-    
+                               help='Stores results as json')
+        run_tests.add_argument("--old", action='store_true', help='In old versions of toncli tests had to have '
+                                                                  'specific method_ids (starting from 0). If you '
+                                                                  'still follow this convention, and want to run '
+                                                                  'tests, provide this flag.')
+
     def set_updatelibs_parser(self):
         self.subparser.add_parser('update_libs')
-    
+
     def set_func_parser(self):
         parser_func = self.subparser.add_parser('func', help=TextUtils.FUNC_HELP,
                                        formatter_class=argparse.RawDescriptionHelpFormatter,
