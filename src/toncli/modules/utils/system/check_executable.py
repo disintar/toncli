@@ -12,7 +12,7 @@ def safe_get_version(executable: str) -> Optional[List[str]]:
         output = subprocess.check_output([os.path.abspath(executable), '-V'])
         output = output.decode()
 
-        if ' build information:' in output:
+        if 'build information:' in output.lower():
             output = output.split('[')[-1]
             output = output[:-1]
             return output.split(',')
