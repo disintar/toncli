@@ -44,7 +44,7 @@ class ParserUtil():
                                 default="", type=str)
 
     def set_get_parser(self):
-        parser_get = self.subparser.add_parser('get', description='Deploy project to blockchain')
+        parser_get = self.subparser.add_parser('get', description='Run get method on contract')
         parser_get.add_argument("--net", "-n", default='testnet', type=str, choices=['testnet', 'mainnet', 'ownnet'],
                                 help='Network to deploy')
         parser_get.add_argument("--update", action='store_true', help='Update cached configs of net')
