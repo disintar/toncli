@@ -1,11 +1,11 @@
 cell get_c5() asm "c5 PUSH";
 
-(int, cell) parse_send_raw_message(slice out_action)
+(int, cell) parse_send_raw_message(slice out_action) impure inline
 {
     return (out_action~load_uint(8), out_action~load_ref());
 }
 
-(int, cell) parse_lib_code(slice out_action)
+(int, cell) parse_lib_code(slice out_action) impure inline
 {
     var mode = out_action~load_uint(7);
     if( out_action.slice_refs() > 0 )
@@ -19,18 +19,18 @@ cell get_c5() asm "c5 PUSH";
     }
 }
 
-(int, cell) parse_raw_reserve(slice out_action)
+(int, cell) parse_raw_reserve(slice out_action) impure inline
 {
     return (out_action~load_uint(8), out_action~load_dict());
 }
 
 
-(cell) parse_set_code(slice out_action)
+(cell) parse_set_code(slice out_action) impure inline
 {
     return out_action~load_ref();
 }
 
-tuple parse_c5()
+tuple parse_c5() impure inline
 {
     {-
         The following is the TL-B of c5
