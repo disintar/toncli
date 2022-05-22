@@ -199,6 +199,8 @@ int cell_null?(cell c) asm "ISNULL";
 () raw_reserve_extra(int amount, cell extra_amount, int mode) impure asm "RAWRESERVEX";
 () send_raw_message(cell msg, int mode) impure asm "SENDRAWMSG";
 () set_code(cell new_code) impure asm "SETCODE";
+() set_lib_code(cell library, int x) impure asm "SETLIBCODE";
+() change_lib(int lib_hash, int x) impure asm "CHANGELIB";
 
 int random() impure asm "RANDU256";
 int rand(int range) impure asm "RAND";
