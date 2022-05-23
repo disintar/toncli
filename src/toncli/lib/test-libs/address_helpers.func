@@ -87,14 +87,14 @@ slice generate_var_address(int address_length) impure method_id {
     }
     else
     {
-        var address = rand(power(2, address_length));
+        var address = random();
 
         slice address_cell =  begin_cell()
         .store_uint(3, 2) ;; addr_var$11
         .store_uint(0, 1) ;; anycast nothing
         .store_uint(address_length, 9)  ;; len
         .store_int(-1, 8) ;; workchain_id: -1
-        .store_uint(address, address_length) ;; 2^address_length
+        .store_uint(address, address_length) ;; mostly 256 bit address
         .end_cell()
         .begin_parse();
 
@@ -138,5 +138,30 @@ slice generate_var_address_with_custom_data(int anycast, int workchain_id, int a
         .begin_parse();
 
         return address_cell;
+    }
+}
+
+slice generate_any_address()
+{
+    ;;_ (Message Any) = MessageAny;
+
+    ;; this method is taking a roll on what to return
+
+    int rnd = rand(4);
+    if(rnd == 0)
+    {
+        return generate_empty_address();
+    }
+    elseif(rnd == 1)
+    {
+        return generate_internal_address();
+    }
+    elseif(rnd == 2)
+    {
+        return generate_external_address(256);
+    }
+    else
+    {
+        return generate_var_address(256);
     }
 }

@@ -11,5 +11,6 @@ int error::slices_equal() asm "109 PUSHINT";
 int error::wrong_action_id() asm "110 PUSHINT";
 int error::wrong_send_mode() asm "111 PUSHINT";
 int error::not_internal_message() asm "112 PUSHINT";
+int error::not_external_message() asm "113 PUSHINT";
 
 int error::not_supported_yet() asm "0xFACC PUSHINT";
