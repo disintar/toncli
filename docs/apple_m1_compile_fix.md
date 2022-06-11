@@ -2,7 +2,7 @@
 Compiling TON modules on Apple M1 can be a tricky task, so we decided to create this guide
 ## 1. Clone sources from official repository
 ```
-git clone --recursive https://github.com/newton-blockchain/ton
+git clone --recursive https://github.com/ton-blockchain/ton
 cd ton
 ```
 Cloning recursively to get all needed repos automatically
