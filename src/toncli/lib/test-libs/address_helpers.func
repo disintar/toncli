@@ -36,13 +36,13 @@ slice generate_internal_address_with_custom_data(int anycast, int workchain_id, 
 }
 
 slice generate_external_address(int address_length) impure method_id {
-    ;;addr_extern$01 len:(## 8) external_address:(bits len)
+    ;;addr_extern$01 len:(## 9) external_address:(bits len)
     ;; = MsgAddressExt;
     var address = random();
 
     slice address_cell =  begin_cell()
         .store_uint(1, 2) ;; addr_extern$01
-        .store_uint(address_length, 8)
+        .store_uint(address_length, 9)
         .store_uint(address, address_length)
         .end_cell()
         .begin_parse();
@@ -51,12 +51,11 @@ slice generate_external_address(int address_length) impure method_id {
 }
 
 slice generate_external_address_with_custom_data(int address_length, int address) impure method_id {
-    ;;addr_extern$01 len:(## 8) external_address:(bits len)
-    ;; = MsgAddressExt;
+    ;;addr_extern$01 len:(## 9) external_address:(bits len) = MsgAddressExt;
 
     slice address_cell =  begin_cell()
         .store_uint(1, 2) ;; addr_extern$01
-        .store_uint(address_length, 8)
+        .store_uint(address_length, 9)
         .store_uint(address, address_length)
         .end_cell()
         .begin_parse();
