@@ -101,6 +101,33 @@ cell generate_external_in_message(int import_fee, builder payload) impure method
     return msg.end_cell();
 }
 
+cell generate_external_in_message_with_empty_address(int import_fee, builder payload) impure method_id {
+    ;;ext_in_msg_info$10 src:AddrNone dest:MsgAddressInt 
+    ;;import_fee:Grams = CommonMsgInfo;
+
+    ;;message$_ {X:Type} info:CommonMsgInfo
+    ;;init:(Maybe (Either StateInit ^StateInit))
+    ;;body:(Either X ^X) = Message X;
+
+    slice ssrc = generate_empty_address();
+    slice sdest = generate_internal_address();
+
+    var msg = begin_cell()
+            .store_uint(2, 2) ;;ext_in_msg_info$10
+            .store_slice(ssrc) ;; src:AddrNone
+            .store_slice(sdest) ;; dest:MsgAddressInt
+            .store_grams(import_fee) ;;
+            .store_uint(0, 1); ;; no init_state
+    if(msg.builder_bits() + payload.builder_bits() > 1023) {
+      msg = msg.store_uint(1,1) ;; Either ^X
+            .store_ref(payload.end_cell());
+    } else {
+      msg = msg.store_uint(1,1).store_builder(payload);
+    }
+
+    return msg.end_cell();
+}
+
 cell generate_external_out_message(int import_fee, builder payload) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddressInt dest:MsgAddressExt
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
@@ -116,6 +143,34 @@ cell generate_external_out_message(int import_fee, builder payload) impure metho
             .store_uint(3, 2) ;;ext_out_msg_info$11
             .store_slice(ssrc) ;; src:MsgAddressInt
             .store_slice(sdest) ;; dest:MsgAddressExt
+            .store_uint(1000, 64) ;; created_lt:uint64
+            .store_uint(1000, 32) ;; created_at:uint32
+            .store_uint(0, 1); ;; no init_state
+    if(msg.builder_bits() + payload.builder_bits() > 1023) {
+      msg = msg.store_uint(1,1) ;; Either ^X
+            .store_ref(payload.end_cell());
+    } else {
+      msg = msg.store_uint(1,1).store_builder(payload);
+    }
+
+    return msg.end_cell();
+}
+
+cell generate_external_out_message_with_empty_address(int import_fee, builder payload) impure method_id {
+    ;;ext_out_msg_info$11 src:MsgAddressInt dest:AddrNone
+    ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
+
+    ;;message$_ {X:Type} info:CommonMsgInfo
+    ;;init:(Maybe (Either StateInit ^StateInit))
+    ;;body:(Either X ^X) = Message X;
+
+    slice ssrc = generate_internal_address();
+    slice sdest = generate_empty_address();
+
+    var msg = begin_cell()
+            .store_uint(3, 2) ;;ext_out_msg_info$11
+            .store_slice(ssrc) ;; src:MsgAddressInt
+            .store_slice(sdest) ;; dest:AddrNone
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(0, 1); ;; no init_state
