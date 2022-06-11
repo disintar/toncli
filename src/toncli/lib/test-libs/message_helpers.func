@@ -74,7 +74,7 @@ cell generate_internal_message_relaxed(int bounce, int ton_amount, builder paylo
     return msg.end_cell();
 }
 
-cell generate_external_in_message(int ton_amount, builder payload) impure method_id {
+cell generate_external_in_message(int import_fee, builder payload) impure method_id {
     ;;ext_in_msg_info$10 src:MsgAddressExt dest:MsgAddressInt 
     ;;import_fee:Grams = CommonMsgInfo;
 
@@ -88,10 +88,8 @@ cell generate_external_in_message(int ton_amount, builder payload) impure method
     var msg = begin_cell()
             .store_uint(2, 2) ;;ext_in_msg_info$10
             .store_slice(ssrc) ;; src:MsgAddressExt
-            .store_slice(sdest) ;; dest:MsgAddressExt
-            .store_grams(ton_amount) ;;
-            .store_uint(1000, 64) ;; created_lt:uint64
-            .store_uint(1000, 32) ;; created_at:uint32
+            .store_slice(sdest) ;; dest:MsgAddressInt
+            .store_grams(import_fee) ;;
             .store_uint(0, 1); ;; no init_state
     if(msg.builder_bits() + payload.builder_bits() > 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
@@ -103,7 +101,7 @@ cell generate_external_in_message(int ton_amount, builder payload) impure method
     return msg.end_cell();
 }
 
-cell generate_external_out_message(int ton_amount, builder payload) impure method_id {
+cell generate_external_out_message(int import_fee, builder payload) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddressInt dest:MsgAddressExt
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
 
@@ -116,9 +114,8 @@ cell generate_external_out_message(int ton_amount, builder payload) impure metho
 
     var msg = begin_cell()
             .store_uint(3, 2) ;;ext_out_msg_info$11
-            .store_slice(ssrc) ;; src:MsgAddressExt
+            .store_slice(ssrc) ;; src:MsgAddressInt
             .store_slice(sdest) ;; dest:MsgAddressExt
-            .store_grams(ton_amount) ;;
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(0, 1); ;; no init_state
@@ -147,7 +144,6 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload) impu
             .store_uint(3, 2) ;;ext_out_msg_info$11
             .store_slice(ssrc) ;; src:MsgAddressExt
             .store_slice(sdest) ;; dest:MsgAddressExt
-            .store_grams(ton_amount) ;;
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(0, 1); ;; no init_state
@@ -192,15 +188,24 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload) impu
     return [ihr_disabled, bounce, bounced, src, to_address, money, timestamps, init_state, body];
 }
 
-[slice, slice, int, tuple, slice] parse_external_message(cell message) impure method_id {
+[slice, slice, int, int, tuple, slice] parse_external_message(cell message) impure method_id {
     slice cs = message.begin_parse();
     int msg_info = cs~load_uint(2);
 
-    throw_if(error::not_external_message(), (msg_info != 2) | (msg_info != 3));
+    throw_if(error::not_external_message(), (msg_info != 2) & (msg_info != 3));
 
     slice src = cs~load_msg_addr();
     slice to_address = cs~load_msg_addr();
-    int timestamps = cs~load_uint(96);
+    int import_fee = 0;
+    int timestamps = 0;
+    if (msg_info == 2)
+    {
+      import_fee = cs~load_grams();
+    }
+    else
+    {
+      timestamps = cs~load_uint(96);
+    }
     int maybe_init_state = cs~load_uint(1);
     throw_if(error::not_supported_yet(), maybe_init_state);
     tuple init_state = empty_tuple();
@@ -215,6 +220,6 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload) impu
         body = (cs~load_ref()).begin_parse();
     }
 
-    return [src, to_address, timestamps, init_state, body];
+    return [src, to_address, import_fee, timestamps, init_state, body];
 }
 
