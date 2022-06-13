@@ -26,7 +26,7 @@ Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be f
 ### Usage and docs
 New to `toncli`?
 
-Try: [Quick start guide](/docs/quick_starat_guide.md)
+Try: [Quick start guide](/docs/quick_start_guide.md)
 
 All other documentation lists in `docs/`
 

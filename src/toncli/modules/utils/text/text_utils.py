@@ -39,6 +39,7 @@ class TextUtils:
 
         {bl}deploy - deploy current project to blockchain
         {bl}get - run get method on contract
+        {bl}send - send internal transaction to contract
         {bl}run_transaction - run remote transaction locally
 
         {bl}fift / f - interact with fift :)
