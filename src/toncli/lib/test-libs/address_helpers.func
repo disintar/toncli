@@ -140,22 +140,20 @@ slice generate_var_address_with_custom_data(int anycast, int workchain_id, int a
     }
 }
 
-slice generate_any_address()
+slice generate_any_address(int typeOfAddress)
 {
     ;;_ (Message Any) = MessageAny;
+    ;; this method is returning address based on the int type
 
-    ;; this method is taking a roll on what to return
-
-    int rnd = rand(4);
-    if(rnd == 0)
+    if(typeOfAddress == 0)
     {
         return generate_empty_address();
     }
-    elseif(rnd == 1)
+    elseif(typeOfAddress == 1)
     {
         return generate_internal_address();
     }
-    elseif(rnd == 2)
+    elseif(typeOfAddress == 2)
     {
         return generate_external_address(256);
     }
