@@ -143,7 +143,7 @@ cell generate_external_in_message(int import_fee, builder payload) impure method
     return msg.end_cell();
 }
 
-cell generate_external_in_message_with_empty_address(int import_fee, builder payload) impure method_id {
+cell generate_external_in_message_with_empty_source_address(int import_fee, builder payload) impure method_id {
     ;;ext_in_msg_info$10 src:AddrNone dest:MsgAddressInt 
     ;;import_fee:Grams = CommonMsgInfo;
 
@@ -198,7 +198,7 @@ cell generate_external_out_message(int import_fee, builder payload) impure metho
     return msg.end_cell();
 }
 
-cell generate_external_out_message_with_empty_address(int import_fee, builder payload) impure method_id {
+cell generate_external_out_message_with_empty_destination_address(int import_fee, builder payload) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddressInt dest:AddrNone
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
 
