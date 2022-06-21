@@ -1,6 +1,62 @@
-builder store_builder(builder to, builder from) asm "STBR";
+builder generate_init_state() impure method_id {
+    return begin_cell().store_uint(0, 1) ;; maybe (##5)
+                      .store_uint(1, 1) ;; Maybe TickTock
+                      .store_uint(1, 1) ;; bool Tick
+                      .store_uint(0, 1) ;; bool Tock
+                      .store_uint(0, 1) ;; code: Maybe Cell^
+                      .store_uint(0, 1) ;; data: Maybe Cell^
+                      .store_uint(0, 1); ;; library: Maybe ^Cell
+}
 
-cell generate_internal_message(int bounce, int ton_amount, builder payload) impure method_id {
+builder generate_init_state_with_data(cell code, cell data, cell library) impure method_id {
+    return begin_cell().store_uint(0, 1) ;; maybe (##5)
+                      .store_uint(1, 1) ;; Maybe TickTock
+                      .store_uint(1, 1) ;; bool Tick
+                      .store_uint(0, 1) ;; bool Tock
+                      .store_uint(1, 1) ;; code: Maybe Cell^
+                      .store_ref(code)  
+                      .store_uint(1, 1) ;; data: Maybe Cell^
+                      .store_ref(data)  
+                      .store_uint(1, 1) ;; library: Maybe ^Cell
+                      .store_ref(library);
+}
+
+tuple parse_init_state(slice cs) impure method_id {
+    tuple parsed_tuple = empty_tuple();
+    int maybe_five = cs~load_uint(1);
+    parsed_tuple~tpush(maybe_five);
+    if(maybe_five == 1) {
+      parsed_tuple~tpush(cs~load_uint(5)); ;; (##5)
+    }
+    int maybe_tick_tock = cs~load_uint(1);
+    parsed_tuple~tpush(maybe_tick_tock);
+    if(maybe_tick_tock == 1) {
+      parsed_tuple~tpush(cs~load_uint(1)); ;; tick
+      parsed_tuple~tpush(cs~load_uint(1)); ;; tock
+    }
+    int maybe_code = cs~load_uint(1);
+    parsed_tuple~tpush(maybe_code);
+    if(maybe_tick_tock == 1) {
+      parsed_tuple~tpush(cs~load_ref()); ;; code
+    }
+    
+    int maybe_data = cs~load_uint(1);
+    parsed_tuple~tpush(maybe_data);
+    if(maybe_tick_tock == 1) {
+      parsed_tuple~tpush(cs~load_ref()); ;; data
+    }
+
+    int maybe_library = cs~load_uint(1);
+    parsed_tuple~tpush(maybe_library);
+    if(maybe_library == 1) {
+      parsed_tuple~tpush(cs~load_ref()); ;; library
+    }
+
+    ;; returns tuple with results that exist only
+    return parsed_tuple;
+}
+
+cell generate_internal_message(int bounce, int ton_amount, int init_state, builder payload) impure method_id {
     ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
     ;;src:MsgAddressInt dest:MsgAddressInt
     ;;value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
@@ -26,7 +82,18 @@ cell generate_internal_message(int bounce, int ton_amount, builder payload) impu
             .store_grams(0) ;; fwd_fee
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -37,44 +104,7 @@ cell generate_internal_message(int bounce, int ton_amount, builder payload) impu
     return msg.end_cell();
 }
 
-cell generate_internal_message_with_empty_address(int bounce, int ton_amount, builder payload) impure method_id {
-    ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
-    ;;src:AddrNone dest:AddrNone
-    ;;value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
-    ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
-
-    ;;message$_ {X:Type} info:CommonMsgInfo
-    ;;init:(Maybe (Either StateInit ^StateInit))
-    ;;body:(Either X ^X) = Message X;
-
-    slice ssrc = generate_empty_address();
-    slice sdest = generate_empty_address();
-
-    var msg = begin_cell()
-            .store_uint(0, 1) ;; int_msg_info$0
-            .store_uint(0, 1) ;; ihr_disabled:Bool
-            .store_uint(bounce, 1) ;; bounce:Bool
-            .store_uint(0, 1) ;; bounced:Bool
-            .store_slice(ssrc) ;; src:AddrNone
-            .store_slice(sdest) ;; dest:AddrNone
-            .store_grams(ton_amount) ;;
-            .store_dict(null()) ;; extra currencies
-            .store_grams(0) ;; ihr_fee
-            .store_grams(0) ;; fwd_fee
-            .store_uint(1000, 64) ;; created_lt:uint64
-            .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
-    if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
-    } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
-    }
-
-    return msg.end_cell();
-}
-
-cell generate_internal_message_relaxed(int bounce, int ton_amount, builder payload, int typeOfAnyAddress) impure method_id {
+cell generate_internal_message_relaxed(int bounce, int ton_amount, int init_state, builder payload, int typeOfAnyAddress) impure method_id {
     ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
     ;;src:MsgAddress dest:MsgAddressInt 
     ;;value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
@@ -105,7 +135,18 @@ cell generate_internal_message_relaxed(int bounce, int ton_amount, builder paylo
             .store_grams(0) ;; fwd_fee
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -116,7 +157,7 @@ cell generate_internal_message_relaxed(int bounce, int ton_amount, builder paylo
     return msg.end_cell();
 }
 
-cell generate_external_in_message(int import_fee, builder payload) impure method_id {
+cell generate_external_in_message(int import_fee, int init_state, builder payload) impure method_id {
     ;;ext_in_msg_info$10 src:MsgAddressExt dest:MsgAddressInt 
     ;;import_fee:Grams = CommonMsgInfo;
 
@@ -132,7 +173,18 @@ cell generate_external_in_message(int import_fee, builder payload) impure method
             .store_slice(ssrc) ;; src:MsgAddressExt
             .store_slice(sdest) ;; dest:MsgAddressInt
             .store_grams(import_fee) ;;
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
     if(msg.builder_bits() + payload.builder_bits() > 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -143,7 +195,7 @@ cell generate_external_in_message(int import_fee, builder payload) impure method
     return msg.end_cell();
 }
 
-cell generate_external_in_message_with_empty_source_address(int import_fee, builder payload) impure method_id {
+cell generate_external_in_message_with_empty_source_address(int import_fee, int init_state, builder payload) impure method_id {
     ;;ext_in_msg_info$10 src:AddrNone dest:MsgAddressInt 
     ;;import_fee:Grams = CommonMsgInfo;
 
@@ -159,7 +211,19 @@ cell generate_external_in_message_with_empty_source_address(int import_fee, buil
             .store_slice(ssrc) ;; src:AddrNone
             .store_slice(sdest) ;; dest:MsgAddressInt
             .store_grams(import_fee) ;;
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -170,7 +234,7 @@ cell generate_external_in_message_with_empty_source_address(int import_fee, buil
     return msg.end_cell();
 }
 
-cell generate_external_out_message(int import_fee, builder payload) impure method_id {
+cell generate_external_out_message(int import_fee, int init_state, builder payload) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddressInt dest:MsgAddressExt
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
 
@@ -187,7 +251,19 @@ cell generate_external_out_message(int import_fee, builder payload) impure metho
             .store_slice(sdest) ;; dest:MsgAddressExt
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -198,7 +274,7 @@ cell generate_external_out_message(int import_fee, builder payload) impure metho
     return msg.end_cell();
 }
 
-cell generate_external_out_message_with_empty_destination_address(int import_fee, builder payload) impure method_id {
+cell generate_external_out_message_with_empty_destination_address(int import_fee, int init_state, builder payload) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddressInt dest:AddrNone
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
 
@@ -215,7 +291,18 @@ cell generate_external_out_message_with_empty_destination_address(int import_fee
             .store_slice(sdest) ;; dest:AddrNone
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -226,7 +313,7 @@ cell generate_external_out_message_with_empty_destination_address(int import_fee
     return msg.end_cell();
 }
 
-cell generate_external_out_message_relaxed(int ton_amount, builder payload, int typeOfAnyAddress) impure method_id {
+cell generate_external_out_message_relaxed(int ton_amount, int init_state, builder payload, int typeOfAnyAddress) impure method_id {
     ;;ext_out_msg_info$11 src:MsgAddress dest:MsgAddressExt
     ;;created_lt:uint64 created_at:uint32 = CommonMsgInfoRelaxed;
 
@@ -248,7 +335,18 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload, int 
             .store_slice(sdest) ;; dest:MsgAddressExt
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
-            .store_uint(0, 1); ;; no init_state
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+      
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
       msg = msg.store_uint(1,1) ;; Either ^X
             .store_ref(payload.end_cell());
@@ -275,8 +373,12 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload, int 
     int fwd_fee = cs~load_grams();
     int timestamps = cs~load_uint(96);
     int maybe_init_state = cs~load_uint(1);
-    throw_if(error::not_supported_yet(), maybe_init_state);
     tuple init_state = empty_tuple();
+    if(maybe_init_state == 1)
+    {
+      ;;todo
+      init_state = parse_init_state(cs);
+    }
     int body_flag = cs~load_uint(1);
     var body = null();
     if (body_flag == 0) {
@@ -309,8 +411,12 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload, int 
       timestamps = cs~load_uint(96);
     }
     int maybe_init_state = cs~load_uint(1);
-    throw_if(error::not_supported_yet(), maybe_init_state);
     tuple init_state = empty_tuple();
+    if(maybe_init_state == 1)
+    {
+      ;;todo
+      init_state = parse_init_state(cs);
+    }
     int body_flag = cs~load_uint(1);
 
     var body = null();
@@ -324,4 +430,3 @@ cell generate_external_out_message_relaxed(int ton_amount, builder payload, int 
 
     return [src, to_address, import_fee, timestamps, init_state, body];
 }
-

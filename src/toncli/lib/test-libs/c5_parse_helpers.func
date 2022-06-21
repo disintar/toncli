@@ -1,5 +1,3 @@
-cell get_c5() asm "c5 PUSH";
-
 (int, cell) parse_send_raw_message(slice out_action) impure inline
 {
     return (out_action~load_uint(8), out_action~load_ref());

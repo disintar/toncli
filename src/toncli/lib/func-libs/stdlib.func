@@ -1,6 +1,6 @@
 ;; Standard library for funC
 ;;
-
+forall X -> tuple unsafe_tuple(X x) asm "NOP";
 forall X -> tuple cons(X head, tuple tail) asm "CONS";
 forall X -> (X, tuple) uncons(tuple list) asm "UNCONS";
 forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
@@ -51,6 +51,7 @@ int check_data_signature(slice data, slice signature, int public_key) asm "CHKSI
 
 () dump_stack() impure asm "DUMPSTK";
 
+cell get_c5() asm "c5 PUSH";
 cell get_data() asm "c4 PUSH";
 () set_data(cell c) impure asm "c4 POP";
 cont get_c3() impure asm "c3 PUSH";
@@ -105,6 +106,7 @@ int slice_depth(slice s) asm "SDEPTH";
 int builder_refs(builder b) asm "BREFS";
 int builder_bits(builder b) asm "BBITS";
 int builder_depth(builder b) asm "BDEPTH";
+builder store_builder(builder to, builder from) asm "STBR";
 
 builder begin_cell() asm "NEWC";
 cell end_cell(builder b) asm "ENDC";
