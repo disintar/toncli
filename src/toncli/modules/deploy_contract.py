@@ -76,7 +76,7 @@ class ContractDeployer(AbstractDeployer):
             real_contracts = self.project_config.contracts
 
         # Compile func
-        # self.compile_func(real_contracts)
+        self.compile_func(real_contracts)
         logger.info(f"🌲 Func compiled")
 
         self.run_tests(real_contracts)
