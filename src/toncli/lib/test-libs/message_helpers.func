@@ -376,7 +376,6 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
     tuple init_state = empty_tuple();
     if(maybe_init_state == 1)
     {
-      ;;todo
       init_state = parse_init_state(cs);
     }
     int body_flag = cs~load_uint(1);
@@ -414,7 +413,6 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
     tuple init_state = empty_tuple();
     if(maybe_init_state == 1)
     {
-      ;;todo
       init_state = parse_init_state(cs);
     }
     int body_flag = cs~load_uint(1);

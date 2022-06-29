@@ -1,9 +1,17 @@
 cell generate_external_out_message_with_bad_source_address() impure method_id {
   slice sdest = generate_external_address(256);
 
+  slice ssrc_invalid =  begin_cell()
+        .store_uint(2, 2) ;; addr_std$10
+        .store_uint(0, 1) ;; anycast nothing
+        .store_int(-1, 8) ;; workchain_id: -1
+        .store_uint(1, 10)
+        .end_cell()
+        .begin_parse();
+
    return begin_cell()
         .store_uint(3, 2) ;;ext_out_msg_info$11
-        .store_int(0, 1) ;; src:INVALID
+        .store_slice(ssrc_invalid);; src:INVALID addr_std$10
         .store_slice(sdest) ;; dest:MsgAddressExt
         .end_cell();
 }
@@ -49,7 +57,7 @@ cell generate_internal_message_with_bad_grams_data() impure method_id {
             .store_uint(0, 1) ;; bounced:Bool
             .store_slice(ssrc) ;; src:MsgAddress
             .store_slice(sdest) ;; dest:MsgAddress
-            .store_uint(8, 8)  ;; len of nanograms
+            .store_uint(8, 4)  ;; len of nanograms
             .store_uint(1, 1) ;; INVALID GRAMS amount
             .end_cell();
 }
@@ -81,6 +89,7 @@ cell generate_internal_message_with_bad_init_state_data() impure method_id {
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(1, 1) ;; init_state
-            .store_ref(init_state_with_bad_data.end_cell())
+            .store_uint(0, 1) ;; Either (X ^X)
+            .store_builder(init_state_builder)
             .end_cell();
 }
