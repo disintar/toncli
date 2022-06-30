@@ -74,7 +74,7 @@ cell generate_internal_message_with_bad_init_state_data() impure method_id {
                       .store_uint(1, 1); ;; library: Maybe ^Cell
                       ;; bits for references but no data
 
-    rreturn begin_cell()
+    return begin_cell()
             .store_uint(0, 1) ;; int_msg_info$0
             .store_uint(0, 1) ;; ihr_disabled:Bool
             .store_uint(0, 1) ;; bounce:Bool
