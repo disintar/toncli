@@ -5,7 +5,7 @@
 
 ### Linux / macOS (intel)
 
-1. Download needed prebuild for your system from [here](https://github.com/ton-blockchain/ton/actions?query=branch%3Amaster+is%3Acompleted)
+1. Download needed prebuild for your system from [here](https://github.com/SpyCheese/ton/actions)
    1. You need to be logged-in to GitHub to download pre-builds
 2. Install `Python3.9` or higher
 3. Run `pip install toncli` or `pip3 install toncli`
@@ -24,7 +24,7 @@
 
 4. Install `toncli` by running `pip install toncli`
 
-5. Download the compiled TON binaries from [here](https://github.com/ton-blockchain/ton/actions/runs/1713804021) (you need to be logged in to GitHub)
+5. Download the compiled TON binaries from [here](https://github.com/SpyCheese/ton/actions/runs/2589030151) (you need to be logged in to GitHub)
 
 ![image](https://user-images.githubusercontent.com/19264196/160259203-07fd0e26-9b8e-4aff-b4f0-8e4e6f871088.png)
 
