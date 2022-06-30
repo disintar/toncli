@@ -26,6 +26,7 @@ class CommandsExecuter():
     parser: ArgumentParser
 
     def __init__(self, command, string_kwargs, parser):
+        LocalVersionCommand()
         
         _, kwargs = argv_fix(sys.argv, string_kwargs)
 

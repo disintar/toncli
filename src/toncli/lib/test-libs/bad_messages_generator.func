@@ -29,13 +29,13 @@ cell generate_external_in_message_with_bad_source_address() impure method_id {
     slice ssrc_invalid =  begin_cell()
         .store_uint(1, 2) ;; addr_extern$01
         .store_uint(128, 9)
-        .store_uint(random(), 10)
+        .store_uint(0, 10)
         .end_cell()
         .begin_parse();
 
    return begin_cell()
         .store_uint(2, 2) ;;ext_in_msg_info$11
-        .store_int(ssrc_invalid, 1) ;; src:INVALID
+        .store_slice(ssrc_invalid) ;; src:INVALID
         .end_cell();
 }
 
