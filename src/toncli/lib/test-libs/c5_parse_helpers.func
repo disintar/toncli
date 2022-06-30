@@ -62,15 +62,26 @@ tuple parse_c5() impure inline
     tuple list_of_actions_tuple = empty_tuple();
 
     var c5 = get_c5();
-    var out_action = c5.begin_parse();
-    int counter = out_action.slice_refs();
-    if(counter > 0)
-    {
-        do
-        {
-            out_action~load_ref();
-            if( out_action.slice_bits() >= 32 )
-            {
+    tuple actions = empty_tuple();
+    var out_action_node = c5.begin_parse();
+    
+    if(out_action_node.slice_bits() == 0) {
+      return null();
+    }
+    int num = 0;
+    int break = false;
+    do {
+      cell next = out_action_node~load_ref();
+      actions = cons(out_action_node, actions);
+      out_action_node = next.begin_parse();
+      num += 1;
+      break = out_action_node.slice_bits() == 0;
+    } until (break);
+
+    int i = 0;
+    do {
+      var out_action = actions~list_next();
+      {
                 var action_code = out_action~load_uint(32);
                 if(action_code == 247711853)
                 {
@@ -92,12 +103,9 @@ tuple parse_c5() impure inline
                     (int mode, cell lib_cell_or_lib_hash) = parse_lib_code(out_action);
                     list_of_actions_tuple~tpush([3, lib_cell_or_lib_hash, mode]);
                 }
-            }
-            counter -= 1;
-        }
-        until ( counter == 0 )
-    }
+      }
+      i += 1;
+    } until (i >= num);
 
     return list_of_actions_tuple;
 }
-
