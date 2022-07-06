@@ -9,11 +9,6 @@ from toncli.modules.utils.system.log import logger
 
 def safe_get_version(executable: str) -> Optional[List[str]]:
     try:
-        logger.info(f"You should also update your binaries for this version. Please download the binaries depending on your system at the links provided. \n 
-    Windows : {bl}https://github.com/SpyCheese/ton/actions/runs/2618774052{rs} \n 
-    Linux : {bl}https://github.com/SpyCheese/ton/actions/runs/2585669126{rs} \n 
-    MacOs : {bl}https://github.com/SpyCheese/ton/actions/runs/2618664609{rs} \n")
-
         output = subprocess.check_output([os.path.abspath(executable), '-V'])
         output = output.decode()
 
@@ -31,6 +26,11 @@ def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
 
     config = {}
     is_executable_changes = False
+
+    logger.info("""You should also update your binaries for this version. Please download the binaries depending on your system at the links provided. \n 
+    Windows : {bl}https://github.com/SpyCheese/ton/actions/runs/2618774052{rs} \n 
+    Linux : {bl}https://github.com/SpyCheese/ton/actions/runs/2585669126{rs} \n 
+    MacOs : {bl}https://github.com/SpyCheese/ton/actions/runs/2618664609{rs} \n""")
 
     for item in ['func', 'fift', 'lite-client']:
         if not executable_config[item] or len(executable_config[item]) == 0:
