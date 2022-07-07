@@ -1,9 +1,9 @@
 from colorama import Fore, Style
 
-
 gr = Fore.GREEN
 bl = Fore.CYAN
 rs = Style.RESET_ALL
+
 
 class TextUtils:
     FIFT_HELP = f'''positional arguments:
@@ -75,5 +75,4 @@ class TextUtils:
 
         Credits: {gr}disintar.io{rs} team
     '''
-    VERSION_WARNING = """\nIts seems that your local fift and func libs (%s) differs from their actual versions (%s).
-                You can update them automatically using "toncli update_libs" or disable this warning by changing "LIBS_WARNING" to "False" param in cofig\n\n"""
+    VERSION_WARNING = f""" Its seems that your local fift and func libs ({bl}%s{rs}) differs from their actual versions ({bl}%s{rs}). You can update them automatically using "{bl}toncli update_libs{rs}" or disable this warning by changing {gr}"LIBS_WARNING" to "False"{rs} param in cofig\n\n"""

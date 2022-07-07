@@ -34,8 +34,8 @@ def main():
             local_lib_path, global_lib_path = get_libs_paths()
             logger.warning(
                 TextUtils.VERSION_WARNING,
-                local_lib_path,
-                global_lib_path
+                global_lib_path,
+                local_lib_path
             )
     
     parserUtil = ParserUtil(parser)

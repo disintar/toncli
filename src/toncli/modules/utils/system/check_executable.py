@@ -3,8 +3,12 @@ import platform
 import shutil
 import subprocess
 from typing import Optional, List, Dict, Tuple
-
+from colorama import Fore, Style
 from toncli.modules.utils.system.log import logger
+
+bl = Fore.CYAN
+gr = Fore.GREEN
+rs = Style.RESET_ALL
 
 
 def safe_get_version(executable: str) -> Optional[List[str]]:
@@ -26,11 +30,6 @@ def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
 
     config = {}
     is_executable_changes = False
-
-    logger.info("""You should also update your binaries for this version. Please download the binaries depending on your system at the links provided. \n 
-    Windows : {bl}https://github.com/SpyCheese/ton/actions/runs/2618774052{rs} \n 
-    Linux : {bl}https://github.com/SpyCheese/ton/actions/runs/2585669126{rs} \n 
-    MacOs : {bl}https://github.com/SpyCheese/ton/actions/runs/2618664609{rs} \n""")
 
     for item in ['func', 'fift', 'lite-client']:
         if not executable_config[item] or len(executable_config[item]) == 0:
@@ -59,6 +58,13 @@ def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
                 version_output = safe_get_version(config[item])
 
                 if version_output is not None and len(version_output) == 2:
+                    logger.info(version_output)
+
+                    # logger.info(f"""You should also update your binaries for this version. Please download the binaries depending on your system at the links provided. \n
+                    # Windows : {bl}https://github.com/SpyCheese/ton/actions/runs/2618774052{rs} \n
+                    # Linux : {bl}https://github.com/SpyCheese/ton/actions/runs/2585669126{rs} \n
+                    # MacOs : {bl}https://github.com/SpyCheese/ton/actions/runs/2618664609{rs} \n""")
+
                     is_executable_changes = True
                     founded_executable = True
                 else:
