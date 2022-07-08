@@ -1,0 +1,275 @@
+"AsmTests.fif" include
+"TonUtil.fif" include
+"Color.fif" include
+
+"{{ code_path }}" include
+constant code               // this is smc code
+drop  // drop functions defanition
+
+"{{ test_path }}" include     // it will return (@proclist, code cell)
+constant test_code         // save code cell as constant
+
+
+{{ verbose }} constant verbose
+{{ output_results }} constant output-results
+
+"EQB36_EfYjFYMV8p_cxSYX61bA0FZ4B65ZNN6L8INY-5gL6w" true parse-load-address drop 2constant address
+
+// this is c7 that will be passed to test code
+0x076ef1ea           // magic
+0                    // actions
+0                    // msgs_sent
+now                  // unixtime
+1                    // block_lt
+1                    // trans_lt
+239                  // randseed
+1000000000 null pair // balance_remaining
+<b address Addr, b> <s // myself
+null                 // global_config
+10 tuple 1 tuple constant c7 // save as c7 cell
+
+
+// TODO: just use Lists.fif
+variable @tests_data       // here we will store all data functions
+variable @tests_names      // here we will store test names
+variable @tests            // here we will store all test functions
+variable @prev_c4            // prev test c4
+variable @prev_c5            // prev test c5
+variable @extra            // prev extra
+null @prev_c4 !
+null @prev_c5 !
+<b b> @extra ! // extra over all tests
+
+variable @cnt        // here we will store tests list length
+@cnt 0!              // set as 0 by default
+
+// so in func main function is pre-defined with main name and method_id 0
+// we need this little trick to bypass problem, when user set other function name as method_id 0
+variable @is_zero_added
+@is_zero_added 0!
+
+// Add element to tuple in Box B with length B'
+// (x, B, B' -> )
+{   =: list_cnt
+    =: list
+    @' list @ dup null? not { @' list_cnt @ untuple } { drop } cond       // decomposes list if it is not null
+    @' list_cnt @ 1 +                                                              // update count
+    tuple @' list !                                                       // create and update tuple
+} : append
+
+{ @cnt @ 1 + @cnt ! } : next-cnt // increase count in box by 1
+{ @cnt @ 1 - @cnt ! } : prev-cnt
+
+{
+    dup null? not
+    @is_zero_added @ 1 = xor // fix main function duplication
+}                // check if not null
+{
+   unpair swap unpair            // get pair (function_name, method_id)
+   dup
+   2 mod                         // check is function test or data
+   0=  {                         // if data
+        dup 0= {  1 @is_zero_added ! } if
+        @tests_data @cnt append  // add data function method_id
+        drop                     // drop function name
+        next-cnt                 // finally update count by 1
+   } {                           // if test function
+        @tests @cnt append       // add test functuin method_id
+        @tests_names @cnt append // add test name
+   } cond
+} while // parse @proclist
+drop // remove other @proclist (or null)
+
+verbose 0>
+{   cr
+    ."INFO: 👸 Test data methods ids: " ^green @tests_data @ (dump) type ^reset cr
+    ."INFO: 🤳 Test methods ids: " ^green @tests @ (dump) type ^reset cr
+    ."INFO: 👼 Test names: " ^green @tests_names @ (dump) type ^reset cr
+    cr
+} if
+
+
+// ( -> test name, data f, test f, success)
+{
+    @tests_names @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests_names ! } { drop } cond // [0, 1, 2] => 0 [1, 2] => 0 (saved to box)
+    @tests_data @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests_data ! } { drop } cond
+    @tests @ @cnt @ untuple @cnt @ 1 - dup 0> { tuple @tests ! } { drop } cond
+    prev-cnt
+} : get-test
+
+{
+    explode
+    dup 1 > {
+        1 -
+
+        swap (dump) swap // first item to string
+
+        { dup 0> }
+        {
+            =: count
+            swap (dump) " " $+ swap $+
+            @' count 1 -
+        }
+        while
+
+        drop // drop counter
+        "{{ output_path }}" file-exists?
+        { "{{ output_path }}" file>B B{0a} B+ B>$ }
+        { B{0a} B>$ } cond
+        swap $+
+        $>B "{{ output_path }}" B>file
+    } {
+        0 > {
+            (dump) $>B "{{ output_path }}" B>file
+        } if
+    } cond
+
+} : write-tuple-to-file
+
+{
+    4 roll =: temp-prev-c4
+    3 roll =: temp-prev-c5
+    3 roll =: extra
+    swap // get function selector
+    test_code <s // load func code as slice
+
+    @' extra // set c4 as extra
+    c7 // add c7 cell
+    1 untuple 10 untuple
+    @' temp-prev-c4
+    @' temp-prev-c5
+    2 tuple
+    11 tuple
+    1 tuple
+
+    verbose dup 2 > {
+        3 > {
+            0x155
+        } {
+            0x55
+        } cond
+    } { drop 0x15 } cond
+    runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    =: extra
+
+    0= not { abort"ERROR: 😱 Error running test data function, please double check it" } if
+    5 untuple
+    dup null? { drop 1000000000 } if
+    =: gas-limit
+    =: c7
+    =: c4
+    =: stack
+    =: function
+    =: test
+    =: test-name
+
+
+    verbose 0>
+    {
+        cr
+        ."INFO: Test [" ^green @' test-name type ^reset ."]: " cr
+        ."INFO:  Test function: [" ^green @' function (dump) type ^reset ."] " cr
+        ."INFO:  Test c7: [" ^green @' c7 (dump) type ^reset ."] " cr
+        ."INFO:  Test c4: [" ^green @' c4 (dump) type ^reset ."] " cr
+        ."INFO:  Test stack: [" ^green @' stack (dump) type ^reset ."] " cr
+        ."INFO:  Test gas-limit: [" ^green @' gas-limit (dump) type ^reset ."] " cr
+        cr
+    } if
+
+    @' stack explode // pass stack to runvm
+    0 = { null } if
+    @' function // function selector
+    code <s // load func code as slice
+    @' c4  // add c4 cell lodaded from lite-client
+    @' c7 // add c7 cell
+    @' gas-limit dup tuple? { explode drop } if
+    verbose dup 0> {
+        1 >
+        { @' gas-limit tuple? { 0x1FD }  // with stack trace + hard gas limit
+                { 0x17D } cond } // with stack trace
+        { @' gas-limit tuple? { 0xFD }  // with vm OP sterr + hard gas limit
+                { 0x7D } cond } // with vm OP sterr
+        cond
+    }
+    { drop @' gas-limit tuple? { 0xBD } // with hard gas limit
+                { 0x3D } cond // without hard gas limit
+    }
+    cond
+    runvmx  // Runvm
+
+    =: gas-used =: c5
+    =: c4  =: exit-code
+    @' stack count 0 = { depth 1 - roll drop } if // if we store null priv. - need to remove
+    depth tuple  =: stack
+    @' exit-code
+    @' c4
+    @' stack
+    @' c5
+    @' gas-used
+    @' test // test function selector
+    test_code <s // load func code as slice
+
+    @' extra // c4 with extra over all cells
+    c7 // add c7 cell
+    1 untuple 10 untuple
+    @' temp-prev-c4
+    @' temp-prev-c5
+    2 tuple
+    11 tuple
+    1 tuple
+
+    verbose dup 2 > {
+        3 > {
+            0x155
+        } {
+            0x55
+        } cond
+    } { drop 0x15 } cond
+    runvmx // here we will get function selector, stack values, c4, c7, gas limit
+    =: extra
+
+    depth 2 >
+    { depth 2 - tuple drop }
+    {   depth 2 =
+        { swap drop }
+        if
+    }
+    cond
+    =: exit-code
+
+    @' exit-code
+    dup
+    1 >
+    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^red ."FAIL" ^reset ."], code: [" ^cyan  (dump) type ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]"  cr }
+    { ."INFO: Test [" ^green @' test-name type ^reset ."] status: [" ^green ."SUCCESS" ^reset ."]" ." Gas used: [" ^green @' gas-used (dump) type ^reset ."]" cr drop } cond
+
+
+    @' test-name
+    @' exit-code
+    @' gas-used
+    3 tuple
+
+    @' c4
+    @' c5
+    @' extra
+} : run-test
+
+
+
+@cnt @
+{ dup 0> }
+{
+    drop
+    @extra @ // extra
+    @prev_c4 @ // old c4
+    @prev_c5 @ // old c5 data
+    get-test run-test
+    @extra !
+    @prev_c5 ! // save prev test c5
+    @prev_c4 ! // save prev test c4
+
+    output-results 1 =
+    { write-tuple-to-file } { drop } cond
+    @cnt @
+}
+while  // run all tests

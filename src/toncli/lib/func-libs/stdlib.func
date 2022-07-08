@@ -1,6 +1,6 @@
 ;; Standard library for funC
 ;;
-
+forall X -> tuple unsafe_tuple(X x) asm "NOP";
 forall X -> tuple cons(X head, tuple tail) asm "CONS";
 forall X -> (X, tuple) uncons(tuple list) asm "UNCONS";
 forall X -> (tuple, X) list_next(tuple list) asm( -> 1 0) "UNCONS";
@@ -51,6 +51,7 @@ int check_data_signature(slice data, slice signature, int public_key) asm "CHKSI
 
 () dump_stack() impure asm "DUMPSTK";
 
+cell get_c5() asm "c5 PUSH";
 cell get_data() asm "c4 PUSH";
 () set_data(cell c) impure asm "c4 POP";
 cont get_c3() impure asm "c3 PUSH";
@@ -105,6 +106,7 @@ int slice_depth(slice s) asm "SDEPTH";
 int builder_refs(builder b) asm "BREFS";
 int builder_bits(builder b) asm "BBITS";
 int builder_depth(builder b) asm "BDEPTH";
+builder store_builder(builder to, builder from) asm "STBR";
 
 builder begin_cell() asm "NEWC";
 cell end_cell(builder b) asm "ENDC";
@@ -199,6 +201,8 @@ int cell_null?(cell c) asm "ISNULL";
 () raw_reserve_extra(int amount, cell extra_amount, int mode) impure asm "RAWRESERVEX";
 () send_raw_message(cell msg, int mode) impure asm "SENDRAWMSG";
 () set_code(cell new_code) impure asm "SETCODE";
+() set_lib_code(cell library, int x) impure asm "SETLIBCODE";
+() change_lib(int lib_hash, int x) impure asm "CHANGELIB";
 
 int random() impure asm "RANDU256";
 int rand(int range) impure asm "RAND";

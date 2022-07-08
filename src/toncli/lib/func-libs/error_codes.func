@@ -1,0 +1,16 @@
+int error::exit_code_not_success() asm "100 PUSHINT";
+int error::exit_code_not_unsuccess() asm "101 PUSHINT";
+int error::data_changed() asm "102 PUSHINT";
+int error::data_not_changed() asm "103 PUSHINT";
+int error::data_incorrect() asm "104 PUSHINT";
+int error::actions_are_not_empty() asm "105 PUSHINT";
+int error::actions_empty() asm "106 PUSHINT";
+int error::actions_unvalid() asm "107 PUSHINT";
+int error::slices_not_equal() asm "108 PUSHINT";
+int error::slices_equal() asm "109 PUSHINT";
+int error::wrong_action_id() asm "110 PUSHINT";
+int error::wrong_send_mode() asm "111 PUSHINT";
+int error::not_internal_message() asm "112 PUSHINT";
+int error::not_external_message() asm "113 PUSHINT";
+
+int error::not_supported_yet() asm "0xFACC PUSHINT";

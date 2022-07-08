@@ -25,8 +25,7 @@ class CommandsExecuter():
     string_kwargs= []
     parser: ArgumentParser
 
-    def __init__(self, command, string_kwargs, parser):
-        
+    def __init__(self, command, string_kwargs, parser):        
         _, kwargs = argv_fix(sys.argv, string_kwargs)
 
         if len(kwargs) == 0 and not command:

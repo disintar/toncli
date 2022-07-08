@@ -15,57 +15,61 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/8f4acbbba3a743f992062c377c48c675)](https://www.codacy.com/gh/disintar/toncli/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=disintar/toncli&amp;utm_campaign=Badge_Grade)
 [![TON](https://img.shields.io/badge/%F0%9F%92%8E-TON-green)](https://ton.org)
 
-The Open Network cross-platform smart contract command line interface. 
+The Open Network cross-platform smart contract command line interface.
 
 Easy to deploy and interact with TON smart contracts.
 
-## Installation
+## 🔧 Installation
 
-Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be found: [INSTALLATION.md](/INSTALLATION.md)
+> ⚠ If you want to support new tests engine - you need to use special binaries from SpyCheese repo. More information could be found in docs.
 
-### Usage and docs
+Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be
+found: [INSTALLATION.md](/INSTALLATION.md)
+
+### 📚 Usage and docs
+
 New to `toncli`?
 
 Try: [Quick start guide](/docs/quick_start_guide.md)
 
 All other documentation lists in `docs/`
 
-## Configuration
+### Lessons
 
-On first start `~/.config/toncli/` (on linux, other systems will have diffrent directory) will be created. If you want to change fift/func libs, network config or other stuff - check it out.
+[🇬🇧 Ton FunC lessons Eng](https://github.com/romanovichim/TonFunClessons_Eng)
+
+[🇷🇺 Ton FunC lessons Rus](https://github.com/romanovichim/TonFunClessons_ru/)
+
 
 ## Contributor Guide
 
 Interested in contributing? Feel free to create issues and pull requests.
 
-There is two main tasks and many TODOs.
-
-Main tasks are - not to use lite-client / fift / func. All can be done with python.
-
-There are many TODOs in code - feel free to fix them and create PRs
+We are trying to process all tasks through issues. You can take own one 🥳
 
 ## Features and status
 
-| Feature                                                                                                    | Status |
-|------------------------------------------------------------------------------------------------------------|--------|
-| `fift` / `func` / `lite-server` usage                                                                      | ✅      |
-| Easy bootstrap project samples `wallet`                                                                    | ✅      |
-| Deploy-wallet for auto send TON to contracts and tests                                                     | ✅      |
-| Compile func to `build/` from `func/` with `files.yaml`                                                    | ✅      |
-| Auto send TON to init contract address                                                                     | ✅      |
-| Deploy to mainnet / testnet / ownnet                                                                       | ✅      |
+| Feature                                                                                                   | Status |
+|-----------------------------------------------------------------------------------------------------------|--------|
+| `fift` / `func` / `lite-server` usage                                                                     | ✅      |
+| Easy bootstrap project samples `wallet`                                                                   | ✅      |
+| Deploy-wallet for auto send TON to contracts and tests                                                    | ✅      |
+| Compile func to `build/` from `func/` with `files.yaml`                                                   | ✅      |
+| Auto send TON to init contract address                                                                    | ✅      |
+| Deploy to mainnet / testnet / ownnet                                                                      | ✅      |
 | Project interact after deploy: easily send messages, run getmethods, run fift parsers on getmethods output | ✅      |
-| Load from hard project structure (example: `src/projects/wallet`)                                          | ✅      |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.)            | ✅      |
-| Get contract address by `toncli addrs`                                                                     | ✅      |
-| Docs for contract creation for beginners                                                                   | ✅      |
-| Project tests with `runvmcode`                                                                             | ✅      |
-| Windows & Linux support                                                                                    | ✅      |
-| Gas auto calculation for store & deploy                                                                    | ❌      |
-| Add more project samples with advanced usage                                                               | ❌      |
-| Project debug                                                                                              | ❌      |
-| Library support                                                                                            | ❌      |
-| Init Message support  (with signature)                                                                     | ❌      |
+| Load from hard project structure (example: `src/projects/wallet`)                                         | ✅      |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.)           | ✅      |
+| Get contract address by `toncli addrs`                                                                    | ✅      |
+| Docs for contract creation for beginners                                                                  | ✅      |
+| Project tests with `runvmcode`                                                                            | ✅      |
+| Windows & Linux support                                                                                   | ✅      |
+| Unit tests engine                                                                                         | ✅      |
+| Gas auto calculation for store & deploy                                                                   | ❌      |
+| Add more project samples with advanced usage                                                              | ❌      |
+| Project debug                                                                                             | ❌      |
+| Library support                                                                                           | ❌      |
+| Init Message support  (with signature)                                                                    | ❌      |
 
 ## Commands
 
@@ -103,6 +107,9 @@ git clone git@github.com:disintar/toncli.git
 cd toncli && pip install -e .
 ```
 
+If you wish to update toncli locally you can use ```pip install -e path/to/toncli/rootfolder/```
+command anytime after you make changes to the toncli source code.
+
 ## Version migration
 
 #### 0.24
@@ -111,9 +118,10 @@ Please, use `toncli update_libs`
 
 #### 0.22
 
-The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/toncli` or delete whole directory `~/.config/toncli`
-
+The easy migration method - remove `fift-libs`, `func-libs` from `~/.config/toncli` or delete whole
+directory `~/.config/toncli`
 
 ## Help and questions
 
-Feel free to ask questions and help in official telegram chats: [Russian](https://t.me/tondev) / [English](https://t.me/tondev_eng)
+Feel free to ask questions and help in official telegram chats: [Russian](https://t.me/tondev)
+/ [English](https://t.me/tondev_eng)

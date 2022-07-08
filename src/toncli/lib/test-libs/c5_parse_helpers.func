@@ -1,0 +1,111 @@
+(int, cell) parse_send_raw_message(slice out_action) impure inline
+{
+    return (out_action~load_uint(8), out_action~load_ref());
+}
+
+(int, cell) parse_lib_code(slice out_action) impure inline
+{
+    var mode = out_action~load_uint(7);
+    if( out_action.slice_refs() > 0 )
+    {
+        return (mode, out_action~load_ref());
+    }
+    else
+    {
+        slice loaded_bits = out_action~load_bits(256);
+        return (mode, begin_cell().store_slice(loaded_bits).end_cell());
+    }
+}
+
+(int, cell) parse_raw_reserve(slice out_action) impure inline
+{
+    return (out_action~load_uint(8), out_action~load_dict());
+}
+
+
+(cell) parse_set_code(slice out_action) impure inline
+{
+    return out_action~load_ref();
+}
+
+tuple parse_c5() impure inline
+{
+    {-
+        The following is the TL-B of c5
+
+        out_list_empty$_ = OutList 0;
+        out_list$_ {n:#} prev:^(OutList n) action:OutAction
+        = OutList (n + 1);
+        action_send_msg#0ec3c86d mode:(## 8) 
+        out_msg:^(MessageRelaxed Any) = OutAction;
+        action_set_code#ad4de08e new_code:^Cell = OutAction;
+        action_reserve_currency#36e6b809 mode:(## 8)
+        currency:CurrencyCollection = OutAction;
+        libref_hash$0 lib_hash:bits256 = LibRef;
+        libref_ref$1 library:^Cell = LibRef;
+        action_change_library#26fa1dd4 mode:(## 7) { mode <= 2 }
+        libref:LibRef = OutAction;
+        out_list_node$_ prev:^Cell action:OutAction = OutListNode;
+
+        hex 0ec3c86d = decimal 247711853
+        hex 36e6b809 = decimal 921090057
+        hex ad4de08e = decimal 2907562126
+        hex 26fa1dd4 = decimal 653925844
+
+        returns a list of tuples in the following format 
+        [
+            [typeOfAction, bodyOfAction, mode]
+            [typeOfAction1, bodyOfAction1, mode1]
+        ]
+    -}
+
+    tuple list_of_actions_tuple = empty_tuple();
+
+    var c5 = get_c5();
+    tuple actions = empty_tuple();
+    var out_action_node = c5.begin_parse();
+    
+    if(out_action_node.slice_bits() == 0) {
+      return null();
+    }
+    int num = 0;
+    int break = false;
+    do {
+      cell next = out_action_node~load_ref();
+      actions = cons(out_action_node, actions);
+      out_action_node = next.begin_parse();
+      num += 1;
+      break = out_action_node.slice_bits() == 0;
+    } until (break);
+
+    int i = 0;
+    do {
+      var out_action = actions~list_next();
+      {
+                var action_code = out_action~load_uint(32);
+                if(action_code == 247711853)
+                {
+                    (int mode, cell body) = parse_send_raw_message(out_action);
+                    list_of_actions_tuple~tpush([0, body, mode]);
+                }
+                elseif(action_code == 2907562126)
+                {
+                    (cell new_setcode) = parse_set_code(out_action);
+                    list_of_actions_tuple~tpush([1, new_setcode, -1]);
+                }
+                elseif(action_code == 921090057)
+                {
+                    (int mode, cell currencies) = parse_raw_reserve(out_action);
+                    list_of_actions_tuple~tpush([2, currencies, mode]);
+                }
+                elseif(action_code == 653925844)
+                {
+                    (int mode, cell lib_cell_or_lib_hash) = parse_lib_code(out_action);
+                    list_of_actions_tuple~tpush([3, lib_cell_or_lib_hash, mode]);
+                }
+      }
+      i += 1;
+    } until (i >= num);
+
+    return list_of_actions_tuple;
+}

@@ -1,0 +1,91 @@
+{-
+    math.func   
+
+    Extends FunC's arithmetic operations.
+-}
+
+(int) power(int x, int exponent) inline {
+    if(x == 0)
+    {
+        return 0;
+    }
+
+    if (exponent == 0){
+        return 1;
+    }
+    else
+    {
+        var result = x;
+        var counter = exponent;
+        while (counter > 1) {
+            result *= x;
+            counter -= 1;
+        }
+        return result;
+    }
+}
+
+(int) sqrt(int x) inline {
+  if (x == 0){
+    return 0;
+  } else {
+    if (x <= 3) {
+      return 1;
+    } else {
+      int z = (x + 1) / 2;
+      int y = x;
+      while (z < y) {
+          y = z;
+          z = (x / z + z) / 2;
+      }
+      return y;
+    }
+  }
+}
+
+(int) avg(int x, int y) inline {
+    return (x + y) / 2;
+}
+
+(int) exp(int x) inline {
+    return (x >= 0 ? 1 << x : 1 >> (x * -1));
+}
+
+(int) log2(int x) inline {
+  int n = 0;
+  if (x >= 128.exp()) { 
+    x >>= 128; 
+    n += 128; 
+  }
+  if (x >= 64.exp()) { 
+    x >>= 64;
+    n += 64; 
+  }
+  if (x >= 32.exp()) {
+    x >>= 32; 
+    n += 32; 
+  }
+  if (x >= 16.exp()) { 
+    x >>= 16; 
+    n += 16; 
+  }
+  if (x >= 8.exp()) { 
+    x >>= 8; 
+    n += 8; 
+  }
+  if (x >= 4.exp()) { 
+    x >>= 4; 
+    n += 4; 
+  }
+  if (x >= 2.exp()) { 
+    x >>= 2; 
+    n += 2; 
+  }
+  if (x >= 1.exp()) { 
+    ;; x >>= 1; 
+    n += 1; 
+  }
+  return n;
+}
+
+(int) mod (int x, int y) asm "MOD";

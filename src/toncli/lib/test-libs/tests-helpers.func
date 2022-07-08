@@ -1,0 +1,144 @@
+
+;; Toncli will automaticly download global_config
+;; And pass it to runvm (when running data functions)
+;; So you can get actual global config of network from get_config() function
+cell get_config() asm "CONFIGROOT";
+
+;; c7 config (if you don't know what it is - just use as is)
+tuple get_c7() inline method_id {
+    return unsafe_tuple([unsafe_tuple([
+        0x076ef1ea,           ;; magic
+        0,                    ;; actions
+        0,                    ;; msgs_sent
+        now(),                ;; unixtime
+        1,                    ;; block_lt
+        1,                    ;; trans_lt
+        239,                  ;; randseed
+        unsafe_tuple([1000000000, null()]),  ;; balance_remaining
+        my_address(),         ;; myself
+        get_config()          ;; global_config
+    ])]);
+}
+
+cell get_prev_c4() asm "10 GETPARAM UNPAIR DROP";
+cell get_prev_c5() asm "10 GETPARAM UNPAIR SWAP DROP";
+
+cell get_extra() asm "c4 PUSH";
+() set_extra(cell c) impure asm "c4 POP";
+
+
+;; prefer using 'invoke_method' or 'invoke_method_expect_fail'
+;; (fun, [args] -> (exit_code, gas_used, [return values]))
+{-
+    Some technical details about this function.
+
+    It invokes the function 'fun' with arguments 'agrs', and tries to make it as safe as possible.
+
+    Which means it makes sure current stack could not be corrupted by called function, and
+    exceptions are catched.
+
+    It also calculates gas used by the called function.
+
+    It is not completely safe (as runvm in fift). E.g. we store current gas value inside c7, so
+    a bad smart contract could change it. Called function potentially could also completely change
+    continuation, and actual testing code will not be executed.
+
+    How is gas calculated?
+    We use 'GASLIMITSTEMP' function (only available in a test version of fift) just before, and
+    just after 'EXECUTE' (so we can compute the difference). We store it as the 11-th element of
+    the 0-th element of c7 (and hope 'fun' will not change it). We also subtract some constant
+    amount of gas from it (which we spend on saving value to c7).
+
+    How do we make sure the stack is not corrupted?
+    We actually want to use 'TRYARGS' function, which both catches potential exceptions and
+    makes sure only len(args) elements are present on the stack during 'fun' execution. Unfortunately,
+    we don't know len(args) in compile-time, so we need to first use 'CALLXVARARGS', which
+    creates a new stack only with needed arguments, and only after that use 'TRY'.
+-}
+forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
+  "{"                                ;; <- this function saves gas-remaining to 11-th element of c7's config
+    "c7 PUSH DUP FIRST"              ;; (c7, config)
+    "GASLIMITSTEMP SWAP DROP"        ;; (c7, config, gas_remaining)
+    "11 SETINDEX 0 SETINDEX c7 POP"  ;; <- new c7 saved
+  "} : save-gas-remaining"
+
+  "{"                                ;; <- assumes 'save-gas-remaining' was called before
+    "GASLIMITSTEMP SWAP DROP"
+    "11 GETPARAM SWAP SUB"
+    ;; we additionally executed [GASLIMITSTEMP, SWAP, DROP, SETINDEX, SETINDEX, POP],
+    ;; before actually calling 'EXECUTE'
+    ;; so we need to subtract   (     18      +  18 +  26 +  (12+26) + (1+26) + 18)
+    ;; from consumed gas value
+    "145 PUSHINT SUB"
+  "} : compute-gas-used"
+
+  "NEWC ENDC c5 POP"                 ;; clear actions cell
+  "RESETLOADEDCELLS"                 ;; <- make sure first cell load cost 100 gas, not 25
+  "255 PUSHINT EXPLODEVAR"           ;; (fun, arg_1, arg_2, ..., arg_n, n)
+  "DUP INC ROLLX"                    ;; (arg_1, arg_2, ..., arg_n, n, fun)
+  "<{"
+    "<{"                             ;; <- normal execution
+      "save-gas-remaining"
+      "EXECUTE"
+      "compute-gas-used"             ;; <- it is important to call it just after EXECUTE, so we don't count additional commands
+      "DEPTH DEC ROLLREVX"           ;; (gas_used, res_1, res_2, ..., res_k)
+      "DEPTH DEC TUPLEVAR"           ;; (gas_used, [res_1, res_2, ..., res_k])
+      "ZERO ROTREV"                  ;; (exit_code = 0, gas_used, [res..])
+    "}> PUSHCONT"
+    "<{"                             ;; <- exception handler
+      "compute-gas-used"             ;; (exception_info, exit_code, gas_used)
+      "ROT DROP NIL"                 ;; (exit_code, gas_used, [])
+    "}> PUSHCONT"
+    "TRY"
+  "}> PUSHCONT"                      ;; (args.., n, fun, func_with_exception_wrapper)
+  "ROT INC -1 PUSHINT"               ;; (args.., fun, func_with_exception_wrapper, n + 1, -1)
+  "CALLXVARARGS"                     ;; (exit_code, gas_used, [res..])
+;
+
+;; same as 'invoke_method_full', but raises if exit_code is not 0 or 1
+;; (fun, [args] -> gas_used, [return values])
+forall F, A, R -> (int, R) invoke_method(F fun, A args) impure method_id {
+    var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
+    throw_if(exit_code, (exit_code != 0) & (exit_code != 1));
+    return (gas_used, return_values);
+}
+
+;; same as 'invoke_method_full', but raises if exit_code is 0 or 1
+;; (fun, [args] -> gas_used)
+forall F, A -> int invoke_method_expect_fail(F fun, A args) impure method_id {
+    var (int exit_code, int gas_used, return_values) = invoke_method_full(fun, args);
+    throw_if(201, (exit_code == 0) | (exit_code == 1));
+    return gas_used;
+}
+
+() set_now(int now) impure asm
+    "c7 PUSH DUP FIRST" ;; (now, c7, config)
+    "ROT"               ;; (c7, config, now)
+    "3 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
+() set_global_config(cell global_config) impure asm
+    "c7 PUSH DUP FIRST" ;; (global config, c7, config)
+    "ROT"               ;; (c7, config, global config)
+    "9 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
+() set_balance([int, cell]) impure asm
+    "c7 PUSH DUP FIRST" ;; (balance, c7, config)
+    "ROT"               ;; (c7, config, balance)
+    "7 SETINDEX"        ;; (c7, new_config)
+    "0 SETINDEX"        ;; (new_c7)
+    "c7 POP"
+;
+
+int priv_to_pub(int priv_key) asm "PRIVTOPUB";
+slice sign(int hash, int priv_key) asm "SIGN";
+
+slice get_actions() impure asm "c5 PUSH CTOS";
+() assert_no_actions() impure inline method_id {
+    throw_if(202, ~ slice_empty?(get_actions()));
+}

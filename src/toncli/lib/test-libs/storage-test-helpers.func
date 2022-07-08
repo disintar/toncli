@@ -1,0 +1,21 @@
+
+cell get_environment() asm "c4 PUSH";
+() set_environment(cell c) impure asm "c4 POP";
+
+() init_environment() impure method_id {
+  set_environment(begin_cell().store_dict(null()).end_cell());
+}
+
+int storage_key(int tag) method_id {
+  return (17 << 117) + tag;
+}
+
+cell load_storage_with_tag(int tag)  method_id {
+  return get_environment().begin_parse().preload_dict().idict_get_ref(256, storage_key(tag));
+}
+
+_ save_storage_with_tag(int tag, cell storage) impure method_id {
+  cell dict = get_environment().begin_parse().preload_dict();
+  dict~idict_set_ref(256, storage_key(tag), storage);
+  set_environment(begin_cell().store_dict(dict).end_cell());
+} 

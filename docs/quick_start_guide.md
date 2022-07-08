@@ -1,11 +1,12 @@
 # toncli Quick start guide
-Provided by [disintar.io](https://disintar.io) team
 
 This quide contains simple steps how-to deploy example smart contract to TON.
 
 ## 1. Install ton / toncli
 
 Please, follow [INSTALLATION.md](/INSTALLATION.md)
+
+(for test engine special version of builds needed)
 
 ## 2. Create simple project
 
@@ -32,6 +33,7 @@ To call a GET method of your contract you can use this command:
 `toncli get hello_world` in the directory of your contract, where hello world is the name of a GET method
 
 ## Other types of projects
+
 1. External data
     1. To use this function you need to run `toncli start external_data`
     2. It loads data of another smart-contract
@@ -40,6 +42,11 @@ To call a GET method of your contract you can use this command:
     1. To use this function you need to run `toncli start external_code`
     2. Using this function you can load code and data of another contract
     3. For detailed usage info you can read [Example](/src/toncli/projects/external_code/README.md)
+
+## Configuration
+
+On first start `~/.config/toncli/` (on linux, other systems will have diffrent directory) will be created. If you want
+to change fift/func libs, network config or other stuff - check it out.
 
 # Other docs
 
@@ -51,4 +58,4 @@ To call a GET method of your contract you can use this command:
 6. [Project structure](/docs/advanced/project_structure.md)
 7. [Interesting features](/docs/advanced/intresting_features.md)
 8. [Send internal fift messages](/docs/advanced/send_fift_internal.md)
-8. [How func tests works?](/docs/advanced/func_tests.md)
+8. [How func tests works?](/docs/advanced/func_tests_new.md)

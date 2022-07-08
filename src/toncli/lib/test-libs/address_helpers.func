@@ -1,0 +1,164 @@
+slice generate_empty_address() impure method_id {
+    ;;   addr_none$00 = MsgAddressExt;
+    return begin_cell().store_uint(0,2).end_cell().begin_parse();
+}
+
+
+slice generate_internal_address() impure method_id {
+    ;;   addr_std$10 anycast:(Maybe Anycast)
+    ;;   workchain_id:int8 address:bits256  = MsgAddressInt;
+    var address = random();
+
+    slice address_cell =  begin_cell()
+        .store_uint(2, 2) ;; addr_std$10
+        .store_uint(0, 1) ;; anycast nothing
+        .store_int(-1, 8) ;; workchain_id: -1
+        .store_uint(address, 256)
+        .end_cell()
+        .begin_parse();
+
+    return address_cell;
+}
+
+slice generate_internal_address_with_custom_data(int anycast, int workchain_id, int address) impure method_id {
+    ;;   addr_std$10 anycast:(Maybe Anycast)
+    ;;   workchain_id:int8 address:bits256  = MsgAddressInt;
+
+    slice address_cell =  begin_cell()
+        .store_uint(2, 2) ;; addr_std$10
+        .store_uint(anycast, 1) ;; anycast nothing
+        .store_int(workchain_id, 8) ;; workchain_id: -1
+        .store_uint(address, 256)
+        .end_cell()
+        .begin_parse();
+
+    return address_cell;
+}
+
+slice generate_external_address(int address_length) impure method_id {
+    ;;addr_extern$01 len:(## 9) external_address:(bits len)
+    ;; = MsgAddressExt;
+    var address = random();
+
+    slice address_cell =  begin_cell()
+        .store_uint(1, 2) ;; addr_extern$01
+        .store_uint(address_length, 9)
+        .store_uint(address, address_length)
+        .end_cell()
+        .begin_parse();
+
+    return address_cell;
+}
+
+slice generate_external_address_with_custom_data(int address_length, int address) impure method_id {
+    ;;addr_extern$01 len:(## 9) external_address:(bits len) = MsgAddressExt;
+
+    slice address_cell =  begin_cell()
+        .store_uint(1, 2) ;; addr_extern$01
+        .store_uint(address_length, 9)
+        .store_uint(address, address_length)
+        .end_cell()
+        .begin_parse();
+
+    return address_cell;
+}
+
+slice generate_var_address(int address_length) impure method_id {
+    ;;addr_var$11 anycast:(Maybe Anycast) addr_len:(## 9)
+    ;;workchain_id:int32 address:(bits addr_len) = MsgAddressInt;
+
+    if(address_length > 256)
+    {
+        var address = random();
+        var address_secondpart = random();
+
+        slice address_cell =  begin_cell()
+        .store_uint(3, 2) ;; addr_var$11
+        .store_uint(0, 1) ;; anycast nothing
+        .store_uint(address_length ,9)  ;; len
+        .store_int(-1, 8) ;; workchain_id: -1
+        .store_uint(address, 256)
+        .store_uint(address_secondpart, 256)
+        .end_cell()
+        .begin_parse();
+
+        return address_cell;
+    }
+    else
+    {
+        var address = random();
+
+        slice address_cell =  begin_cell()
+        .store_uint(3, 2) ;; addr_var$11
+        .store_uint(0, 1) ;; anycast nothing
+        .store_uint(address_length, 9)  ;; len
+        .store_int(-1, 8) ;; workchain_id: -1
+        .store_uint(address, address_length) ;; mostly 256 bit address
+        .end_cell()
+        .begin_parse();
+
+        return address_cell;
+    }
+}
+
+slice generate_var_address_with_custom_data(int anycast, int workchain_id, int address_length, slice address_slice) impure method_id {
+    ;;addr_var$11 anycast:(Maybe Anycast) addr_len:(## 9)
+    ;;workchain_id:int32 address:(bits addr_len) = MsgAddressInt;
+    
+
+    if(address_length > 256)
+    {
+        var addr = address_slice~load_uint(256);
+        var addr_second_part = address_slice~load_uint(256);
+
+        slice address_cell =  begin_cell()
+        .store_uint(3, 2) ;; addr_var$11
+        .store_uint(anycast, 1) ;; anycast nothing
+        .store_uint(address_length ,9)  ;; len
+        .store_int(workchain_id, 8)
+        .store_uint(addr, 256)
+        .store_uint(addr_second_part, 256)
+        .end_cell()
+        .begin_parse();
+
+        return address_cell;
+    }
+    else
+    {
+        var addr = address_slice~load_uint(256);
+
+        slice address_cell =  begin_cell()
+        .store_uint(3, 2) ;; addr_var$11
+        .store_uint(anycast, 1) ;; anycast nothing
+        .store_uint(address_length, 9)  ;; len
+        .store_int(workchain_id, 8) ;; workchain_id: -1
+        .store_uint(addr, address_length)
+        .end_cell()
+        .begin_parse();
+
+        return address_cell;
+    }
+}
+
+slice generate_any_address(int typeOfAddress)
+{
+    ;;_ (Message Any) = MessageAny;
+    ;; this method is returning address based on the int type
+
+    if(typeOfAddress == 0)
+    {
+        return generate_empty_address();
+    }
+    elseif(typeOfAddress == 1)
+    {
+        return generate_internal_address();
+    }
+    elseif(typeOfAddress == 2)
+    {
+        return generate_external_address(256);
+    }
+    else
+    {
+        return generate_var_address(256);
+    }
+}

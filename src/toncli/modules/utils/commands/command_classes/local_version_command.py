@@ -10,6 +10,7 @@ rs = Style.RESET_ALL
 class LocalVersionCommand():
     def __init__(self):
         update_text = f'\n🦋 New {bl}TONCLI{rs} version is available. Please install it using "{bl}pip install --upgrade toncli{rs}".\n'
+
         version_local = pkg_resources.get_distribution("toncli").version
         try:
             version_global = requests.get('https://pypi.org/pypi/toncli/json').json()['info']['version']
