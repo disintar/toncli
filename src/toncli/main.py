@@ -2,6 +2,7 @@ import argparse
 import sys
 import textwrap
 import configparser
+import os
 
 from toncli.modules.utils.commands.commands_executer import CommandsExecuter
 from toncli.modules.utils.parsers.parser_utils import ParserUtil
@@ -15,6 +16,10 @@ def main():
     CLI interface definition
     :return:
     '''
+    
+    # Enabling coloured text in Windows terminals
+    os.system("")
+    
     # This is concept of nft https://disintar.io
     # Nft information parse will be added in next versions of CLI
     # print("disintar.io NFT owners today say: 🙈 🙉 🙊")

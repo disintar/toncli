@@ -40,9 +40,7 @@
 
 ![image](https://user-images.githubusercontent.com/19264196/160259355-dacc0234-f8b7-4b9e-b1cd-8a5d6df0712a.png)
 
-11. Success! 
-
-P.S. for a beautiful display of colors and emoticons, it is advised to install the latest version of the 'Windows Terminal Preview' from the Microsoft Store
+11. Success!
 
 
 ## Installation from source
