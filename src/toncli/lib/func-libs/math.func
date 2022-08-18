@@ -4,7 +4,7 @@
     Extends FunC's arithmetic operations.
 -}
 
-(int) power(int x, int exponent) inline {
+(int) power(int x, int exponent) inline_ref {
     if(x == 0)
     {
         return 0;
@@ -25,7 +25,7 @@
     }
 }
 
-(int) sqrt(int x) inline {
+(int) sqrt(int x) inline_ref {
   if (x == 0){
     return 0;
   } else {
@@ -43,15 +43,15 @@
   }
 }
 
-(int) avg(int x, int y) inline {
+(int) avg(int x, int y) inline_ref {
     return (x + y) / 2;
 }
 
-(int) exp(int x) inline {
+(int) exp(int x) inline_ref {
     return (x >= 0 ? 1 << x : 1 >> (x * -1));
 }
 
-(int) log2(int x) inline {
+(int) log2(int x) inline_ref {
   int n = 0;
   if (x >= 128.exp()) { 
     x >>= 128; 
