@@ -1,0 +1,5 @@
+contract:
+  data: fift/data.fif
+  func:
+    - func/op-codes.fc
+    - func/nft-item.fc

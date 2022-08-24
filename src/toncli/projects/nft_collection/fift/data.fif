@@ -1,0 +1,70 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+
+// Specify your own collection base uri
+<b
+  1 8 u,
+  "https://raw.githubusercontent.com/ton-blockchain/token-contract/main/nft/web-example/"
+  $>B B,
+b>
+
+
+// Specify your own collection Uri
+<b
+  1 8 u,
+  "https://raw.githubusercontent.com/ton-blockchain/token-contract/main/nft/web-example/my_collection.json"
+  $>B B,
+b>
+
+<b
+  swap ref, // Storing clollection ref
+  swap ref, // Storing common ref
+b>
+
+variable content 
+content ! // Storing content cell in a variable
+
+// Specify your own user-friendly address
+
+
+"EQB8EqvPWlUq6g3pZPW9AQU4xLDDh65MxfFT_UStljYuCy_X"
+$>smca 0= abort"Specify valid royalty addr"
+
+constant flags
+constant royalty_addr
+constant wc
+
+"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
+$>smca 0= abort"Specify valid owner addr"
+constant owner_flags
+constant owner_addr
+constant owner_wc
+
+."Owner address:" owner_wc owner_addr owner_flags .Addr cr
+."Royalty addres:" wc royalty_addr flags .Addr cr
+
+"build/nft.fif" constant nft_path
+
+
+<b
+  5 16 u,
+  100 16 u,
+  wc royalty_addr Addr,
+b>
+// Royalty cell
+
+nft_path include // Could return ( tuple methods, cell res_cell )
+// So we get rid of tuple
+
+over
+tuple? { nip } if
+
+
+<b
+  owner_wc owner_addr Addr, // Adding owner addr to data
+  0 64 u,
+  content @ ref,
+  swap ref,
+  swap ref, // We got royalty cell here on the stack
+b>
