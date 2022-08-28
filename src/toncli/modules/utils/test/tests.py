@@ -59,6 +59,7 @@ class TestsRunner:
                 'test_path': contract.to_save_tests_location,
                 'output_results': int(output_results),
                 'output_path': output_path,
+                'contract_data': contract.data,
                 'verbose': verbose
             }
 
