@@ -33,7 +33,7 @@ class TestsRunner:
                     if config.name == item:
                         real_contracts.append(config)
         else:
-            real_contracts = self.project_config.contracts
+            real_contracts = list( filter( lambda p: len(p.func_tests_files_locations ) > 0, self.project_config.contracts ) )
 
         if not len(real_contracts):
             logger.error(f"😥 No contracts [{contracts}] are founded in project.yaml")
