@@ -1,14 +1,16 @@
 nft_collection:
   data: fift/data.fif
   func:
-    - func/stdlib.fc
-    - func/params.fc
-    - func/op-codes.fc
-    - func/nft-collection.fc
+    - func/helpers.func
+    - func/params.func
+    - func/op-codes.func
+    - func/nft-collection.func
 
 nft:
   func:
-    - func/stdlib.fc
-    - func/params.fc
-    - func/op-codes.fc
-    - func/nft-item.fc
+    - func/helpers.func
+    - func/params.func
+    - func/op-codes.func
+    - func/nft-item.func
+  tests:
+    - tests/nft-tests.func

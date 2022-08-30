@@ -2,6 +2,7 @@ contract:
   data: fift/data.fif
   func:
     - func/op-codes.func
+    - func/params.func
     - func/helpers.func
     - func/nft-item.func
   tests:

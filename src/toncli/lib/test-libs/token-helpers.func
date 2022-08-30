@@ -1,0 +1,12 @@
+int token_snake_len( slice content) impure inline {
+	int len = 0;
+
+	while( ~ null?( content ) ){
+		len       += content.slice_bits();
+		content    = content.slice_refs() ? content~load_ref().begin_parse() : null();
+	} 
+
+	return len;
+
+}
+

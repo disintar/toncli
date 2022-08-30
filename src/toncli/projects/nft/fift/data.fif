@@ -1,12 +1,34 @@
 "TonUtil.fif" include
 "Asm.fif" include
 
-"build/contract.pk" load-generate-keypair // generate key pair
-constant private_key  // save private to constant
-constant public_key // save public to constant
+"kQDzy14OkWffhTvu289ftEY0xFZCqNU1cUbpiv8rZvQviL5F" 
+$>smca 0= abort"Specify valid collection address" 
+
+=: coll_flags
+=: coll_addr
+=: coll_wc
+
+."Collection address:" coll_wc coll_addr coll_flags .Addr cr
+
+"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
+$>smca 0= abort"Specify valid owner address"
+
+=: owner_flags
+=: owner_addr
+=: owner_wc
+
+."Owner address:" owner_wc owner_addr owner_flags .Addr cr
+
+
 
 <b
-  0 32 u, // seqno
-  0 32 u, // subwallet-id
-  public_key B, // add bin public key to cell
+  1 8 u,
+  "my_nft.json" $,
+b>
+
+<b
+  0 64 u, // item_idx
+  coll_wc coll_addr Addr,
+  owner_wc owner_addr Addr,
+  swap ref,
 b>
