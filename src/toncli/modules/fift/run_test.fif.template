@@ -44,7 +44,7 @@ null @prev_c5 !
 // IDK since we don't have a way to get stack size. Or do we?
 // Maybe move it to the very top before asm-mode changes ( L5 )?
 
-def? proj_data { proj_data include } { <b b>  } cond
+def? proj_data { @' proj_data include } { <b b>  } cond
 @init_c4 ! 
 
 variable @cnt        // here we will store tests list length
