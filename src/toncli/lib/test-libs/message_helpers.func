@@ -170,7 +170,7 @@ builder generate_nft_get_static_data_request( int query_id ) impure inline {
 	return begin_cell().store_uint( 0x2fcb26a2, 32 ).store_uint( query_id, 64 );
 }
 
-builder generate_nft_deploy_nft_request( int idx, cell content, int query_id, int forward_amount ) impure inline {
+builder generate_nft_deploy_request( int idx, cell content, int query_id, int forward_amount ) impure inline {
 	return generate_internal_message_body( 1, query_id )
 		.store_uint( idx, 64 )
 		.store_grams( forward_amount )
