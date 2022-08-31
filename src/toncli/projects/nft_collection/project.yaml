@@ -1,5 +1,5 @@
 nft_collection:
-  data: fift/data.fif
+  data: fift/collection-data.fif
   func:
     - func/helpers.func
     - func/params.func
@@ -7,6 +7,7 @@ nft_collection:
     - func/nft-collection.func
 
 nft:
+  data: fift/nft-data.fif
   func:
     - func/helpers.func
     - func/params.func

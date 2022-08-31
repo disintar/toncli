@@ -88,8 +88,8 @@ cell generate_internal_message_custom( int bounce, int ton_amount, int init_stat
     slice sdest = null?( dst_addr ) ? generate_internal_address() : dst_addr;
 
     var msg = begin_cell()
-            .store_uint(0, 1) ;; int_msg_info$0
-            .store_uint(0, 1) ;; ihr_disabled:Bool
+            .store_uint(0, 1) ;; int_msg_info$0 
+	    .store_uint(0, 1) ;; ihr_disabled:Bool
             .store_uint(bounce, 1) ;; bounce:Bool
             .store_uint(0, 1) ;; bounced:Bool
             .store_slice(ssrc) ;; src:MsgAddressInt
@@ -168,6 +168,13 @@ builder generate_nft_transfer_request( slice new_owner, slice response_dst, int 
 builder generate_nft_get_static_data_request( int query_id ) impure inline {
 	;;get_static_data#2fcb26a2 query_id:uint64 = InternalMsgBody;
 	return begin_cell().store_uint( 0x2fcb26a2, 32 ).store_uint( query_id, 64 );
+}
+
+builder generate_nft_deploy_nft_request( int idx, cell content, int query_id, int forward_amount ) impure inline {
+	return generate_internal_message_body( 1, query_id )
+		.store_uint( idx, 64 )
+		.store_grams( forward_amount )
+		.store_ref( content );
 }
 
 
