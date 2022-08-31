@@ -36,13 +36,13 @@ tuple parse_init_state(slice cs) impure method_id {
     }
     int maybe_code = cs~load_uint(1);
     parsed_tuple~tpush(maybe_code);
-    if(maybe_tick_tock == 1) {
+    if(maybe_code == 1) {
       parsed_tuple~tpush(cs~load_ref()); ;; code
     }
     
     int maybe_data = cs~load_uint(1);
     parsed_tuple~tpush(maybe_data);
-    if(maybe_tick_tock == 1) {
+    if(maybe_data == 1) {
       parsed_tuple~tpush(cs~load_ref()); ;; data
     }
 
@@ -376,7 +376,14 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
     tuple init_state = empty_tuple();
     if(maybe_init_state == 1)
     {
-      init_state = parse_init_state(cs);
+      ;;Either bit was ignored before
+
+      if( cs~load_uint(1) ) {
+      	init_state = parse_init_state( cs~load_ref().begin_parse() );
+      }
+      else {
+      	init_state = parse_init_state(cs);
+      }
     }
     int body_flag = cs~load_uint(1);
     var body = null();
