@@ -5,7 +5,7 @@
 // Specify your own collection base uri
 <b
   1 8 u,
-  "https://raw.githubusercontent.com/ton-blockchain/token-contract/main/nft/web-example/"
+  "https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/"
   $>B B,
 b>
 
@@ -13,7 +13,7 @@ b>
 // Specify your own collection Uri
 <b
   1 8 u,
-  "https://raw.githubusercontent.com/ton-blockchain/token-contract/main/nft/web-example/my_collection.json"
+  "https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/my_collection.json"
   $>B B,
 b>
 
