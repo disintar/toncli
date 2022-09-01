@@ -536,11 +536,11 @@ int __test_get() {
 	slice res_owner      = stack.fourth();
 	cell  res_content    = stack.at( 4 );
 
-	;; Check that initialized NFT can't have empty colleciton addr.
+	;; Check that initialized NFT can't have empty owner_address
 	;; And the other way around
-	throw_if( 301, ( init? ^ res_collection.slice_bits() > 0 ) );
+	throw_unless( 301, ( init? ^ res_owner.null?() ) );
 
-	;; Check that contrac author correctly loads data
+	;; Check that contract correctly loads data
 	throw_unless( 302, equal_slices( owner, res_owner ) );
 	throw_unless( 303, equal_slices( coll_addr, res_collection ) );
 
@@ -548,21 +548,27 @@ int __test_get() {
 
 	throw_unless( 304, equal_slices( content.begin_parse(), content_data ) );
 
-	int content_layout = content_data~load_uint( 8 );
+	;; Only collection-less NFT have to comply with TIP-64
+	;; Such NFT items have addr_none as collection_address
+	if( equal_slices( res_owner, generate_empty_address() ) ){
 
-	;; Check for allowed content_layout
-	throw_unless( 305, ( content_layout  == 1 ) | ( content_layout == 0 ) );
+		int content_layout = content_data~load_uint( 8 );
 
-	if( content_layout == 1 ){
+		;; Check for allowed content_layout
+		throw_unless( 305, ( content_layout  == 1 ) | ( content_layout == 0 ) );
 
-		;; Check that off-chain URI contains at least one ASCII char
-		throw_unless( 306, token_snake_len( content_data ) > 8 );
-	} else {
-		;; On-chain is stored as dict
-		;; Has to be non-empty
-		throw_unless( 306, content_data.preload_dict().dict_empty?() );
 
-		;; Perhaps could go further and test for Optional dict keys but none of those is required so i'll leave it be
+		if( content_layout == 1 ){
+
+			;; Check that off-chain URI contains at least one ASCII char
+			throw_unless( 306, token_snake_len( content_data ) > 8 );
+		} else {
+			;; On-chain is stored as dict
+			;; Has to be non-empty
+			throw_unless( 306, content_data.preload_dict().dict_empty?() );
+
+			;; Perhaps could go further and test for Optional dict keys but none of those is required so i'll leave it be
+		}
 	}
 
 
