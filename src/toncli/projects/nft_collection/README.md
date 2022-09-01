@@ -26,6 +26,6 @@ This project allows you to:
    - Get address of previously deployed collection
    - Make yourself familiar with process of sending [internal messages from toncli](https://github.com/disintar/toncli/blob/master/docs/advanced/send_fift_internal.md) 
 
-  `toncli send -n testnet -a 0.05 --address "kQAaHefuZCu6inUqWYSd2YGUt7qW6ssqt__Y0VFS2AdLEAF5"  --body fift/deploy.fif`
+  `toncli send -n testnet -a 0.05 --address "kQAaHefuZCu6inUqWYSd2YGUt7qW6ssqt__Y0VFS2AdLEAF5"  --body fift/deploy.fif`  
   Every next item deployment you should make sure to change item index in the *fift/deploy.fif* file ( Yes. Manually for now ).
 
