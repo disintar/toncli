@@ -1,4 +1,4 @@
-contract:
+nft_item:
   data: fift/data.fif
   func:
     - func/op-codes.func
@@ -6,4 +6,4 @@ contract:
     - func/helpers.func
     - func/nft-item.func
   tests:
-    - tests/nft_tests.func
+    - tests/nft-tests.func
