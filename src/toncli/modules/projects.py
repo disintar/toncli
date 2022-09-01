@@ -22,8 +22,8 @@ class ProjectBootstrapper:
         self.project_help_action = defaultdict(lambda: "")
 
         self.project_help_action['wallet'] = f" and {gr}toncli deploy -n testnet{rs}"
-        self.project_help_action['nft_collection']= f" and {gr} build, run_tests, deploy"
-        self.project_help_action['nft_item']      = f" and {gr} build, run_tests, deploy"
+        self.project_help_action['nft_collection']= f" and {gr} cat README.md{rs} for more information"
+        self.project_help_action['nft_item']      = f" and {gr} build, run_tests (mainly for tesing/dev purposes)"
         self.project_help_action['external_code'] = f" and {gr}cat README.md{rs} for more information"
         self.project_help_action['external_data'] = f" and {gr}cat README.md{rs} for more information"
 
