@@ -2,10 +2,10 @@
 
 This project allows you to:
 
-1.  Build basic nft collection contract
-2.  Aims to *hopefully* test any nftcollection contract for compliance with[NFT Standard](https://github.com/ton-blockchain/TIPs/issues/62)
-3.  Deploy collection contract via `toncli deploy`
-4.  Manually deploy NFT item to the collection
+1. Build basic nft collection contract
+2. Aims to *hopefully* test any nftcollection contract for compliance with[NFT Standard](https://github.com/ton-blockchain/TIPs/issues/62)
+3. Deploy collection contract via `toncli deploy`
+4. Manually deploy NFT item to the collection
 
 ## Building
 
@@ -34,10 +34,15 @@ This project allows you to:
   To deploy your own NFT item to the already deployed collection
   you will need:  
   
--   Configure *fift/deploy.fif* script with your own values:[Take a look](https://github.com/ton-blockchain/TIPs/issues/64)  
--   Get address of previously deployed collection  
--   Make yourself familiar with process of sending [internal messages from toncli](https://github.com/disintar/toncli/blob/master/docs/advanced/send_fift_internal.md)  
+-   Configure *fift/deploy.fif* script with your own values:
+[Take a look](https://github.com/ton-blockchain/TIPs/issues/64)  
 
-`toncli send -n testnet -a 0.05 --address "kQAaHefuZCu6inUqWYSd2YGUt7qW6ssqt__Y0VFS2AdLEAF5"  --body fift/deploy.fif`  
+-   Get address of previously deployed collection 
+
+-   Make yourself familiar with process of sending
+[internal messages from toncli](https://github.com/disintar/toncli/blob/master/docs/advanced/send_fift_internal.md) 
+
+`toncli send -n testnet -a 0.05 --address 
+"kQAaHefuZCu6inUqWYSd2YGUt7qW6ssqt__Y0VFS2AdLEAF5"  --body fift/deploy.fif`  
 Every next item deployment you should make sure to
 change item index in the *fift/deploy.fif* file ( Yes. Manually for now ).
