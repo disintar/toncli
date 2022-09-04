@@ -1,16 +1,12 @@
 "TonUtil.fif" include
 "Asm.fif" include
-"build/jetton_wallet.fif" include // Loading jetton wallet code cell on stack
-
-// If running in test mode include will produce tuple we don't want
-over
-tuple? { nip } if
 
 <b
   1 8 u, // Off-chain token
   "https://raw.githubusercontent.com/Trinketer22/token-contract/main/ft/web-example/test_jetton.json"
   $>B B,
 b>
+
 
 "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
 $>smca 0= abort"Specify valid admin addr"
@@ -22,5 +18,7 @@ drop // Drop flags
   swap Gram, // total supply
   -rot Addr,  //  admin address
   swap ref,   //   content cell
-  swap ref,   //   code cell
+  "build/jetton_wallet.fif" include // Loading jetton code
+  over tuple? { nip } if // In testing mode (asm-mode 3) include returns ( cell, tuple ) we don't want tuple in the cell
+  ref,   //   code cell
 b>
