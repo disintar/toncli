@@ -1,0 +1,10 @@
+jetton_wallet:
+  data: fift/wallet_data.fif
+  func:
+    - func/helpers.func
+    - func/op-codes.func
+    - func/params.func
+    - func/jetton-utils.func
+    - func/jetton-wallet.func
+  tests:
+    - tests/wallet-tests.func
