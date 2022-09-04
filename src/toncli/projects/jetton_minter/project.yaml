@@ -6,6 +6,8 @@ jetton_minter:
     - func/helpers.func
     - func/jetton-utils.func
     - func/jetton-minter.func
+  tests:
+    - tests/minter-tests.func
 
 jetton_wallet:
   data: fift/wallet_data.fif
@@ -15,3 +17,5 @@ jetton_wallet:
     - func/helpers.func
     - func/jetton-utils.func
     - func/jetton-wallet.func
+  tests:
+    - tests/wallet-tests.func
