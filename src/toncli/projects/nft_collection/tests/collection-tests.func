@@ -83,10 +83,18 @@ int __test_deploy_item(){
 
     	var (owner_address, prev_item_index, content, nft_item_code, royalty_params) = load_test_data();
 	slice rand_addr     = generate_internal_address_with_custom_data( 0, 0, random() );
-	cell nft_content    = begin_cell().store_uint( 1, 8 ).store_slice("my_nft.json").end_cell();
+	{-
+		This is not the actual content format required for successfull deployment.
+		Contrant will accept it and i think it's something to fix
+		cell nft_content    = begin_cell().store_uint( 1, 8 ).store_slice("my_nft.json").end_cell();
+	-}
+
+	cell nft_content    = begin_cell().store_slice("my_nft.json").end_cell();
+	;; That's what actually should be sent for successfull deployment
+	cell nft_init	    = begin_cell().store_slice( owner_address ).store_ref( nft_content ).end_cell();
 	int query_id        = rand( 1337 ) + 1; 
 	int forward_amount  = one_ton / 10;
-	builder msg_body    = generate_nft_deploy_request( 0, nft_content, query_id, forward_amount ); 
+	builder msg_body    = generate_nft_deploy_request( 0, nft_init, query_id, forward_amount ); 
 	cell msg            = generate_internal_message_custom( 0, 0, 0, msg_body, rand_addr, null(), 0 );  
 	;; Should not allow deploy from non-owner address
 	int gas_used        = invoke_method_expect_fail( recv_internal, [ one_ton, 0, msg, msg_body.end_cell().begin_parse() ] );
@@ -126,7 +134,7 @@ int __test_deploy_item(){
 
 	;; Content in message body should be equal to what we sent
 
-	throw_unless( 505, equal_slices( nft_content.begin_parse(), parsed_msg.at( 8 ) ) );
+	throw_unless( 505, equal_slices( nft_init.begin_parse(), parsed_msg.at( 8 ) ) );
 
 	;; Nft index has to increase
 
