@@ -165,6 +165,7 @@ builder generate_nft_transfer_request( slice new_owner, slice response_dst, int 
 
     }
 
+
 builder generate_nft_get_static_data_request( int query_id ) impure inline {
 	;;get_static_data#2fcb26a2 query_id:uint64 = InternalMsgBody;
 	return begin_cell().store_uint( 0x2fcb26a2, 32 ).store_uint( query_id, 64 );
@@ -175,6 +176,78 @@ builder generate_nft_deploy_request( int idx, cell content, int query_id, int fo
 		.store_uint( idx, 64 )
 		.store_grams( forward_amount )
 		.store_ref( content );
+}
+
+builder generate_jetton_burn_request( int query_id, amount, slice dst, cell custom_payload ) impure inline {
+	{-
+	burn#595f07bc query_id:uint64 amount:(VarUInteger 16) 
+              response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+              = InternalMsgBody;
+
+	-}
+
+	builder burn_msg = generate_internal_message_body( 0x595f07bc, query_id )
+							  .store_grams( amount )
+							 .store_slice( dst );
+	if( ~ null?( custom_payload ) ) {
+		burn_msg = burn_msg.store_uint( 1, 1 ).store_ref( custom_payload ); 
+	}
+	else {
+		burn_msg = burn_msg.store_uint( 0, 1 );
+	}
+
+	return burn_msg;
+}
+
+builder generate_jetton_burn_notification( int query_id, int amount, slice sender, slice resp_dst ) {
+	return generate_internal_message_body( 0x7bdd97de, query_id ).store_grams( amount )
+								     .store_slice( sender )
+								     .store_slice( resp_dst );
+}
+
+builder generate_jetton_transfer_request( 
+					  int query_id, int amount,
+					  slice dst, slice resp_dst, 
+					  cell custom_payload, int forward_amount,
+					  cell forward_payload, int is_ref?
+
+					) impure method_id {
+	{-
+
+	transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress
+                 response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+                 forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell)
+                 = InternalMsgBody;
+
+	-}
+
+	var req = generate_internal_message_body( 0x0f8a7ea5, query_id )
+						.store_grams( amount )
+						 .store_slice( dst )
+						.store_slice( resp_dst );
+
+	if( null?( custom_payload ) ) {
+		req = req.store_uint( 0, 1);
+	}
+	else {
+		req = req.store_uint( 1, 1).store_ref( custom_payload );
+	}
+
+	req = req.store_grams( forward_amount );
+
+	if( ~ null?( forward_payload ) ) {
+		if( is_ref? ) {
+			req = req.store_uint( 1, 1 ).store_ref( forward_payload );
+		}
+		else {
+			req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
+		}
+	}
+	else {
+		req = req.store_uint( 0, 1 );
+	}
+
+	return req;
 }
 
 
