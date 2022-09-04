@@ -1,0 +1,31 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+/* 
+ This file is primerely for tests to run
+ Main way of deploying jetton wallet is via jetton minter "mint" operation.
+ Sending jettons from already deployed wallet is also an option
+ Thus random 256 bit value will be used ans and address for collection and owner
+
+ We're going to use newkeypair as a way to generate two random 256 bit values
+ Do not do that in real app 
+*/
+
+"build/jetton_wallet.fif" include // Loading wallet code cell
+// If running in test mode include will produce tuple we don't want
+over
+tuple? { nip } if
+
+
+newkeypair 
+
+256 B>u@
+swap
+256 B>u@
+
+<b
+  1000000000 10 * Gram, // 10 jettons balance ( if decimals is set to 9 )
+  Basechain rot Addr, // owner
+  Basechain rot Addr, // minter addr
+  swap ref, // wallet code
+b>
