@@ -574,7 +574,7 @@ int __test_burn_no_gas() {
 
 }
 
-int __test_no_forward_fee() {
+int __test_burn_no_forward_fee() {
 	int burn_fee = jetton_gas_fee * 2;
 	int forward_fee = one_unit / 10;
 	int excess 	= 1;
@@ -587,7 +587,7 @@ int __test_no_forward_fee() {
 	return gas_used;
 }
 
-int __test_no_excess() {
+int __test_burn_no_excess() {
 	int burn_fee = jetton_gas_fee * 2;
 	int forward_fee = one_unit / 10;
 	int excess 	= 1;
