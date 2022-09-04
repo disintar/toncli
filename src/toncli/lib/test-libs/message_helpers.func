@@ -159,6 +159,9 @@ builder generate_nft_transfer_request( slice new_owner, slice response_dst, int 
                 req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
             }
         }
+	else {
+		req = req.store_uint( 0, 1 );
+	}
 
 
         return req;
