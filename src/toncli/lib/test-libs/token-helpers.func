@@ -1,0 +1,105 @@
+int slcmp(slice a, slice b) asm "SDEQ";
+
+int token_snake_len( slice content) impure inline {
+	int len = 0;
+
+	while( ~ null?( content ) ){
+		len       += content.slice_bits();
+		content    = content.slice_refs() ? content~load_ref().begin_parse() : null();
+	} 
+
+	return len;
+
+}
+
+cell get_snake_tail( cell tail ) impure inline {
+
+	while( ~ tail.null?() ) {
+		slice tail_slice = tail.begin_parse();
+		tail	   	 = tail_slice.slice_refs() ? tail_slice~load_ref() : null();
+	}
+
+	return tail;
+}
+
+cell snake_concat( cell head, cell tail ) impure method_id {
+	slice	head_sl  = head.begin_parse();
+	;; store_slice, as i've discovered, copies slice with refs ( if any )
+	;; We don't need refs since those are copied manually down below
+	builder snake 	 = begin_cell().store_slice( head_sl~load_bits( head_sl.slice_bits() ) );
+
+	if( head_sl.slice_refs() ) {
+		snake = snake.store_ref( snake_concat( head_sl~load_ref(), tail ) );
+	}
+	else { 
+		snake = snake.store_ref( tail );
+	}
+
+	return snake.end_cell();
+}
+
+cell snake_concat_tagged( int tag, cell head, cell tail ) impure inline {
+	slice   head_sl  = head.begin_parse();
+	builder snake	 = begin_cell().store_uint( tag, 8 );
+	cell	tagged   = null();
+	int 	lbits	 = 1023 - 8; ;;Bits left after prepending tag
+
+	if( head_sl.slice_bits() > lbits ) {
+		;; If we can't fit it we just ref the concat result
+		tagged = snake.store_ref( snake_concat( head, tail )).end_cell();
+	}
+	else {
+		;; Otherwise squeeze it into one and concat 
+		tagged = snake_concat( snake.store_slice( head_sl ).end_cell(), tail );
+	}
+
+	
+
+	return tagged;
+
+}
+
+int snake_equal?( slice snake1, slice snake2 ) impure inline {
+	int equal = true;
+
+	do {
+		int s1_data = snake1.slice_bits();
+		int s2_data = snake2.slice_bits();
+
+		if( s1_data <= s2_data ) {
+
+			if( s1_data > 0 ) {
+				;; Compare shortest slice
+				equal  = slcmp( snake1, snake2~load_bits( s1_data ) );
+			}
+
+			;; Snake1 guaranteed no data left
+			snake1 = snake1.slice_refs() ? snake1~load_ref().begin_parse() : null();
+
+			;; If snake1 has no refs and s2 still has data
+			;; Those are not equal
+			if( snake1.null?() & s2_data > s1_data ) {
+				equal = false;
+			}
+			else {
+				;; Snake one still has refs
+				;; If data chunks are equal means snake2 is ended too
+				if( s2_data == s1_data ){
+					snake2 = snake2.slice_refs() ? snake2~load_ref().begin_parse() : null();
+				}
+			}
+
+		}
+		else {
+			equal  = slcmp( snake2, snake1~load_bits( s2_data ) );
+
+			snake2 = snake2.slice_refs() ? snake2~load_ref().begin_parse() : null();
+		}
+			
+	} until( ~ equal | ( snake1.null?() & snake2.null?() ) )
+
+	return equal;
+
+}
+
+

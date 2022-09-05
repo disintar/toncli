@@ -34,6 +34,10 @@ class TextUtils:
 
         {bl}start - create new project structure based on example project  
         {gr}   wallet - create project with v3 wallet example
+        {gr}   nft_collection- project with NFT collection example
+        {gr}   nft_item      - project with single nft item example
+        {gr}   jetton_minter - project with Jetton minter example
+        {gr}   jetton_wallet - project with Jetton wallet example
         {gr}   external_data - create external data usage example
         {gr}   external_code - create external code usage example
 

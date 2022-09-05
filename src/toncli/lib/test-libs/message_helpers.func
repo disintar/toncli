@@ -56,6 +56,204 @@ tuple parse_init_state(slice cs) impure method_id {
     return parsed_tuple;
 }
 
+int random_query_id() impure method_id {
+    randomize_lt();
+    return rand( 1 << 64 ) + 1; ;; From 1 to 2^64
+}
+
+builder generate_internal_message_body( int op, int query_id ) impure inline {
+    builder body = begin_cell().store_uint( op, 32 );
+
+    if( query_id == 0 ){
+
+        query_id = random_query_id();
+
+    }
+
+    return body.store_uint( query_id, 64 );
+}
+
+
+cell generate_internal_message_custom( int bounce, int ton_amount, int init_state, builder payload, slice  src_addr, slice dst_addr, int fwd_fee ) impure method_id {
+    ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
+    ;;src:MsgAddressInt dest:MsgAddressInt
+    ;;value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
+    ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
+
+    ;;message$_ {X:Type} info:CommonMsgInfo
+    ;;init:(Maybe (Either StateInit ^StateInit))
+    ;;body:(Either X ^X) = Message X;
+
+    slice ssrc  = null?( src_addr ) ? generate_internal_address() : src_addr;
+    slice sdest = null?( dst_addr ) ? generate_internal_address() : dst_addr;
+
+    var msg = begin_cell()
+            .store_uint(0, 1) ;; int_msg_info$0 
+	    .store_uint(0, 1) ;; ihr_disabled:Bool
+            .store_uint(bounce, 1) ;; bounce:Bool
+            .store_uint(0, 1) ;; bounced:Bool
+            .store_slice(ssrc) ;; src:MsgAddressInt
+            .store_slice(sdest) ;; dest:MsgAddressInt
+            .store_grams(ton_amount) ;;
+            .store_dict(null()) ;; extra currencies
+            .store_grams(0) ;; ihr_fee
+            .store_grams( fwd_fee ) ;; fwd_fee
+            .store_uint(1000, 64) ;; created_lt:uint64
+            .store_uint(1000, 32) ;; created_at:uint32
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+      builder init_state_builder = generate_init_state();
+
+      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+        msg = msg.store_uint(1,1) ;; Either ^StateInit
+            .store_ref(init_state_builder.end_cell());
+      } else {
+        msg = msg.store_uint(0,1).store_builder(init_state_builder);
+      }
+    }
+    
+    if(msg.builder_bits() + payload.builder_bits() >= 1023) {
+      msg = msg.store_uint(1,1) ;; Either ^X
+            .store_ref(payload.end_cell());
+    } else {
+      msg = msg.store_uint(0,1).store_builder(payload);
+    }
+
+    return msg.end_cell();
+   
+}
+
+builder generate_nft_transfer_request( slice new_owner, slice response_dst, int query_id
+    , cell custom_payload, int forward_amount
+    , cell forward_payload ,int is_ref?
+
+    ) impure method_id {
+        ;;transfer#5fcc3d14 query_id:uint64 new_owner:MsgAddress response_destination:MsgAddress 
+        ;; custom_payload:(Maybe ^Cell) 
+        ;;forward_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell) 
+        ;;= InternalMsgBody;
+
+        builder req = generate_internal_message_body( 0x5fcc3d14, query_id)
+                        .store_slice( new_owner )
+                      .store_slice( response_dst );
+
+        if( null?( custom_payload ) ){
+
+            req~store_uint( 0, 1 );
+
+        }
+        else {
+
+            req~store_uint( 1, 1 );
+            req = req.store_ref( custom_payload );
+
+        }
+
+        req = req.store_grams( forward_amount );
+
+        if( ~ null?( forward_payload ) ) {
+            if( is_ref? ){
+                req = req.store_uint( 1, 1 ).store_ref( forward_payload );
+            }
+            else {
+                req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
+            }
+        }
+	else {
+		req = req.store_uint( 0, 1 );
+	}
+
+
+        return req;
+
+    }
+
+
+builder generate_nft_get_static_data_request( int query_id ) impure inline {
+	;;get_static_data#2fcb26a2 query_id:uint64 = InternalMsgBody;
+	return begin_cell().store_uint( 0x2fcb26a2, 32 ).store_uint( query_id, 64 );
+}
+
+builder generate_nft_deploy_request( int idx, cell content, int query_id, int forward_amount ) impure inline {
+	return generate_internal_message_body( 1, query_id )
+		.store_uint( idx, 64 )
+		.store_grams( forward_amount )
+		.store_ref( content );
+}
+
+builder generate_jetton_burn_request( int query_id, amount, slice dst, cell custom_payload ) impure inline {
+	{-
+	burn#595f07bc query_id:uint64 amount:(VarUInteger 16) 
+              response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+              = InternalMsgBody;
+
+	-}
+
+	builder burn_msg = generate_internal_message_body( 0x595f07bc, query_id )
+							  .store_grams( amount )
+							 .store_slice( dst );
+	if( ~ null?( custom_payload ) ) {
+		burn_msg = burn_msg.store_uint( 1, 1 ).store_ref( custom_payload ); 
+	}
+	else {
+		burn_msg = burn_msg.store_uint( 0, 1 );
+	}
+
+	return burn_msg;
+}
+
+builder generate_jetton_burn_notification( int query_id, int amount, slice sender, slice resp_dst ) {
+	return generate_internal_message_body( 0x7bdd97de, query_id ).store_grams( amount )
+								     .store_slice( sender )
+								     .store_slice( resp_dst );
+}
+
+builder generate_jetton_transfer_request( 
+					  int query_id, int amount,
+					  slice dst, slice resp_dst, 
+					  cell custom_payload, int forward_amount,
+					  cell forward_payload, int is_ref?
+
+					) impure method_id {
+	{-
+
+	transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress
+                 response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+                 forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell)
+                 = InternalMsgBody;
+
+	-}
+
+	var req = generate_internal_message_body( 0x0f8a7ea5, query_id )
+						.store_grams( amount )
+						 .store_slice( dst )
+						.store_slice( resp_dst );
+
+	if( null?( custom_payload ) ) {
+		req = req.store_uint( 0, 1);
+	}
+	else {
+		req = req.store_uint( 1, 1).store_ref( custom_payload );
+	}
+
+	req = req.store_grams( forward_amount );
+
+	if( ~ null?( forward_payload ) ) {
+		if( is_ref? ) {
+			req = req.store_uint( 1, 1 ).store_ref( forward_payload );
+		}
+		else {
+			req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
+		}
+	}
+	else {
+		req = req.store_uint( 0, 1 );
+	}
+
+	return req;
+}
+
+
 cell generate_internal_message(int bounce, int ton_amount, int init_state, builder payload) impure method_id {
     ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
     ;;src:MsgAddressInt dest:MsgAddressInt

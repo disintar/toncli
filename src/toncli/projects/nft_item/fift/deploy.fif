@@ -1,0 +1,35 @@
+"TonUtil.fif" include
+
+50000000 =: storage_grams
+
+// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
+"TotallyNotValid"
+dup
+
+."Deploying with nft owner address:" type cr
+
+$>smca 0= abort"Specify valid owner address"
+drop // Dropping address flags
+
+// Initialization message body consists of owner_address and ref to the nft_content cell
+<b
+  -rot
+  Addr,
+  <b
+    "my_nft.json" $,
+  b>
+  ref,
+b>
+
+
+
+<b
+  1 32 u, // op deploy_nft
+  12345 64 u, // query_id
+  0 64 u, // nft_idx b>
+  storage_grams Gram, // Storing forward_amount for nft deployment
+  swap ref, // Storing content ref
+b>
+
+
+
