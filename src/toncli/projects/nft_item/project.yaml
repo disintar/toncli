@@ -1,5 +1,5 @@
 nft_item:
-  data: fift/data.fif
+  data: fift/nft-data.fif
   func:
     - func/op-codes.func
     - func/params.func
