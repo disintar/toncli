@@ -1,22 +1,26 @@
 "TonUtil.fif" include
 "Asm.fif" include
 
+"EQB8EqvPWlUq6g3pZPW9AQU4xLDDh65MxfFT_UStljYuCy_X" constant royalty_address // Change to your own
+"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" constant owner_address // Change to your own
+"https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/" constant collection_base // Specify your own collection base uri
+"https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/my_collection.json" constant collection_json // Specify your own collection Uri
+"build/nft.fif" constant nft_path
 
-// Specify your own collection base uri
 <b
   1 8 u,
-  "https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/"
+  collection_base
   $>B B,
 b>
 
 
-// Specify your own collection Uri
 <b
   1 8 u,
-  "https://raw.githubusercontent.com/Trinketer22/token-contract/main/nft/web-example/my_collection.json"
+  collection_json
   $>B B,
 b>
 
+// content cell
 <b
   swap ref, // Storing clollection ref
   swap ref, // Storing common ref
@@ -28,31 +32,27 @@ content ! // Storing content cell in a variable
 // Specify your own user-friendly address
 
 
-"EQB8EqvPWlUq6g3pZPW9AQU4xLDDh65MxfFT_UStljYuCy_X"
+royalty_address
 $>smca 0= abort"Specify valid royalty addr"
+drop
+2constant royalty_raw
 
-constant flags
-constant royalty_addr
-constant wc
-
-"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
+owner_address
 $>smca 0= abort"Specify valid owner addr"
-constant owner_flags
-constant owner_addr
-constant owner_wc
+drop
+2constant owner_raw
 
-."Owner address:" owner_wc owner_addr owner_flags .Addr cr
-."Royalty addres:" wc royalty_addr flags .Addr cr
-
-"build/nft.fif" constant nft_path
+."Owner address:" owner_address type cr
+."Royalty addres:" royalty_address type cr
 
 
+
+// Royalty cell
 <b
   5 16 u,
   100 16 u,
-  wc royalty_addr Addr,
+  royalty_raw Addr,
 b>
-// Royalty cell
 
 nft_path include // Could return ( tuple methods, cell res_cell )
 // So we get rid of tuple
@@ -62,7 +62,7 @@ tuple? { nip } if
 
 
 <b
-  owner_wc owner_addr Addr, // Adding owner addr to data
+  owner_raw Addr, // Adding owner addr to data
   0 64 u,
   content @ ref,
   swap ref,
