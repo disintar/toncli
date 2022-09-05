@@ -53,7 +53,7 @@
 
     (int total_supply, slice admin_address, cell content, cell jetton_wallet_code) = load_data();
 
-    if (op == op::mint()) {
+    if (op == op_mint) {
         throw_unless(73, equal_slices(sender_address, admin_address));
         slice to_address = in_msg_body~load_msg_addr();
         int amount = in_msg_body~load_coins();
@@ -66,7 +66,7 @@
         return ();
     }
 
-    if (op == op::burn_notification()) {
+    if (op == op_burn_notification) {
         int jetton_amount = in_msg_body~load_coins();
         slice from_address = in_msg_body~load_msg_addr();
         throw_unless(74,
@@ -80,7 +80,7 @@
             .store_slice(response_address)
             .store_coins(0)
             .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-            .store_uint(op::excesses(), 32)
+            .store_uint(op_excesses, 32)
             .store_uint(query_id, 64);
           send_raw_message(msg.end_cell(), 2 + 64);
         }

@@ -1,9 +1,9 @@
-int op::transfer() asm "0xf8a7ea5 PUSHINT";
-int op::transfer_notification() asm "0x7362d09c PUSHINT";
-int op::internal_transfer() asm "0x178d4519 PUSHINT";
-int op::excesses() asm "0xd53276db PUSHINT";
-int op::burn() asm "0x595f07bc PUSHINT";
-int op::burn_notification() asm "0x7bdd97de PUSHINT";
+const int op_transfer = 0xf8a7ea5;
+const int op_transfer_notification = 0x7362d09c;
+const int op_internal_transfer = 0x178d4519;
+const int op_excesses = 0xd53276db;
+const int op_burn = 0x595f07bc;
+const int op_burn_notification = 0x7bdd97de;
 
 ;; Minter
-int op::mint() asm "21 PUSHINT";
+const int op_mint = 21;

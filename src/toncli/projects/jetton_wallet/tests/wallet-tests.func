@@ -109,7 +109,7 @@ _ verify_transfer_notification( cell msg, int jetton_amount, int query_id, slice
 
 	slice msg_body	= parsed_msg.at( 8 );
 
-	throw_unless( 803, op::transfer_notification() == msg_body~load_uint( 32 ) );
+	throw_unless( 803, op_transfer_notification == msg_body~load_uint( 32 ) );
 
 	throw_unless( 804, query_id == msg_body~load_uint( 64 ) );
 
@@ -149,7 +149,7 @@ _ verify_burn_notification( cell msg, int query_id, int burn_amount, slice sende
 
 	slice msg_body	 = parsed_msg.at( 8 );
 
-	throw_unless( 902, op::burn_notification()  == msg_body~load_uint( 32 ) );
+	throw_unless( 902, op_burn_notification  == msg_body~load_uint( 32 ) );
 
 	throw_unless( 903, query_id == msg_body~load_uint( 64 ) );
 
@@ -183,7 +183,7 @@ _ verify_excess_jetton( int query_id, slice resp_dst, int msg_value, int forward
 
 	slice msg_body = parsed_msg.at( 8 );
 
-	throw_unless( 703, op::excesses() == msg_body~load_uint( 32 ) );
+	throw_unless( 703, op_excesses == msg_body~load_uint( 32 ) );
 
 	throw_unless( 704, query_id == msg_body~load_uint( 64 ) );
 }

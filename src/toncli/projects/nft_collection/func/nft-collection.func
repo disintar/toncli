@@ -61,7 +61,7 @@ slice calculate_nft_item_address(int wc, cell state_init) {
     .store_slice(to_address)
     .store_coins(0)
     .store_uint(0, 1 + 4 + 4 + 64 + 32 + 1 + 1)
-    .store_uint(op::report_royalty_params(), 32)
+    .store_uint(op_report_royalty_params, 32)
     .store_uint(query_id, 64)
     .store_slice(data);
   send_raw_message(msg.end_cell(), 64); ;; carry all the remaining value of the inbound message
@@ -84,7 +84,7 @@ slice calculate_nft_item_address(int wc, cell state_init) {
 
     var (owner_address, next_item_index, content, nft_item_code, royalty_params) = load_data();
 
-    if (op == op::get_royalty_params()) {
+    if (op == op_get_royalty_params) {
         send_royalty_params(sender_address, query_id, royalty_params.begin_parse());
         return ();
     }

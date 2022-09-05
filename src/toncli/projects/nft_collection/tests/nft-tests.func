@@ -65,7 +65,7 @@ _ verify_ownership_assigned( int query_id, slice owner, slice new_owner, int for
 
 	slice msg_body = parsed_msg.at( 8 );
 
-	throw_unless( 603, op::ownership_assigned() == msg_body~load_uint( 32 ) );
+	throw_unless( 603, op_ownership_assigned == msg_body~load_uint( 32 ) );
 
 	throw_unless( 604, query_id == msg_body~load_uint( 64 ) );
 	
@@ -110,7 +110,7 @@ _ verify_excess_sent( int query_id, slice resp_dst, int balance, int forward_fee
 
 	slice msg_body = parsed_msg.at( 8 );
 
-	throw_unless( 703, op::excesses() == msg_body~load_uint( 32 ) );
+	throw_unless( 703, op_excesses == msg_body~load_uint( 32 ) );
 
 	throw_unless( 704, query_id == msg_body~load_uint( 64 ) );
 
@@ -507,7 +507,7 @@ int __test_get_static_data() {
 
 	( int op, int resp_query_id ) = ( ds~load_uint( 32 ), ds~load_uint( 64 ) );
 
-	throw_unless( 803, op::report_static_data() == op );
+	throw_unless( 803, op_report_static_data == op );
 
 	throw_unless( 804, query_id == resp_query_id );
 

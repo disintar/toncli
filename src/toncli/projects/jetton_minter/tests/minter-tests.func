@@ -32,7 +32,7 @@ _ verify_excess_jetton( int query_id, slice resp_dst, int msg_value, int forward
 
 	slice msg_body = parsed_msg.at( 8 );
 
-	throw_unless( 703, op::excesses() == msg_body~load_uint( 32 ) );
+	throw_unless( 703, op_excesses == msg_body~load_uint( 32 ) );
 
 	throw_unless( 704, query_id == msg_body~load_uint( 64 ) );
 }
