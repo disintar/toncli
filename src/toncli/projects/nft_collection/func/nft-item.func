@@ -14,6 +14,13 @@
 
 -}
 
+#pragma version >=0.2.0;
+#include "helpers.func";
+#include "params.func";
+#include "op-codes.func";
+
+
+
 int min_tons_for_storage() asm "50000000 PUSHINT"; ;; 0.05 TON
 
 ;;

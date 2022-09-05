@@ -12,6 +12,15 @@ This is suitable for most tokens, if you need tokens transferable between workch
 
 -}
 
+#pragma version >=0.2.0;
+#include "op-codes.func";
+#include "params.func";
+#include "helpers.func";
+#include "jetton-utils.func";
+
+
+
+
 int min_tons_for_storage() asm "10000000 PUSHINT"; ;; 0.01 TON
 int gas_consumption() asm "10000000 PUSHINT"; ;; 0.01 TON
 
