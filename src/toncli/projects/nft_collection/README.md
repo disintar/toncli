@@ -3,7 +3,7 @@
 This project allows you to:
 
 1.  Build basic nft collection contract
-2.  Aims to *hopefully* test any nftcollection contract for compliance with[NFT Standard](https://github.com/ton-blockchain/TIPs/issues/62)
+2.  Aims to *hopefully* test any nftcollection contract for compliance with [NFT Standard](https://github.com/ton-blockchain/TIPs/issues/62)
 3.  Deploy collection contract via `toncli deploy`
 4.  Manually deploy NFT item to the collection
 
@@ -15,7 +15,7 @@ This project allows you to:
 
 ## Testing
 
-  Same here `toncli run_test` 
+  Same here `toncli run_test`  
   If you encounter **error 6** during *run_tests*
   make shure that your binaries are built according to:
   [this manual](https://github.com/disintar/toncli/blob/master/docs/advanced/func_tests_new.md)
@@ -31,8 +31,7 @@ This project allows you to:
   Prior to deployment you need to check out *fift/collection-data.fif*
   and change all mock configuration values like collection_content,
   owner_address Etc.  
-  There is nothing special in deploy command:
-  `toncli deploy -n testnet nft_collection`.  
+  To deploy run:`toncli deploy -n testnet nft_collection`.  
   
 ## Deploying individual items
 

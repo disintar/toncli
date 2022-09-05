@@ -3,7 +3,7 @@
 This project allows you to:
 
 1.  Build basic jetton minter contract
-2.  Aims to *hopefully* test any nftcollection contract for compliance with[Jetton standerd](https://github.com/ton-blockchain/TIPs/issues/74)
+2.  Aims to *hopefully* test any nftcollection contract for compliance with [Jetton standerd](https://github.com/ton-blockchain/TIPs/issues/74)
 3.  Deploy minter contract via `toncli deploy`
 4.  Manually deploy jetton wallet via minting tokens
 5.  Manually send to other jetton wallets
@@ -16,7 +16,7 @@ This project allows you to:
 
 ## Testing
 
-  Same here `toncli run_test` 
+  Same here `toncli run_test`  
   If you encounter **error 6** during *run_tests*
   make shure that your binaries are built according to:[this manual](https://github.com/disintar/toncli/blob/master/docs/advanced/func_tests_new.md)
   
@@ -28,9 +28,8 @@ This project allows you to:
   First type:`toncli build`
   However it makes sense to deploy only *jetton_minter*.  
   Prior to deployment you need to check out *fift/minter_data.fif*
-  and change all mock configuration values to your own liking.
-  There is nothing special in deploy command:
-  `toncli deploy -n testnet jetton_minter`.  
+  and change all mock configuration values to your own liking.  
+  To deploy run:`toncli deploy -n testnet jetton_minter`.  
   
 ## Minting jettons
 
