@@ -16,7 +16,9 @@ This project allows you to:
 
 ## Testing
 
-  Same here `toncli run_test`  
+  Same here `toncli run_test` 
+  If you encounter **error 6** during *run_tests*
+  make shure that your binaries are built according to:[this manual](https://github.com/disintar/toncli/blob/master/docs/advanced/func_tests_new.md)
   
 ## Deploying minter contract
 
