@@ -2,12 +2,12 @@
 
 This project allows you to:
 
-1. Build basic jetton minter contract
-2. Aims to *hopefully* test any nftcollection contract for compliance with[Jetton standerd](https://github.com/ton-blockchain/TIPs/issues/74)
-3. Deploy minter contract via `toncli deploy`
-4. Manually deploy jetton wallet via minting tokens
-5. Manually send to other jetton wallets
-6. Manyally burn coins on your wallet
+1.  Build basic jetton minter contract
+2.  Aims to *hopefully* test any nftcollection contract for compliance with[Jetton standerd](https://github.com/ton-blockchain/TIPs/issues/74)
+3.  Deploy minter contract via `toncli deploy`
+4.  Manually deploy jetton wallet via minting tokens
+5.  Manually send to other jetton wallets
+6.  Manyally burn coins on your wallet
 
 ## Building
 
@@ -35,10 +35,10 @@ This project allows you to:
   To mint coins to your wallet
   you will have to:  
   
-+ Configure *fift/mint_jettons.fif* script with your own values:
++   Configure *fift/mint_jettons.fif* script with your own values:
 [Take a look](https://github.com/ton-blockchain/TIPs/issues/74)  
 
-+ Make yourself familiar with process of sending  [internal messages](https://github.com/disintar/toncli/blob/master/docs/advanced/send_fift_internal.md)  
++   Make yourself familiar with process of sending  [internal messages](https://github.com/disintar/toncli/blob/master/docs/advanced/send_fift_internal.md)  
 
 `toncli send -n testnet -a 0.035 -c jetton_minter  --body fift/mint_jettons.fif`
 
@@ -47,12 +47,12 @@ This project allows you to:
   To send coins to someone elses jetton wallet
   you will have to:
 
-+ Setup values in *fift/send_jettons.fif*  
-+ Run:`toncli send -n testnet -a 0.1 --address < your jetton wallet addr>  --body fift/send_jettons.fif`  
++   Setup values in *fift/send_jettons.fif*  
++   Run:`toncli send -n testnet -a 0.1 --address < your jetton wallet addr>  --body fift/send_jettons.fif`  
 
 ## Burning jettons
 
   To burn jettons
 
-+ Setup values in *fift/burn_jettons.fif*
-+ Run `toncli send -n testnet -a 0.1 --address < your jetton wallet addr >  --body fift/burn_jettons.fif`
++   Setup values in *fift/burn_jettons.fif*
++   Run `toncli send -n testnet -a 0.1 --address < your jetton wallet addr >  --body fift/burn_jettons.fif`
