@@ -63,7 +63,7 @@ class DeployWalletContract(AbstractDeployer):
                     f"🧪 Test coins can be found in {bl}@testgiver_ton_bot{rs} / @tondev")
 
 
-                self.export_address_to_fift( self.owner_fift_path );
+                self.export_address_to_fift( self.owner_fift_path, "owner" );
                 sys.exit()
         else:
             self.project_config = ProjectConf(self.project_root)
@@ -76,7 +76,7 @@ class DeployWalletContract(AbstractDeployer):
                 f"Is inited: {is_inited}) in {config_folder}")
 
             if not os.path.exists( self.owner_fift_path ):
-                self.export_address_to_fift( self.owner_fift_path )
+                self.export_address_to_fift( self.owner_fift_path, "owner" )
 
 
 
