@@ -139,7 +139,7 @@ class AbstractDeployer:
 
         with open( path, "w", encoding='utf-8' ) as f:
             logger.info(f"🦘 Exporing address to {gr}{path}{rs}")
-            f.write( addresses[0][0].replace( ":", " ") + " 2constant {name}_raw\n" )
+            f.write( addresses[0][0].replace( ":", " ") + f" 2constant {name}_raw\n" )
             f.write( f'"{addresses[0][1]}" constant {name}_address\n' )
             f.write( f'"{addresses[0][2]}" constant {name}_no_bounce\n' )
 
