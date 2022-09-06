@@ -44,7 +44,7 @@ slice calculate_nft_item_address(int wc, cell state_init) {
 
 () deploy_nft_item(int item_index, cell nft_item_code, int amount, cell nft_content) impure {
   cell state_init = calculate_nft_item_state_init(item_index, nft_item_code);
-  slice nft_address = calculate_nft_item_address(workchain(), state_init);
+  slice nft_address = calculate_nft_item_address(workchain, state_init);
   var msg = begin_cell()
             .store_uint(0x18, 6)
             .store_slice(nft_address)
@@ -143,7 +143,7 @@ slice calculate_nft_item_address(int wc, cell state_init) {
 slice get_nft_address_by_index(int index) method_id {
     var (_, _, _, nft_item_code, _) = load_data();
     cell state_init = calculate_nft_item_state_init(index, nft_item_code);
-    return calculate_nft_item_address(workchain(), state_init);
+    return calculate_nft_item_address(workchain, state_init);
 }
 
 (int, int, slice) royalty_params() method_id {

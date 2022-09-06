@@ -15,7 +15,7 @@ This project allows you to:
 
 ## Testing
 
-  Same here `toncli run_test`  
+  Build project and then: `toncli run_test`  
 
   ⚠ If you see `6` error code on all tests - you need to update your binary [more information here](https://github.com/disintar/toncli/issues/72)
   
