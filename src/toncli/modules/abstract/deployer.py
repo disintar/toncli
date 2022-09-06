@@ -134,6 +134,15 @@ class AbstractDeployer:
 
         return addresses
 
+    def export_address_to_fift( self, path: str ):
+        addresses = self.get_address()
+
+        with open( path, "w", encoding='utf-8' ) as f:
+            logger.info(f"🦘 Exporing address to {gr}{self.owner_fift_path}{rs}")
+            f.write( addresses[0][0].replace( ":", " ") + " 2constant owner_raw\n" )
+            f.write( f'"{addresses[0][1]}" constant owner_address\n' )
+            f.write( f'"{addresses[0][2]}" constant owner_no_bounce\n' )
+
     def compile_func(self, contracts: List[TonProjectConfig] = None):
         """Compile func to code.fif"""
         # Build code

@@ -26,6 +26,7 @@ class DeployWalletContract(AbstractDeployer):
         self.network = network
         self.workchain = workchain
         self.project_root = os.path.abspath(f"{config_folder}/wallet")
+        self.owner_fift_path = os.path.abspath(f"{config_folder}/fift-libs/OwnerAddr.fif") 
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
         if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
@@ -61,6 +62,8 @@ class DeployWalletContract(AbstractDeployer):
                     f"💎 About {gr}2 TON{rs} will be OK for 10-12 contracts\n"
                     f"🧪 Test coins can be found in {bl}@testgiver_ton_bot{rs} / @tondev")
 
+
+                self.export_address_to_fift( self.owner_fift_path );
                 sys.exit()
         else:
             self.project_config = ProjectConf(self.project_root)
@@ -71,6 +74,11 @@ class DeployWalletContract(AbstractDeployer):
             logger.info(
                 f"🦘 Found existing deploy-wallet [{gr}{self.addresses[0][1]}{rs}] (Balance: {balance}💎, "
                 f"Is inited: {is_inited}) in {config_folder}")
+
+            if not os.path.exists( self.owner_fift_path ):
+                self.export_address_to_fift( self.owner_fift_path )
+
+
 
     def send_ton(self, address: str, amount: float, quiet: bool = False):
         """Send ton to some address from DeployWallet"""
