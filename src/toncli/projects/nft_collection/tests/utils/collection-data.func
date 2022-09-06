@@ -1,3 +1,15 @@
+( slice, int, cell ) get_test_data() inline {
+	
+	var ( _, stack ) = invoke_method( get_collection_data, [] );
+
+	slice owner  = stack.third();
+	int next_idx = stack.first();
+	cell content = stack.second();
+
+	return ( owner, next_idx, content );
+
+}
+
 (slice, int, cell, cell, cell) load_test_data() inline {
     var ds = get_data().begin_parse();
     return (    ds~load_msg_addr(), ;; owner_address

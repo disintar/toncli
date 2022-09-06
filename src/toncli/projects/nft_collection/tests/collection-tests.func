@@ -58,14 +58,14 @@ int __test_deploy_item(){
 	 1) Will test just that it won't allow deployment from non-owner
 	 2) Successfull deployment increases index and sends apropriate msgs
 	-}
-    var (owner_address, prev_item_index, content, nft_item_code, royalty_params) = load_test_data(); ;; this data will load from c4
+    var ( owner_address, prev_item_index, content ) = get_test_data(); ;; this data will load from get_collection_data
 
     slice rand_addr = generate_internal_address_with_custom_data(0, 0, random());
     {-
 		This is not the actual content format required for successfull deployment.
 		Contrant will accept it and i think it's something to fix
 		cell nft_content    = begin_cell().store_uint( 1, 8 ).store_slice("my_nft.json").end_cell();
-	-}
+    -}
 
     cell nft_content = begin_cell().store_slice("my_nft.json").end_cell();
     ;; That's what actually should be sent for successfull deployment
