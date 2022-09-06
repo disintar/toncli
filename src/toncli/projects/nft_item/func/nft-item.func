@@ -14,7 +14,14 @@
 
 -}
 
-int min_tons_for_storage() asm "50000000 PUSHINT"; ;; 0.05 TON
+#pragma version >=0.2.0;
+#include "helpers.func";
+#include "params.func";
+#include "op-codes.func";
+
+
+
+const int min_tons_for_storage = 50000000; ;; 0.05 TON
 
 ;;
 ;;  Storage
@@ -71,7 +78,7 @@ int min_tons_for_storage() asm "50000000 PUSHINT"; ;; 0.05 TON
     in_msg_body~load_int(1); ;; this nft don't use custom_payload
     int forward_amount = in_msg_body~load_coins();
 
-    int rest_amount = my_balance - min_tons_for_storage();
+    int rest_amount = my_balance - min_tons_for_storage;
     if (forward_amount) {
       rest_amount -= (forward_amount + fwd_fees);
     }

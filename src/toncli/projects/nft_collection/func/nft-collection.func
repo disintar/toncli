@@ -8,6 +8,11 @@
 ;;           royalty_params:^RoyaltyParams
 ;;           = Storage;
 
+#pragma version >=0.2.0;
+#include "helpers.func";
+#include "params.func";
+#include "op-codes.func";
+
 (slice, int, cell, cell, cell) load_data() inline {
   var ds = get_data().begin_parse();
   return 
