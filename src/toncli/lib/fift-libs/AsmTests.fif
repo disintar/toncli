@@ -1315,3 +1315,5 @@ variable asm-mode  1 asm-mode !
 { <b 2 8 u, swap 256 u, b>spec } : hash>libref
 // ( c -- c' )
 { hash hash>libref } : >libref
+
+true constant asm-test
