@@ -1,5 +1,6 @@
-const int one_ton = 1000000000; ;; 10^9 nanoTON
-const int min_storage = 50000000; ;; 0.05 TON minimal storage fee
+#pragma version >=0.2.0;
+
+#include "utils/constants.func";
 
 slice get_owner_addr() inline {
 	slice ds = get_data().begin_parse().skip_bits( 64 );
