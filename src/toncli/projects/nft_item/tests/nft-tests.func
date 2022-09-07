@@ -150,7 +150,7 @@ int __test_transfer_not_owner(){
 
 }
 
-int __test_transfer_forward_amount_too_lagre() {
+int __test_transfer_forward_amount_too_large() {
 
 	var ( owner_addr, new_owner, resp_dst ) = setup_transfer_addresses( true );
 
