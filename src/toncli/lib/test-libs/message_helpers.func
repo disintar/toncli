@@ -121,6 +121,11 @@ cell generate_internal_message_custom(int bounce, int ton_amount, int init_state
 
 }
 
+builder generate_get_royalty_params( int  query_id ) {
+	;;get_royalty_params#693d3950 query_id:uint64 = InternalMsgBody;
+	return generate_internal_message_body( 0x693d3950, query_id );
+}
+
 builder generate_nft_transfer_request(slice new_owner, slice response_dst, int query_id, cell custom_payload, int forward_amount, cell forward_payload, int is_ref?) impure method_id {
     ;;transfer#5fcc3d14 query_id:uint64 new_owner:MsgAddress response_destination:MsgAddress
     ;; custom_payload:(Maybe ^Cell)
