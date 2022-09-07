@@ -123,12 +123,7 @@ int __test_deploy_item(){
 
 int __test_royalty_msg () {
 
-	{-
-	 There is no get_royalty_params method in this contract.
-	 So we're going to have to take those params from data
-	-}
-
-	( int numirator, int denominator, slice dst ) = load_test_royalty(); ;;Could have been get_test_royalty
+	( int numirator, int denominator, slice dst ) = get_test_royalty(); ;;Could be load_test_royalty
 
 	int query_id        = rand( 1337 ) + 1;
 	slice src_addr	    = generate_internal_address_with_custom_data( 0, 0, random() );
@@ -257,3 +252,18 @@ int __test_get_nft_content() {
     return gas_used;
 
 }
+
+int __test_royalty_params() {
+
+        var ( gas_used, stack ) = invoke_method( royalty_params, [] );
+
+        throw_unless( 700, stack.tuple_length() == 3 );
+        throw_unless( 701, is_int( stack.first() ) );
+        throw_unless( 702, is_int( stack.second() ) );
+        throw_unless( 703, is_slice( stack.third() ) );
+
+        parse_std_addr( stack.third() );
+
+        return gas_used;
+}
+
