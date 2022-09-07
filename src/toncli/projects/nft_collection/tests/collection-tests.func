@@ -121,6 +121,45 @@ int __test_deploy_item(){
     return gas_used + gas_success;
 }
 
+int __test_royalty_msg () {
+
+	{-
+	 There is no get_royalty_params method in this contract.
+	 So we're going to have to take those params from data
+	-}
+
+	( int numirator, int denominator, slice dst ) = load_test_royalty(); ;;Could have been get_test_royalty
+
+	int query_id        = rand( 1337 ) + 1;
+	slice src_addr	    = generate_internal_address_with_custom_data( 0, 0, random() );
+	builder msg_body    = generate_get_royalty_params( query_id );
+	cell msg	    = generate_internal_message_custom( 0, 0, 0, msg_body, src_addr, null(), 0 );
+	( int gas_used, _ ) = invoke_method( recv_internal, [ one_ton, one_ton, msg, msg_body.end_cell().begin_parse() ] );
+	tuple actions       = parse_c5();
+
+	throw_unless( 500, actions.tuple_length() == 1 );
+
+	( int action_type, cell body, int mode ) = actions.first().untriple();
+	throw_unless( 501, action_type == 0 );
+	throw_unless( 502, mode == 64 );
+
+
+	tuple parsed_msg    = unsafe_tuple( parse_internal_message(body) );
+
+	;;Message is sent back
+	throw_unless( 503, equal_slices( src_addr, parsed_msg.at( 4 ) ) );
+
+	slice msg_body      = parsed_msg.at( 8 );
+	throw_unless( 504, op_report_royalty_params == msg_body~load_uint( 32 ) );
+	throw_unless( 505, query_id == msg_body~load_uint( 64 ) );
+	throw_unless( 506, numirator == msg_body~load_uint( 16 ) );
+	throw_unless( 507, denominator == msg_body~load_uint( 16 ) );
+	throw_unless( 508, equal_slices( dst, msg_body~load_msg_addr() ) );
+
+
+	return gas_used;
+}
+
 ;; Get methods test cases
 
 int __test_get_collection_data() {

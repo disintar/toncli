@@ -23,3 +23,18 @@ int get_nft_index() inline {
 
     return idx;
 }
+
+( int, int, slice ) load_test_royalty() {
+	( _, _, _, _, cell royalty ) = load_test_data();
+	slice ds = royalty.begin_parse();
+
+	return ( ds~load_uint( 16 ), ds~load_uint( 16 ), ds~load_msg_addr() );
+}
+
+{-
+( int, int, slice ) get_test_royalty() {
+	( _, tuple stack ) = invoke_method( get_royalty_params, [] );
+
+	return ( stack.first(), stack.second(), stack.third() );
+}
+-}
