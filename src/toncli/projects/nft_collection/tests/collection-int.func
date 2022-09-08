@@ -31,6 +31,25 @@ int __test_get_collection_data_deploy() {
 	return gas_before + gas_after + gas_deploy;
 }
 
+int __test_get_collection_data_change_owner() {
+
+	var ( gas_before, stack ) = invoke_method( get_collection_data, [] );
+
+	int query_id       = rand( 1337 ) + 1;
+	int change_owner   = 3; ;;WARNING contract dependent value.
+	slice owner        = stack.third();
+	slice new_owner    = generate_internal_address_with_custom_data(0, 0, random());
+	builder msg_body   = generate_internal_message_body( change_owner, query_id ).store_slice( new_owner );
+	cell    msg        = generate_internal_message_custom( 0, 0, 0, msg_body, owner, null(), 0 );
+
+	var ( gas_change, _ )    = invoke_method( recv_internal, [one_ton, one_ton, msg, msg_body.end_cell().begin_parse()] );
+	var ( gas_after, stack ) = invoke_method( get_collection_data, [] );
+
+	throw_unless( 500, equal_slices( new_owner, stack.third() ) );
+
+	return gas_before + gas_change + gas_after;
+}
+
 int __test_get_nft_address_by_index() {
 
     slice owner = get_owner();

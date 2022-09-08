@@ -48,7 +48,38 @@ _ validate_TIP_64(slice content_data) impure inline {
     }
 }
 
-int __test_deploy_item(){
+int __test_change_owner() {
+
+	{-
+	  This method is not defined in TIP-62.
+	  Still this is de-facto standard.
+	  One could argue that this one should
+	  be moved elsewhere.
+	-}
+
+	var (owner_address, prev_item_index, content, nft_item_code, royalty_params) = load_test_data(); ;; this data will load from c4
+
+	int change_owner = 3; ;;Change owner op could be different
+	int query_id     = rand(1337) + 1;
+	slice rand_addr  = generate_internal_address_with_custom_data(0, 0, random());
+	;;Setting this random address as new collection owner.
+	builder msg_body = generate_internal_message_body( change_owner, query_id ).store_slice( rand_addr );
+	cell  msg        = generate_internal_message_custom( 0, 0, 0, msg_body, rand_addr, null(), 0 );
+
+	;; Should fail from non-owner address
+	int gas_failed   = invoke_method_expect_fail( recv_internal, [one_ton, one_ton, msg, msg_body.end_cell().begin_parse()] );
+
+	;;With correct owner it should succeed
+	msg              = generate_internal_message_custom( 0, 0, 0, msg_body, owner_address, null(), 0 );
+	var ( gas_success, _ ) = invoke_method( recv_internal, [one_ton, 0, msg, msg_body.end_cell().begin_parse()] );
+
+	throw_unless( 500, equal_slices( rand_addr, get_owner() ) );
+
+
+	return gas_success + gas_failed;
+}
+
+int __test_deploy_item() {
 	{-
 	 Collection deployment behaviour is not really defined in TIP-62
 	 Besides get methods.
@@ -195,6 +226,9 @@ int __test_get_collection_data() {
 
 
 int __test_get_nft_content() {
+
+	;;Is there anything to be integrationally tested here?
+	;;Probably not
 
     var (owner_address, next_item_index, content, nft_item_code, royalty_params) = load_test_data();
     slice coll_slice = content.begin_parse();
