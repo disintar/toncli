@@ -49,7 +49,7 @@ _ validate_TIP_64(slice content_data) impure inline {
 }
 
 int __test_deploy_item(){
-    {-
+	{-
 	 Collection deployment behaviour is not really defined in TIP-62
 	 Besides get methods.
 	 Still have to test that it at least barely works right?
@@ -58,13 +58,15 @@ int __test_deploy_item(){
 	 1) Will test just that it won't allow deployment from non-owner
 	 2) Successfull deployment increases index and sends apropriate msgs
 	-}
+
     var (owner_address, prev_item_index, content, nft_item_code, royalty_params) = load_test_data(); ;; this data will load from c4
 
     slice rand_addr = generate_internal_address_with_custom_data(0, 0, random());
-    {-
-		This is not the actual content format required for successfull deployment.
-		Contrant will accept it and i think it's something to fix
-		cell nft_content    = begin_cell().store_uint( 1, 8 ).store_slice("my_nft.json").end_cell();
+
+	{-
+	  This is not the actual content format required for successfull deployment.
+	  Contrant will accept it and i think it's something to fix
+	  cell nft_content    = begin_cell().store_uint( 1, 8 ).store_slice("my_nft.json").end_cell();
 	-}
 
     cell nft_content = begin_cell().store_slice("my_nft.json").end_cell();
@@ -174,13 +176,13 @@ int __test_get_collection_data() {
     ;; First ref of a content is returned
     ;; Collection content
 
-    cell  res_content = stack.second();
-    slice cont_slice = content.begin_parse();
+    cell  res_content  = stack.second();
+    slice cont_slice   = content.begin_parse();
     cell  coll_content = cont_slice~load_ref();
 
     throw_unless(602, equal_slices(coll_content.begin_parse(), res_content.begin_parse()));
 
-    slice res_owner = stack.third();
+    slice res_owner    = stack.third();
     throw_unless(603, equal_slices(owner_address, res_owner));
 
     ;; Let's check that CollectionContent is compliant to TIP-64
@@ -191,50 +193,12 @@ int __test_get_collection_data() {
     return gas_used;
 }
 
-int __test_get_nft_address_by_index() {
-
-    slice owner = get_owner();
-
-    ;; To test that nft address is correct
-    ;; we have to deploy one first and capture it's address
-    ;; Index:0
-
-    cell nft_content = begin_cell().store_uint(1, 8).store_slice("my_nft.json").end_cell();
-    int query_id = rand(1337) + 1;
-    int forward_amount = one_ton / 10;
-    int deploy_idx = 0;
-    builder msg_body = generate_nft_deploy_request(deploy_idx, nft_content, query_id, forward_amount);
-    cell msg = generate_internal_message_custom(0, 0, 0, msg_body, owner, null(), 0);
-
-    (int gas_used, _) = invoke_method(recv_internal, [one_ton, 0, msg, msg_body.end_cell().begin_parse()]);
-    ;; Should successfully deploy and produce singe deployment message
-
-    tuple actions = parse_c5();
-    throw_unless(500, actions.tuple_length() == 1);
-
-    (int action_type, cell body, int mode) = actions.at(0).untriple();
-    throw_unless(501, action_type == 0);
-
-    tuple parsed_msg = unsafe_tuple(parse_internal_message(body));
-
-    ;;Picking nft address from deployment message
-    slice nft_address = parsed_msg.at(4);
-
-    var (gas_used2, stack) = invoke_method(get_nft_address_by_index, [deploy_idx]);
-
-    throw_unless(502, stack.tuple_length() == 1);
-
-    throw_unless(503, equal_slices(nft_address, stack.first()));
-
-
-    return gas_used;
-}
 
 int __test_get_nft_content() {
 
     var (owner_address, next_item_index, content, nft_item_code, royalty_params) = load_test_data();
     slice coll_slice = content.begin_parse();
-    cell nft_content = begin_cell().store_uint(1, 8).store_slice("my_nft.json").end_cell();
+    cell nft_content = begin_cell().store_slice("my_nft.json").end_cell();
 
     (_, cell collection_comm) = (coll_slice~load_ref(), coll_slice~load_ref());
     cell concat_content = snake_concat_tagged(1, collection_comm, nft_content);
@@ -252,6 +216,11 @@ int __test_get_nft_content() {
     return gas_used;
 
 }
+
+{-
+  get_nft_address_by_index requires deployed nft item.
+  Thus it has been moved to integrational tests.
+-}
 
 int __test_royalty_params() {
 
