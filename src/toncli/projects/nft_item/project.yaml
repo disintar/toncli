@@ -7,3 +7,4 @@ nft_item:
     - func/nft-item.func
   tests:
     - tests/nft-tests.func
+    - tests/nft-tests-int.func
