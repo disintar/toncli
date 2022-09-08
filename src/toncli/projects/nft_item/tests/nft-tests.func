@@ -521,7 +521,7 @@ int __test_get_static_data() {
 
 ;; Get methods test
 
-int __test_get() {
+int __test_get_nft_data() {
 	;; (int init?, int index, slice collection_address, slice owner_address, cell individual_content)
 
 	var ( idx, coll_addr, owner, content ) = load_test_data();

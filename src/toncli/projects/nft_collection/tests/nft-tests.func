@@ -1,5 +1,6 @@
-const int one_ton = 1000000000; ;; 10^9 nanoTON
-const int min_storage = 50000000; ;; 0.05 TON minimal storage fee
+#pragma version >=0.2.0;
+
+#include "utils/constants.func";
 
 slice get_owner_addr() inline {
 	slice ds = get_data().begin_parse().skip_bits( 64 );
@@ -150,7 +151,7 @@ int __test_transfer_not_owner(){
 
 }
 
-int __test_transfer_forward_amount_too_lagre() {
+int __test_transfer_forward_amount_too_large() {
 
 	var ( owner_addr, new_owner, resp_dst ) = setup_transfer_addresses( true );
 
@@ -520,7 +521,7 @@ int __test_get_static_data() {
 
 ;; Get methods test
 
-int __test_get() {
+int __test_get_nft_data() {
 	;; (int init?, int index, slice collection_address, slice owner_address, cell individual_content)
 
 	var ( idx, coll_addr, owner, content ) = load_test_data();
