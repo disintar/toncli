@@ -19,8 +19,6 @@ This project allows you to:
   make shure that your binaries are built according to:
   [this manual](https://github.com/disintar/toncli/blob/master/docs/advanced/func_tests_new.md)
 
-
-  
 ## Deploying item contract
 
   To deploy collection-less nft you should edit
@@ -37,6 +35,5 @@ This project allows you to:
 -   Set *nft_json* to the full url pointing to your item metadata json
 
   If you aim to deploy item within collection please *use nft_collection project*.  
-
   To deploy run:`toncli deploy -n testnet nft_item`.  
-  
+

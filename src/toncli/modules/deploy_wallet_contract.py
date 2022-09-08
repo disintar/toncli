@@ -26,7 +26,7 @@ class DeployWalletContract(AbstractDeployer):
         self.network = network
         self.workchain = workchain
         self.project_root = os.path.abspath(f"{config_folder}/wallet")
-        self.owner_fift_path = os.path.abspath(f"{config_folder}/fift-libs/OwnerAddr.fif") 
+        self.owner_fift_path = os.path.abspath(f"{config_folder}/fift-libs/OwnerAddr.fif")
 
         # If files.yaml in func folder - it's older version of project structure, so migrate
         if os.path.exists(os.path.abspath(f"{self.project_root}/func/files.yaml")):
