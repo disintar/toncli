@@ -10,6 +10,9 @@ int __test_get_jetton_data_mint() {
 	int total_supply = stack.first();
 	int mintable?    = stack.second();
 	slice admin      = stack.third();
+	cell content     = stack.fourth();
+	cell code        = stack.at( 4 );
+
 
 	;; Can't test non mintable contract with mint message.
 	if( ~ mintable? ) {
@@ -43,6 +46,8 @@ int __test_get_jetton_data_burn() {
 	int total_supply = stack.first();
 	int mintable?    = stack.second();
 	slice admin      = stack.third();
+	cell content     = stack.fourth();
+	cell  code       = stack.at( 4 );
 
 	;;Nothing to burn
 	if( total_supply == 0 ) {
@@ -60,18 +65,6 @@ int __test_get_jetton_data_burn() {
 	int forward_ton  = one_unit / 10;
 	int burn_amount  = ( rand( 100 ) + 1 ) * one_unit / 10;
 
-	{-
-	  Now here comes got'cha!
-	  burn notificaiton has to be sent
-	  from a valid jetton wallet contract address.
-	  To calculate it we need wallet code to hash from.
-	  There is no way to get code via get methods.
-	  So this is not REAL integration test.
-	  Still i think it's worth going for it.
-	-}
-
-	var ( _, _, _, code ) = load_test_data();
-	
 	slice jetton_addr = my_address(); ;;In testing mode my_address() for test code equals  my_address() for contract code
 	slice sender      = generate_internal_address_with_custom_data( 0, 0, random() );
 	slice src	      = calculate_user_jetton_wallet_address( sender, jetton_addr, code );
