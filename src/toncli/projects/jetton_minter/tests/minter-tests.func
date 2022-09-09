@@ -1,4 +1,7 @@
-const int one_unit = 1000000000; ;; 10^9
+#pragma version >=0.2.0;
+
+#include "utils/constants.func";
+
 (int, slice, cell, cell) load_test_data() inline {
   slice ds = get_data().begin_parse();
   return (
