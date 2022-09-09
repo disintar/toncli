@@ -606,9 +606,9 @@ int __test_burn_successfull() {
 	int msg_value       = one_unit;
 	int forward_fee     = one_unit / 10;
 	int forward_amount  = one_unit / 4;
-	int burn_amount     = balance;
+	int burn_amount     = ( rand( 10 ) + 1 ) * balance / 10;
 
-	var  msg_body       = generate_jetton_burn_request( query_id, burn_amount, resp_dst, null() ); ;;Burn balance + 1 jettons
+	var  msg_body       = generate_jetton_burn_request( query_id, burn_amount, resp_dst, null() );
 	cell msg            = generate_internal_message_custom( 0, 0, 0, msg_body, owner, null(), 0 );
 	var ( gas_used, _ ) = invoke_method( recv_internal, [ msg_value, msg_value, msg, msg_body.end_cell().begin_parse() ] );
 
@@ -627,6 +627,26 @@ int __test_burn_successfull() {
 
 	return gas_used;
 
+}
+
+int __test_internal_transfer() {
+
+	var ( owner, dst, resp_dst, query_id ) = setup_req_fields();
+
+	slice from          = get_master();
+	int balance         = get_test_balance();
+	int forward_ton     = one_unit / 10;
+	int msg_value       = one_unit;
+	int transfer_amount = ( rand( 10 ) + 1 ) * one_unit / 10; ;;From 0.1 to 1 unit
+
+
+	var  msg_body       = generate_jetton_internal_transfer_request( query_id, transfer_amount, from, dst, forward_ton, null(), false );
+	cell msg            = generate_internal_message_custom( 0, 0, 0,  msg_body, from, null(), 0 );
+	var ( gas_used, _ ) = invoke_method( recv_internal, [ msg_value, msg_value, msg, msg_body.end_cell().begin_parse() ] );
+
+	throw_unless( 500, balance + transfer_amount == get_test_balance() );
+
+	return gas_used;
 }
 
 ;; Get methods testing starts here
