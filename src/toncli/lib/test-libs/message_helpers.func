@@ -137,27 +137,25 @@ builder generate_nft_transfer_request(slice new_owner, slice response_dst, int q
             .store_slice(response_dst);
 
     if (null?(custom_payload)) {
-        req~store_uint(0, 1);
+		req = req.store_uint(0, 1);
     }
-
-            else {
-                req~store_uint(1, 1);
-                req = req.store_ref(custom_payload);
-            }
+    else {
+		req = req.store_uint(1, 1).store_ref(custom_payload);
+    }
 
     req = req.store_grams(forward_amount);
 
     if (~ null?(forward_payload)) {
         if (is_ref?) {
-            req = req.store_uint(1, 1).store_ref(forward_payload);
+			req = req.store_uint(1, 1).store_ref(forward_payload);
         }
-                else {
-                    req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
-                }
+        else {
+			req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
+        }
     }
-            else {
-                req = req.store_uint(0, 1);
-            }
+    else {
+		req = req.store_uint(0, 1);
+    }
 
     return req;
 }
@@ -189,17 +187,55 @@ builder generate_jetton_burn_request(int query_id, amount, slice dst, cell custo
     if(~ null?(custom_payload)) {
         burn_msg = burn_msg.store_uint(1, 1).store_ref(custom_payload);
     }
-            else {
-                burn_msg = burn_msg.store_uint(0, 1);
-            }
+    else {
+		burn_msg = burn_msg.store_uint(0, 1);
+    }
 
-    return burn_msg;
+	return burn_msg;
 }
 
 builder generate_jetton_burn_notification(int query_id, int amount, slice sender, slice resp_dst) {
     return generate_internal_message_body(0x7bdd97de, query_id).store_grams(amount)
             .store_slice(sender)
             .store_slice(resp_dst);
+}
+
+builder generate_jetton_internal_transfer_request(
+        int query_id, int amount,
+		slice from, slice resp_addr,
+		int forward_amount, cell forward_payload,
+		int is_ref? ) impure method_id {
+	{-
+
+	  Unspecified by standard but suggested format of internal message
+
+	  internal_transfer  query_id:uint64 amount:(VarUInteger 16) from:MsgAddress
+                     response_address:MsgAddress
+                     forward_ton_amount:(VarUInteger 16)
+                     forward_payload:(Either Cell ^Cell)
+                     = InternalMsgBody;
+	-}
+
+	builder req = generate_internal_message_body( 0x178d4519, query_id )
+	               .store_grams( amount )
+				   .store_slice( from )
+				   .store_slice( resp_addr )
+				   .store_grams( forward_amount );
+
+	if( ~ forward_payload.null?() ){
+		if( is_ref? ) {
+			req = req.store_uint( 1, 1 ).store_ref( forward_payload );
+		}
+		else {
+			req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
+		}
+	}
+	else {
+		req = req.store_uint( 0, 1 );
+	}
+
+	return req;
+
 }
 
 builder generate_jetton_transfer_request(
@@ -224,23 +260,23 @@ builder generate_jetton_transfer_request(
     if(null?(custom_payload)) {
         req = req.store_uint(0, 1);
     }
-            else {
-                req = req.store_uint(1, 1).store_ref(custom_payload);
-            }
+    else {
+        req = req.store_uint(1, 1).store_ref(custom_payload);
+    }
 
     req = req.store_grams(forward_amount);
 
     if(~ null?(forward_payload)) {
-        if(is_ref?) {
-            req = req.store_uint(1, 1).store_ref(forward_payload);
-        }
-                else {
-                    req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
-                }
+       if(is_ref?) {
+       	req = req.store_uint(1, 1).store_ref(forward_payload);
+       }
+       else {
+       	req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
+       }
     }
-            else {
-                req = req.store_uint(0, 1);
-            }
+    else {
+    	req = req.store_uint(0, 1);
+    }
 
     return req;
 }
