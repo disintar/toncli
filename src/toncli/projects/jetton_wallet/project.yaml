@@ -8,3 +8,4 @@ jetton_wallet:
     - func/jetton-wallet.func
   tests:
     - tests/wallet-tests.func
+    - tests/wallet-tests-int.func
