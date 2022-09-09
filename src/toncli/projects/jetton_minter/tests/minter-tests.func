@@ -94,6 +94,10 @@ int __test_burn_notification() {
 	;; Still have to verify excess structure
 
 	verify_excess_jetton( query_id, admin_address, 0, 0, 0, sent_msg );
+
+	var( new_supply, _, _, _ ) = load_test_data(); 
+
+	throw_unless( 603, total_supply - burn_amount == new_supply );
 	
 
 	return gas_used;
