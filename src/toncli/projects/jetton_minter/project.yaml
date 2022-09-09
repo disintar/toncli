@@ -8,6 +8,7 @@ jetton_minter:
     - func/jetton-minter.func
   tests:
     - tests/minter-tests.func
+    - tests/minter-tests-int.func
 
 jetton_wallet:
   data: fift/wallet_data.fif
