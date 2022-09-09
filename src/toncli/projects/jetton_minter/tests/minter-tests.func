@@ -84,7 +84,7 @@ int __test_burn_notification() {
 
 	;; Expect single message
 	tuple actions	    = parse_c5();
-	throw_unless( 600, actions.tuple_length() == 1 ); 
+	throw_unless( 600, actions.tuple_length() == 1 );
 
 	( int action_type, cell sent_msg, int mode ) = actions.at(0).untriple();
 	throw_unless( 601, action_type == 0 );
@@ -97,6 +97,66 @@ int __test_burn_notification() {
 	
 
 	return gas_used;
+}
+
+int __test_mint() {
+
+	;;Non-standardized but widely used message
+	var ( total_supply, admin_address, content, code ) = load_test_data();
+
+	int query_id     = rand(1337) + 1;
+	int forward_ton  = one_unit / 10;
+	int mint_amount  = ( rand( 100 ) + 1 ) * one_unit / 10;
+	slice rand_addr  = generate_internal_address_with_custom_data(0, 0, random());
+	slice mint_dst   = generate_internal_address_with_custom_data(0, 0, random());
+	slice mint_from  = generate_empty_address();
+
+	{-
+		In current implementation sends any forward payload provided.
+		However for jettons to be successfully creditated on wallet balance
+		it should have internal_transfer message format.
+	-}
+
+	cell mint_payload = generate_jetton_internal_transfer_request( query_id, mint_amount, mint_from, rand_addr, forward_ton, null(), false ).end_cell();
+	builder mint_body = generate_internal_message_body( op_mint, query_id ).store_slice( mint_dst ).store_grams( forward_ton ).store_ref( mint_payload );
+	;; Testing mint with non-admin address
+	cell msg          = generate_internal_message_custom( 0, 0, 0,  mint_body, rand_addr, null(), 0 );
+
+	int gas_failed    = invoke_method_expect_fail( recv_internal, [ one_unit, one_unit, msg, mint_body.end_cell().begin_parse() ] );
+	assert_no_actions();
+
+	;;Now changing source address to admin
+	msg               = generate_internal_message_custom( 0, 0, 0,  mint_body, admin_address, null(), 0 );
+
+	var( gas_success, _ ) = invoke_method( recv_internal, [ one_unit, one_unit, msg, mint_body.end_cell().begin_parse() ] );
+
+	;; Expect single message
+	tuple actions	    = parse_c5();
+	throw_unless( 600, actions.tuple_length() == 1 );
+
+	( int action_type, cell sent_msg, int mode ) = actions.at(0).untriple();
+	throw_unless( 601, action_type == 0 );
+
+	tuple parsed_msg = unsafe_tuple( parse_internal_message( sent_msg ) );
+
+	{-
+	  What do we know about how mint message should look like in general?
+	  1) Wallet has to be deployed thus StateInit has to be present
+	  2) Our forward payload should be the message body
+	  That's what we're going to check for.
+	  Rest is very contract specific.
+	-}
+
+	throw_if( 602, parsed_msg.at( 7 ).null?() );
+	throw_unless( 603, equal_slices( mint_payload.begin_parse(), parsed_msg.at( 8 ) ) );
+
+	;; Also total supply should increase by mint_amount
+
+	var( new_supply, _, _, _ ) = load_test_data();
+	throw_unless( 604, total_supply + mint_amount == new_supply );
+
+	return gas_failed + gas_success;
+
 }
 
 ;; Get methods tests start here
