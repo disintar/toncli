@@ -68,7 +68,7 @@ class TextUtils:
         {bl}wallet - print addresses of 2 wallets - bounceable wallet and deploy wallet
         {gr}   You can use this command only when wallet is built with commands "toncli build" or "toncli deploy"
 
-        All commands can be found in https://github.com/disintar/toncli/blob/master/docs/commands.md
+        All commands can be found in https://github.com/disintar/toncli/blob/master/docs/advanced/commands.md
 
         {rs}
         Each command have help e.g.: toncli deploy -h
