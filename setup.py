@@ -1,4 +1,5 @@
 import setuptools
+from glob import glob
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -8,7 +9,7 @@ with open("requirements.txt", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="toncli",
-    version="0.0.38",
+    version="0.0.43",
     author="Andrey Tvorozhkov",
     author_email="andrey@head-labs.com",
     description="Easy to use CLI for fift / func projects",
@@ -25,9 +26,11 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Environment :: Console",
     ],
-    package_dir={"": "src"},
+    package_dir={
+        "": "src",
+    },
     install_requires=install_requires,
-    packages=setuptools.find_packages(where="src"),
+    packages=['toncli'],
     python_requires=">=3.8",
     entry_points={
         'console_scripts': [
