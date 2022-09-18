@@ -1,11 +1,10 @@
 # New version of the test framework!
 
 New tests use new tvm op codes, which are not available in the stable version of TON, so you need to install the dev version of func/fift. 
-You need to compile func/fift binaries from **toncli-local** branch of ton from [here](https://github.com/SpyCheese/ton/tree/toncli-local). 
+You need to compile func/fift binaries from **toncli-local** branch of ton from [here](https://github.com/SpyCheese/ton/tree/toncli-local). (see [INSTALLATION.md](https://github.com/disintar/toncli/blob/master/INSTALLATION.md))
 You also need to make sure you use new versions of [Asm.fif](/src/toncli/lib/fift-libs/Asm.fif) and 
-[AsmTests.fif](/src/toncli/lib/fift-libs/AsmTests.fif) from this repository. 
+[AsmTests.fif](/src/toncli/lib/fift-libs/AsmTests.fif) from this repository.
 
-**TODO: write install instructions?**
 
 **Note:** if you try to run tests written in an old way with a new toncli version, you will probably see an error 
 like `PROC:<{:procedure already defined`. You need to either rewrite tests in a new way (which is preferred!) or pass `--old` flags as argument of `toncli run_tests`.  
@@ -27,7 +26,7 @@ They catch exceptions and compute gas usage.
 
 ## Examples
 
-A lot of tests written in a new way could be found [here](https://github.com/BorysMinaiev/func-contest-1-tests-playground).
+A lot of tests written in a new way could be found in `nft_collection` and `nft_item` projects examples. Also, a lot of helpers in `tests-libs` can be founded.
 
 Assume we have a contract, which stores the 64-bit integer inside, increases it when receiving an internal message, and reports current value on `get_total`.
 We can write a test like this:

@@ -1,0 +1,10 @@
+nft_item:
+  data: fift/nft-data.fif
+  func:
+    - func/utils/op-codes.func
+    - func/utils/params.func
+    - func/utils/helpers.func
+    - func/nft-item.func
+  tests:
+    - tests/nft-tests.func
+    - tests/nft-tests-int.func

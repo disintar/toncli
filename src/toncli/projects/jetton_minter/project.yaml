@@ -1,0 +1,23 @@
+jetton_minter:
+  data: fift/minter_data.fif
+  func:
+    - func/op-codes.func
+    - func/params.func
+    - func/helpers.func
+    - func/jetton-utils.func
+    - func/jetton-minter.func
+  tests:
+    - tests/minter-tests.func
+    - tests/minter-tests-int.func
+
+jetton_wallet:
+  data: fift/wallet_data.fif
+  func:
+    - func/op-codes.func
+    - func/params.func
+    - func/helpers.func
+    - func/jetton-utils.func
+    - func/jetton-wallet.func
+  tests:
+    - tests/wallet-tests.func
+    - tests/wallet-tests-int.func

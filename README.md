@@ -21,9 +21,7 @@ Easy to deploy and interact with TON smart contracts.
 
 ## 🔧 Installation
 
-> ⚠ If you want to support new tests engine - you need to use special binaries from SpyCheese repo. More information could be found in docs.
-
-Toncli support Windows / macOS (m1 / intel) / Linux, installation guide can be
+Toncli support Windows / macOS (m1 / intel) / Linux / Docker, installation guide can be
 found: [INSTALLATION.md](/INSTALLATION.md)
 
 ### 📚 Usage and docs
@@ -50,26 +48,22 @@ We are trying to process all tasks through issues. You can take own one 🥳
 ## Features and status
 
 | Feature                                                                                                   | Status |
-|-----------------------------------------------------------------------------------------------------------|--------|
-| `fift` / `func` / `lite-server` usage                                                                     | ✅      |
-| Easy bootstrap project samples `wallet`                                                                   | ✅      |
-| Deploy-wallet for auto send TON to contracts and tests                                                    | ✅      |
-| Compile func to `build/` from `func/` with `files.yaml`                                                   | ✅      |
-| Auto send TON to init contract address                                                                    | ✅      |
-| Deploy to mainnet / testnet / ownnet                                                                      | ✅      |
-| Project interact after deploy: easily send messages, run getmethods, run fift parsers on getmethods output | ✅      |
-| Load from hard project structure (example: `src/projects/wallet`)                                         | ✅      |
-| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.)           | ✅      |
-| Get contract address by `toncli addrs`                                                                    | ✅      |
-| Docs for contract creation for beginners                                                                  | ✅      |
-| Project tests with `runvmcode`                                                                            | ✅      |
-| Windows & Linux support                                                                                   | ✅      |
-| Unit tests engine                                                                                         | ✅      |
-| Gas auto calculation for store & deploy                                                                   | ❌      |
-| Add more project samples with advanced usage                                                              | ❌      |
-| Project debug                                                                                             | ❌      |
-| Library support                                                                                           | ❌      |
-| Init Message support  (with signature)                                                                    | ❌      |
+|-----------------------------------------------------------------------------------------------------------|-------|
+| `fift` / `func` / `lite-server` usage                                                                     | ✅     |
+| Easy bootstrap project samples `wallet`                                                                   | ✅     |
+| Deploy-wallet for auto send TON to contracts and tests                                                    | ✅     |
+| Compile func to `build/` from `func/` with `files.yaml`                                                   | ✅     |
+| Auto send TON to init contract address                                                                    | ✅     |
+| Deploy to mainnet / testnet / ownnet                                                                      | ✅     |
+| Project interact after deploy: easily send messages, run getmethods, run fift parsers on getmethods output | ✅     |
+| Load from hard project structure (example: `src/projects/wallet`)                                         | ✅     |
+| Run remote contracts locally (get cells from chain and run locally to get error / debug / etc.)           | ✅     |
+| Get contract address by `toncli addrs`                                                                    | ✅     |
+| Docs for contract creation for beginners                                                                  | ✅     |
+| Project tests with `runvmcode`                                                                            | ✅     |
+| Windows & Linux support                                                                                   | ✅     |
+| Unit tests engine                                                                                         | ✅     |
+| Add more project samples with advanced usage                                                              | ✅      |
 
 ## Commands
 

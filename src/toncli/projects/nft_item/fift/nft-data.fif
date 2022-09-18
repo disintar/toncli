@@ -1,0 +1,27 @@
+"TonUtil.fif" include
+"Asm.fif" include
+
+// toncli creates file in fift-libs
+// where store deploy wallet address
+// you can use this address to control nft or nft collection
+"OwnerAddr.fif" include
+
+// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" instead of owner_address <- you can use address in any form
+// or use address of toncli deploy wallet:
+owner_address constant nft_owner_address
+
+"https://my-cool-uri.lol/🤫" constant nft_json // Your nft metadata path to nft
+
+owner_address $>smca 0= abort"Specify valid owner address" drop
+2constant owner_raw
+."Owner address:" owner_address type cr
+
+<b
+  0 64 u, // item_idx
+  0 2 u, // collection-less
+  owner_raw Addr,
+  <b
+    1 8 u, // off-chain tag
+    nft_json $>B B,
+  b> ref,
+b>

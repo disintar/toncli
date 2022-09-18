@@ -1,24 +1,24 @@
 builder generate_init_state() impure method_id {
     return begin_cell().store_uint(0, 1) ;; maybe (##5)
-                      .store_uint(1, 1) ;; Maybe TickTock
-                      .store_uint(1, 1) ;; bool Tick
-                      .store_uint(0, 1) ;; bool Tock
-                      .store_uint(0, 1) ;; code: Maybe Cell^
-                      .store_uint(0, 1) ;; data: Maybe Cell^
-                      .store_uint(0, 1); ;; library: Maybe ^Cell
+            .store_uint(1, 1) ;; Maybe TickTock
+            .store_uint(1, 1) ;; bool Tick
+            .store_uint(0, 1) ;; bool Tock
+            .store_uint(0, 1) ;; code: Maybe Cell^
+            .store_uint(0, 1) ;; data: Maybe Cell^
+            .store_uint(0, 1); ;; library: Maybe ^Cell
 }
 
 builder generate_init_state_with_data(cell code, cell data, cell library) impure method_id {
     return begin_cell().store_uint(0, 1) ;; maybe (##5)
-                      .store_uint(1, 1) ;; Maybe TickTock
-                      .store_uint(1, 1) ;; bool Tick
-                      .store_uint(0, 1) ;; bool Tock
-                      .store_uint(1, 1) ;; code: Maybe Cell^
-                      .store_ref(code)  
-                      .store_uint(1, 1) ;; data: Maybe Cell^
-                      .store_ref(data)  
-                      .store_uint(1, 1) ;; library: Maybe ^Cell
-                      .store_ref(library);
+            .store_uint(1, 1) ;; Maybe TickTock
+            .store_uint(1, 1) ;; bool Tick
+            .store_uint(0, 1) ;; bool Tock
+            .store_uint(1, 1) ;; code: Maybe Cell^
+            .store_ref(code)
+            .store_uint(1, 1) ;; data: Maybe Cell^
+            .store_ref(data)
+            .store_uint(1, 1) ;; library: Maybe ^Cell
+            .store_ref(library);
 }
 
 tuple parse_init_state(slice cs) impure method_id {
@@ -26,35 +26,261 @@ tuple parse_init_state(slice cs) impure method_id {
     int maybe_five = cs~load_uint(1);
     parsed_tuple~tpush(maybe_five);
     if(maybe_five == 1) {
-      parsed_tuple~tpush(cs~load_uint(5)); ;; (##5)
+        parsed_tuple~tpush(cs~load_uint(5)); ;; (##5)
     }
     int maybe_tick_tock = cs~load_uint(1);
     parsed_tuple~tpush(maybe_tick_tock);
     if(maybe_tick_tock == 1) {
-      parsed_tuple~tpush(cs~load_uint(1)); ;; tick
-      parsed_tuple~tpush(cs~load_uint(1)); ;; tock
+        parsed_tuple~tpush(cs~load_uint(1)); ;; tick
+        parsed_tuple~tpush(cs~load_uint(1)); ;; tock
     }
     int maybe_code = cs~load_uint(1);
     parsed_tuple~tpush(maybe_code);
     if(maybe_code == 1) {
-      parsed_tuple~tpush(cs~load_ref()); ;; code
+        parsed_tuple~tpush(cs~load_ref()); ;; code
     }
-    
+
     int maybe_data = cs~load_uint(1);
     parsed_tuple~tpush(maybe_data);
     if(maybe_data == 1) {
-      parsed_tuple~tpush(cs~load_ref()); ;; data
+        parsed_tuple~tpush(cs~load_ref()); ;; data
     }
 
     int maybe_library = cs~load_uint(1);
     parsed_tuple~tpush(maybe_library);
     if(maybe_library == 1) {
-      parsed_tuple~tpush(cs~load_ref()); ;; library
+        parsed_tuple~tpush(cs~load_ref()); ;; library
     }
 
     ;; returns tuple with results that exist only
     return parsed_tuple;
 }
+
+int random_query_id() impure method_id {
+    randomize_lt();
+    return rand(1 << 64) + 1; ;; From 1 to 2^64
+}
+
+builder generate_internal_message_body(int op, int query_id) impure method_id {
+    builder body = begin_cell().store_uint(op, 32);
+
+    if (query_id == 0) {
+        query_id = random_query_id();
+    }
+
+    return body.store_uint(query_id, 64);
+}
+
+
+cell generate_internal_message_custom(int bounce, int ton_amount, int init_state, builder payload, slice  src_addr, slice dst_addr, int fwd_fee) impure method_id {
+    ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
+    ;;src:MsgAddressInt dest:MsgAddressInt
+    ;;value:CurrencyCollection ihr_fee:Grams fwd_fee:Grams
+    ;;created_lt:uint64 created_at:uint32 = CommonMsgInfo;
+
+    ;;message$_ {X:Type} info:CommonMsgInfo
+    ;;init:(Maybe (Either StateInit ^StateInit))
+    ;;body:(Either X ^X) = Message X;
+
+    slice ssrc = null?(src_addr) ? generate_internal_address() : src_addr;
+    slice sdest = null?(dst_addr) ? generate_internal_address() : dst_addr;
+
+    var msg = begin_cell()
+            .store_uint(0, 1) ;; int_msg_info$0 
+            .store_uint(0, 1) ;; ihr_disabled:Bool
+            .store_uint(bounce, 1) ;; bounce:Bool
+            .store_uint(0, 1) ;; bounced:Bool
+            .store_slice(ssrc) ;; src:MsgAddressInt
+            .store_slice(sdest) ;; dest:MsgAddressInt
+            .store_grams(ton_amount) ;;
+            .store_dict(null()) ;; extra currencies
+            .store_grams(0) ;; ihr_fee
+            .store_grams(fwd_fee) ;; fwd_fee
+            .store_uint(1000, 64) ;; created_lt:uint64
+            .store_uint(1000, 32) ;; created_at:uint32
+            .store_uint(init_state, 1); ;; init_state
+    if (init_state == 1) {
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
+    }
+
+    if(msg.builder_bits() + payload.builder_bits() >= 1023) {
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
+    } else {
+        msg = msg.store_uint(0, 1).store_builder(payload);
+    }
+
+    return msg.end_cell();
+
+}
+
+builder generate_get_royalty_params( int  query_id ) {
+	;;get_royalty_params#693d3950 query_id:uint64 = InternalMsgBody;
+	return generate_internal_message_body( 0x693d3950, query_id );
+}
+
+builder generate_nft_transfer_request(slice new_owner, slice response_dst, int query_id, cell custom_payload, int forward_amount, cell forward_payload, int is_ref?) impure method_id {
+    ;;transfer#5fcc3d14 query_id:uint64 new_owner:MsgAddress response_destination:MsgAddress
+    ;; custom_payload:(Maybe ^Cell)
+    ;;forward_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell)
+    ;;= InternalMsgBody;
+
+    builder req = generate_internal_message_body(0x5fcc3d14, query_id)
+            .store_slice(new_owner)
+            .store_slice(response_dst);
+
+    if (null?(custom_payload)) {
+		req = req.store_uint(0, 1);
+    }
+    else {
+		req = req.store_uint(1, 1).store_ref(custom_payload);
+    }
+
+    req = req.store_grams(forward_amount);
+
+    if (~ null?(forward_payload)) {
+        if (is_ref?) {
+			req = req.store_uint(1, 1).store_ref(forward_payload);
+        }
+        else {
+			req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
+        }
+    }
+    else {
+		req = req.store_uint(0, 1);
+    }
+
+    return req;
+}
+
+
+builder generate_nft_get_static_data_request(int query_id) impure method_id {
+    ;;get_static_data#2fcb26a2 query_id:uint64 = InternalMsgBody;
+    return begin_cell().store_uint(0x2fcb26a2, 32).store_uint(query_id, 64);
+}
+
+builder generate_nft_deploy_request(int idx, cell content, int query_id, int forward_amount) impure method_id {
+    return generate_internal_message_body(1, query_id)
+            .store_uint(idx, 64)
+            .store_grams(forward_amount)
+            .store_ref(content);
+}
+
+builder generate_jetton_burn_request(int query_id, amount, slice dst, cell custom_payload) impure method_id {
+    {-
+	burn#595f07bc query_id:uint64 amount:(VarUInteger 16) 
+              response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+              = InternalMsgBody;
+
+	-}
+
+    builder burn_msg = generate_internal_message_body(0x595f07bc, query_id)
+            .store_grams(amount)
+            .store_slice(dst);
+    if(~ null?(custom_payload)) {
+        burn_msg = burn_msg.store_uint(1, 1).store_ref(custom_payload);
+    }
+    else {
+		burn_msg = burn_msg.store_uint(0, 1);
+    }
+
+	return burn_msg;
+}
+
+builder generate_jetton_burn_notification(int query_id, int amount, slice sender, slice resp_dst) {
+    return generate_internal_message_body(0x7bdd97de, query_id).store_grams(amount)
+            .store_slice(sender)
+            .store_slice(resp_dst);
+}
+
+builder generate_jetton_internal_transfer_request(
+        int query_id, int amount,
+		slice from, slice resp_addr,
+		int forward_amount, cell forward_payload,
+		int is_ref? ) impure method_id {
+	{-
+
+	  Unspecified by standard but suggested format of internal message
+
+	  internal_transfer  query_id:uint64 amount:(VarUInteger 16) from:MsgAddress
+                     response_address:MsgAddress
+                     forward_ton_amount:(VarUInteger 16)
+                     forward_payload:(Either Cell ^Cell)
+                     = InternalMsgBody;
+	-}
+
+	builder req = generate_internal_message_body( 0x178d4519, query_id )
+	               .store_grams( amount )
+				   .store_slice( from )
+				   .store_slice( resp_addr )
+				   .store_grams( forward_amount );
+
+	if( ~ forward_payload.null?() ){
+		if( is_ref? ) {
+			req = req.store_uint( 1, 1 ).store_ref( forward_payload );
+		}
+		else {
+			req = req.store_uint( 0, 1 ).store_slice( forward_payload.begin_parse() );
+		}
+	}
+	else {
+		req = req.store_uint( 0, 1 );
+	}
+
+	return req;
+
+}
+
+builder generate_jetton_transfer_request(
+        int query_id, int amount,
+        slice dst, slice resp_dst,
+        cell custom_payload, int forward_amount,
+        cell forward_payload, int is_ref?) impure method_id {
+    {-
+
+	transfer#0f8a7ea5 query_id:uint64 amount:(VarUInteger 16) destination:MsgAddress
+                 response_destination:MsgAddress custom_payload:(Maybe ^Cell)
+                 forward_ton_amount:(VarUInteger 16) forward_payload:(Either Cell ^Cell)
+                 = InternalMsgBody;
+
+	-}
+
+    var req = generate_internal_message_body(0x0f8a7ea5, query_id)
+            .store_grams(amount)
+            .store_slice(dst)
+            .store_slice(resp_dst);
+
+    if(null?(custom_payload)) {
+        req = req.store_uint(0, 1);
+    }
+    else {
+        req = req.store_uint(1, 1).store_ref(custom_payload);
+    }
+
+    req = req.store_grams(forward_amount);
+
+    if(~ null?(forward_payload)) {
+       if(is_ref?) {
+       	req = req.store_uint(1, 1).store_ref(forward_payload);
+       }
+       else {
+       	req = req.store_uint(0, 1).store_slice(forward_payload.begin_parse());
+       }
+    }
+    else {
+    	req = req.store_uint(0, 1);
+    }
+
+    return req;
+}
+
 
 cell generate_internal_message(int bounce, int ton_amount, int init_state, builder payload) impure method_id {
     ;;int_msg_info$0 ihr_disabled:Bool bounce:Bool bounced:Bool
@@ -84,21 +310,21 @@ cell generate_internal_message(int bounce, int ton_amount, int init_state, build
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(init_state, 1); ;; init_state
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
+        builder init_state_builder = generate_init_state();
 
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
-    
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -137,21 +363,21 @@ cell generate_internal_message_relaxed(int bounce, int ton_amount, int init_stat
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(init_state, 1); ;; init_state
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
-    
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -175,21 +401,21 @@ cell generate_external_in_message(int import_fee, int init_state, builder payloa
             .store_grams(import_fee) ;;
             .store_uint(init_state, 1); ;; init_state
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
-    
+
     if(msg.builder_bits() + payload.builder_bits() > 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -214,21 +440,21 @@ cell generate_external_in_message_with_empty_source_address(int import_fee, int 
             .store_uint(init_state, 1); ;; init_state
 
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
 
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -252,23 +478,23 @@ cell generate_external_out_message(int import_fee, int init_state, builder paylo
             .store_uint(1000, 64) ;; created_lt:uint64
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(init_state, 1); ;; init_state
-    
+
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
-    
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -293,21 +519,21 @@ cell generate_external_out_message_with_empty_destination_address(int import_fee
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(init_state, 1); ;; init_state
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
 
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -337,21 +563,21 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
             .store_uint(1000, 32) ;; created_at:uint32
             .store_uint(init_state, 1); ;; init_state
     if (init_state == 1) {
-      builder init_state_builder = generate_init_state();
-      
-      if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
-        msg = msg.store_uint(1,1) ;; Either ^StateInit
-            .store_ref(init_state_builder.end_cell());
-      } else {
-        msg = msg.store_uint(0,1).store_builder(init_state_builder);
-      }
+        builder init_state_builder = generate_init_state();
+
+        if(msg.builder_bits() + init_state_builder.builder_bits() >= 1023) {
+            msg = msg.store_uint(1, 1) ;; Either ^StateInit
+                    .store_ref(init_state_builder.end_cell());
+        } else {
+            msg = msg.store_uint(0, 1).store_builder(init_state_builder);
+        }
     }
-    
+
     if(msg.builder_bits() + payload.builder_bits() >= 1023) {
-      msg = msg.store_uint(1,1) ;; Either ^X
-            .store_ref(payload.end_cell());
+        msg = msg.store_uint(1, 1) ;; Either ^X
+                .store_ref(payload.end_cell());
     } else {
-      msg = msg.store_uint(0,1).store_builder(payload);
+        msg = msg.store_uint(0, 1).store_builder(payload);
     }
 
     return msg.end_cell();
@@ -375,16 +601,16 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
     int maybe_init_state = cs~load_uint(1);
     tuple init_state = empty_tuple();
     if(maybe_init_state == 1)
-    {
-      ;;Either bit was ignored before
+            {
+                ;;Either bit was ignored before
 
-      if( cs~load_uint(1) ) {
-      	init_state = parse_init_state( cs~load_ref().begin_parse() );
-      }
-      else {
-      	init_state = parse_init_state(cs);
-      }
-    }
+                if(cs~load_uint(1)) {
+                    init_state = parse_init_state(cs~load_ref().begin_parse());
+                }
+                        else {
+                            init_state = parse_init_state(cs);
+                        }
+            }
     int body_flag = cs~load_uint(1);
     var body = null();
     if (body_flag == 0) {
@@ -408,20 +634,19 @@ cell generate_external_out_message_relaxed(int ton_amount, int init_state, build
     slice to_address = cs~load_msg_addr();
     int import_fee = 0;
     int timestamps = 0;
-    if (msg_info == 2)
-    {
-      import_fee = cs~load_grams();
+    if (msg_info == 2) {
+        import_fee = cs~load_grams();
+    } else {
+        timestamps = cs~load_uint(96);
     }
-    else
-    {
-      timestamps = cs~load_uint(96);
-    }
+
     int maybe_init_state = cs~load_uint(1);
     tuple init_state = empty_tuple();
-    if(maybe_init_state == 1)
-    {
-      init_state = parse_init_state(cs);
+
+    if (maybe_init_state == 1)  {
+        init_state = parse_init_state(cs);
     }
+
     int body_flag = cs~load_uint(1);
 
     var body = null();

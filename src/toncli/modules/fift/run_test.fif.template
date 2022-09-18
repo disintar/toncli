@@ -2,18 +2,35 @@
 "TonUtil.fif" include
 "Color.fif" include
 
+// TODO: just use Lists.fif
+variable @tests            // here we will store all test functions in a format [function_name, method_id]
+variable @prev_c4            // prev test c4
+variable @prev_c5            // prev test c5
+variable @init_c4 // Init value of c4
+null @prev_c4 !
+null @prev_c5 !
+
+{   depth 0 >
+    { 0 = not }
+    { drop depth }
+    while // clear stack
+} : clear-stack
+
+{% if contract_data|length %}
+  "{{ contract_data }}" include @init_c4 ! clear-stack
+  .s
+{% else %}
+  <b b>  @init_c4 !
+{% endif %}
+
 asm-no-remove-unused
 
 "{{ test_path }}" include     // it will return (@proclist, code cell)
 constant test_code         // save code cell as constant
 
-
 {{ verbose }} constant verbose
 {{ output_results }} constant output-results
 
-{% if contract_data|length %}
-"{{ contract_data }}" constant proj_data 
-{% endif %}
 
 "EQB36_EfYjFYMV8p_cxSYX61bA0FZ4B65ZNN6L8INY-5gL6w" true parse-load-address drop 2constant address
 
@@ -30,22 +47,6 @@ now                  // unixtime
 null                 // global_config
 10 tuple 1 tuple constant c7 // save as c7 cell
 
-
-// TODO: just use Lists.fif
-variable @tests            // here we will store all test functions in a format [function_name, method_id]
-variable @prev_c4            // prev test c4
-variable @prev_c5            // prev test c5
-variable @init_c4 // Init value of c4
-null @prev_c4 !
-null @prev_c5 !
-
-// We usually (Eh) don't have procedures defined in data.fif so include returns just cell
-// What if someone adds method to it? No good. What can we do? 
-// IDK since we don't have a way to get stack size. Or do we?
-// Maybe move it to the very top before asm-mode changes ( L5 )?
-
-def? proj_data { @' proj_data include } { <b b>  } cond
-@init_c4 ! 
 
 variable @cnt        // here we will store tests list length
 @cnt 0!              // set as 0 by default
