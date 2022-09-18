@@ -1,26 +1,26 @@
 "TonUtil.fif" include
 
+// toncli creates file in fift-libs
+// where store deploy wallet address
+// you can use this address to control nft or nft collection
+"OwnerAddr.fif" include
+
 50000000 =: storage_grams
 
-// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP"
-"TotallyNotValid"
-dup
+// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" <- you can use address in any form
+// or use address of toncli deploy wallet:
+owner_address constant nft_owner_address
 
-."Deploying with nft owner address:" type cr
+."Deploying with nft owner address:" nft_owner_address type cr
 
-$>smca 0= abort"Specify valid owner address"
+nft_owner_address $>smca 0= abort"Specify valid owner address"
 drop // Dropping address flags
 
 // Initialization message body consists of owner_address and ref to the nft_content cell
 <b
-  -rot
-  Addr,
-  <b
-    "my_nft.json" $,
-  b>
-  ref,
+  -rot Addr, // owner address
+  <b "my_nft.json" $, b> ref, // nft content
 b>
-
 
 
 <b

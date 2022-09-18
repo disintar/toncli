@@ -22,13 +22,12 @@ slice gen_new_owner( slice old_owner ) inline {
 ( int, slice, slice, cell ) load_test_data() inline {
 	slice ds	= get_data().begin_parse();
 	int idx		= ds~load_uint( 64 );
-	slice coll_addr = ds~load_msg_addr();
+	slice coll_addr = ds~load_msg_addr(); ;; if single nft - addr_none here
 	slice owner	= ds~load_msg_addr();
 
 	;;We need all addresses on Workchain 0 otherwise force_chain will throw 333
-
-	coll_addr.force_chain();
 	owner.force_chain();
+
 	return ( idx, coll_addr, owner, ds~load_ref() );
 }
 
@@ -523,13 +522,11 @@ int __test_get_static_data() {
 
 int __test_get_nft_data() {
 	;; (int init?, int index, slice collection_address, slice owner_address, cell individual_content)
-
 	var ( idx, coll_addr, owner, content ) = load_test_data();
 
 	( int gas_used, tuple stack ) = invoke_method( get_nft_data, [] );
 
 	;;Check that argument count match signature
-
 	throw_unless( 300, stack.tuple_length() == 5 );
 	int init? = stack.first();
 	int res_idx = stack.second();

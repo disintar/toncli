@@ -26,7 +26,7 @@ This project allows you to:
   This project is aimed mostly at testing and development of your own
   nft item contrat to be then used with *nft_collection*.  
 
-  However, deploying collection-less NFT is still posslibe.
+  However, deploying collection-less NFT is still possible.
 
 -   Set *coll_raw* address to *addr_none*.
   `0 2 u,` instead of `coll_raw Addr,` would be the
@@ -35,5 +35,8 @@ This project allows you to:
 -   Set *nft_json* to the full url pointing to your item metadata json
 
   If you aim to deploy item within collection please *use nft_collection project*.  
-  To deploy run:`toncli deploy -n testnet nft_item`.  
+  To deploy run:`toncli deploy`.  
 
+## Get nft data
+
+`toncli get get_nft_data --fift ./fift/parse-data-nft.fif`

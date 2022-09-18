@@ -1,39 +1,27 @@
 "TonUtil.fif" include
 "Asm.fif" include
 
-"kQDzy14OkWffhTvu289ftEY0xFZCqNU1cUbpiv8rZvQviL5F" constant collection_address // Specify your own
-"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" constant owner_address // Specify your own
-"my_nft.json" constant nft_json // Your nft metadata relative path to collection_base
+// toncli creates file in fift-libs
+// where store deploy wallet address
+// you can use this address to control nft or nft collection
+"OwnerAddr.fif" include
 
+// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" instead of owner_address <- you can use address in any form
+// or use address of toncli deploy wallet:
+owner_address constant nft_owner_address
 
+"https://my-cool-uri.lol/🤫" constant nft_json // Your nft metadata path to nft
 
-collection_address
-$>smca 0= abort"Specify valid collection address" 
-drop 
-
-2constant coll_raw
-
-."Collection address:" collection_address type cr
-
-owner_address
-$>smca 0= abort"Specify valid owner address"
-drop
-
+owner_address $>smca 0= abort"Specify valid owner address" drop
 2constant owner_raw
-
 ."Owner address:" owner_address type cr
-
-
-
-<b
-  1 8 u, // Needed only for collection-less ( owner_raw == addr_none )
-  nft_json
-  $>B B,
-b>
 
 <b
   0 64 u, // item_idx
-  coll_raw Addr,
+  0 2 u, // collection-less
   owner_raw Addr,
-  swap ref,
+  <b
+    1 8 u, // off-chain tag
+    nft_json $>B B,
+  b> ref,
 b>
