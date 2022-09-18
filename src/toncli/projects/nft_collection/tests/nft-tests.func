@@ -27,8 +27,14 @@ slice gen_new_owner( slice old_owner ) inline {
 
 	;;We need all addresses on Workchain 0 otherwise force_chain will throw 333
 
-	coll_addr.force_chain();
-	owner.force_chain();
+	if (coll_addr.preload_uint(2) != 0){ ;; if not addr_none
+		coll_addr.force_chain();
+	}
+
+	if (owner.preload_uint(2) != 0){
+		owner.force_chain();
+	}
+
 	return ( idx, coll_addr, owner, ds~load_ref() );
 }
 

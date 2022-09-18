@@ -13,11 +13,9 @@ This project allows you to:
   to uncomment some of the *func/helpers*
 
 ## Testing
+  Build project and then: `toncli run_test`
 
-  Same here `toncli run_test`  
-  If you encounter **error 6** during *run_tests*
-  make shure that your binaries are built according to:
-  [this manual](https://github.com/disintar/toncli/blob/master/docs/advanced/func_tests_new.md)
+  ⚠ If you see `6` error code on all tests - you need to update your binary [more information here](https://github.com/disintar/toncli/issues/72)
 
 ## Deploying item contract
 
@@ -39,4 +37,4 @@ This project allows you to:
 
 ## Get nft data
 
-`toncli get get_nft_data --fift ./fift/parse-data-nft.fif`
+`toncli get get_nft_data --fift ./fift/parse-data-nft-single.fif`

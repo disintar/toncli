@@ -2,9 +2,17 @@
 "Color.fif" include
 "Asm.fif" include
 
+// toncli creates file in fift-libs
+// where store deploy wallet address
+// you can use this address to control nft or nft collection
+"OwnerAddr.fif" include
+
+// "EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" instead of owner_address <- you can use address in any form
+// or use address of toncli deploy wallet:
+owner_address constant collection_owner_address
+
 // Change to your own
 "EQB8EqvPWlUq6g3pZPW9AQU4xLDDh65MxfFT_UStljYuCy_X" constant royalty_address
-"EQDlT07NpSh0uj-aSBkF2TRxOqR2nw0ErOQsA6TYakr1-FxP" constant owner_address
 
 // 5 / 100 = 5% :)
 5 constant royalty_numerator
@@ -25,7 +33,7 @@
 royalty_address $>smca 0= abort"Specify valid royalty addr" drop
 2constant royalty_raw
 
-owner_address $>smca 0= abort"Specify valid owner addr" drop
+collection_owner_address $>smca 0= abort"Specify valid owner addr" drop
 2constant owner_raw
 
 ^reset ."👽 Owner Address: "  owner_address ^green type cr
