@@ -35,6 +35,13 @@ int __test_get_jetton_data_mint() {
 	;; Total supply should increase by our mint_amount
 	throw_unless( 500, total_supply + mint_amount == stack.first() );
 
+	;; Rest should not change
+
+	throw_unless( 501, mintable? == stack.second() );
+	throw_unless( 502, equal_slices( admin, stack.third() ) );
+	throw_unless( 503, equal_slices( content.begin_parse(), stack.fourth().begin_parse() ) );
+	throw_unless( 504, equal_slices( code.begin_parse(), stack.at( 4 ).begin_parse() ) );
+
 
 	return gas_before + gas_mint + gas_after;
 }
@@ -77,6 +84,13 @@ int __test_get_jetton_data_burn() {
 
 
 	throw_unless( 500, total_supply - burn_amount == stack.first() );
+
+	;; Rest should not change
+
+	throw_unless( 501, mintable? == stack.second() );
+	throw_unless( 502, equal_slices( admin, stack.third() ) );
+	throw_unless( 503, equal_slices( content.begin_parse(), stack.fourth().begin_parse() ) );
+	throw_unless( 504, equal_slices( code.begin_parse(), stack.at( 4 ).begin_parse() ) );
 
 	return gas_before + gas_burn + gas_after;
 }
