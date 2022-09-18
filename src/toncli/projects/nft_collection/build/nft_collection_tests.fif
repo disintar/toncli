@@ -1,0 +1,2993 @@
+"Asm.fif" include
+// automatically generated from `/home/tvorogme/.config/toncli/func-libs/stdlib.func` `/home/tvorogme/.config/toncli/func-libs/error_codes.func` `/home/tvorogme/.config/toncli/func-libs/math.func` `/home/tvorogme/.config/toncli/test-libs/1.address_helpers.func` `/home/tvorogme/.config/toncli/test-libs/storage-test-helpers.func` `/home/tvorogme/.config/toncli/test-libs/tests-helpers.func` `/home/tvorogme/.config/toncli/test-libs/c5_parse_helpers.func` `/home/tvorogme/.config/toncli/test-libs/message_helpers.func` `/home/tvorogme/.config/toncli/test-libs/bad_messages_generator.func` `/home/tvorogme/.config/toncli/test-libs/token-helpers.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/func/utils/helpers.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/func/utils/params.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/func/utils/op-codes.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/func/nft-collection.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/tests/collection-tests.func` incl:`/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/tests/utils/collection-data.func` incl:`/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/tests/utils/constants.func` `/home/tvorogme/projects/toncli/src/toncli/projects/nft_collection/tests/collection-int.func` 
+PROGRAM{
+  DECLPROC power
+  DECLPROC sqrt
+  DECLPROC avg
+  DECLPROC exp
+  DECLPROC log2
+  114362 DECLMETHOD generate_empty_address
+  103563 DECLMETHOD generate_internal_address
+  71142 DECLMETHOD generate_internal_address_with_custom_data
+  105789 DECLMETHOD generate_external_address
+  77760 DECLMETHOD generate_external_address_with_custom_data
+  119020 DECLMETHOD generate_var_address
+  101577 DECLMETHOD generate_var_address_with_custom_data
+  DECLPROC generate_any_address
+  69682 DECLMETHOD init_environment
+  104832 DECLMETHOD storage_key
+  68533 DECLMETHOD load_storage_with_tag
+  113134 DECLMETHOD save_storage_with_tag
+  85860 DECLMETHOD get_c7
+  78457 DECLMETHOD invoke_method
+  93676 DECLMETHOD invoke_method_expect_fail
+  127733 DECLMETHOD assert_no_actions
+  DECLPROC parse_send_raw_message
+  DECLPROC parse_lib_code
+  DECLPROC parse_raw_reserve
+  DECLPROC parse_set_code
+  DECLPROC parse_c5
+  66092 DECLMETHOD generate_init_state
+  86734 DECLMETHOD generate_init_state_with_data
+  70014 DECLMETHOD parse_init_state
+  71497 DECLMETHOD random_query_id
+  128031 DECLMETHOD generate_internal_message_body
+  103755 DECLMETHOD generate_internal_message_custom
+  DECLPROC generate_get_royalty_params
+  125184 DECLMETHOD generate_nft_transfer_request
+  93113 DECLMETHOD generate_nft_get_static_data_request
+  80940 DECLMETHOD generate_nft_deploy_request
+  72255 DECLMETHOD generate_jetton_burn_request
+  DECLPROC generate_jetton_burn_notification
+  128076 DECLMETHOD generate_jetton_internal_transfer_request
+  100003 DECLMETHOD generate_jetton_transfer_request
+  129018 DECLMETHOD generate_internal_message
+  108731 DECLMETHOD generate_internal_message_relaxed
+  115574 DECLMETHOD generate_external_in_message
+  78122 DECLMETHOD generate_external_in_message_with_empty_source_address
+  94514 DECLMETHOD generate_external_out_message
+  75192 DECLMETHOD generate_external_out_message_with_empty_destination_address
+  77897 DECLMETHOD generate_external_out_message_relaxed
+  94767 DECLMETHOD parse_internal_message
+  97177 DECLMETHOD parse_external_message
+  76887 DECLMETHOD generate_external_out_message_with_bad_source_address
+  113901 DECLMETHOD generate_external_out_message_with_bad_destination_address
+  124331 DECLMETHOD generate_external_in_message_with_bad_source_address
+  128854 DECLMETHOD generate_external_in_message_with_bad_destination_address
+  122899 DECLMETHOD generate_internal_message_with_bad_grams_data
+  105345 DECLMETHOD generate_internal_message_with_bad_init_state_data
+  DECLPROC token_snake_len
+  DECLPROC get_snake_tail
+  103208 DECLMETHOD snake_concat
+  DECLPROC snake_concat_tagged
+  DECLPROC snake_equal?
+  DECLPROC force_chain
+  DECLPROC load_data
+  DECLPROC save_data
+  DECLPROC calculate_nft_item_state_init
+  DECLPROC calculate_nft_item_address
+  DECLPROC deploy_nft_item
+  DECLPROC send_royalty_params
+  DECLPROC recv_internal
+  102491 DECLMETHOD get_collection_data
+  92067 DECLMETHOD get_nft_address_by_index
+  85719 DECLMETHOD royalty_params
+  68445 DECLMETHOD get_nft_content
+  DECLPROC load_test_data
+  DECLPROC get_owner
+  DECLPROC get_content
+  DECLPROC get_nft_index
+  DECLPROC load_test_royalty
+  DECLPROC get_test_royalty
+  DECLPROC get_state_init_field
+  DECLPROC validate_TIP_64
+  DECLPROC __test_change_owner
+  DECLPROC __test_deploy_item
+  DECLPROC __test_royalty_msg
+  DECLPROC __test_get_collection_data
+  DECLPROC __test_get_nft_content
+  DECLPROC __test_royalty_params
+  DECLPROC __test_get_collection_data_deploy
+  DECLPROC __test_get_collection_data_change_owner
+  DECLPROC __test_get_nft_address_by_index
+  power PROCREF:<{
+    //  x exponent
+    OVER	//  x exponent x
+    0 EQINT	//  x exponent _3
+    IFJMP:<{	//  x exponent
+      2DROP	// 
+      0 PUSHINT	//  _4=0
+    }>	//  x exponent
+    DUP	//  x exponent exponent
+    0 EQINT	//  x exponent _6
+    IFJMP:<{	//  x exponent
+      2DROP	// 
+      1 PUSHINT	//  _7=1
+    }>	//  x exponent
+    OVER	//  x counter result
+    WHILE:<{
+      OVER	//  x counter result counter
+      1 GTINT	//  x counter result _11
+    }>DO<{	//  x counter result
+      s2 PUSH	//  x counter result x
+      MUL	//  x counter result
+      SWAP	//  x result counter
+      DEC	//  x result counter
+      SWAP	//  x counter result
+    }>	//  x counter result
+    2 1 BLKDROP2	//  result
+  }>
+  sqrt PROCREF:<{
+    //  x
+    DUP	//  x x
+    0 EQINT	//  x _2
+    IFJMP:<{	//  x
+      DROP	// 
+      0 PUSHINT	//  _3=0
+    }>	//  x
+    DUP	//  x x
+    4 LESSINT	//  x _5
+    IFJMP:<{	//  x
+      DROP	// 
+      1 PUSHINT	//  _6=1
+    }>	//  x
+    DUP	//  x x
+    INC	//  x _9
+    1 RSHIFT#	//  x z
+    OVER	//  x z y
+    WHILE:<{
+      2DUP	//  x z y z y
+      LESS	//  x z y _13
+    }>DO<{	//  x z y
+      DROP	//  x z
+      s0 s1 s0 PUSH3	//  x z y x z
+      DIV	//  x z y _14
+      ROT	//  x y _14 z
+      ADD	//  x y _15
+      1 RSHIFT#	//  x y z
+      SWAP	//  x z y
+    }>	//  x z y
+    2 1 BLKDROP2	//  y
+  }>
+  avg PROCREF:<{
+    //  x y
+    ADD	//  _2
+    1 RSHIFT#	//  _4
+  }>
+  exp PROCREF:<{
+    //  x
+    DUP	//  x x
+    -1 GTINT	//  x _2
+    IF:<{	//  x
+      POW2	//  _3
+    }>ELSE<{	//  x
+      1 PUSHINT	//  x _6=1
+      SWAP	//  _6=1 x
+      NEGATE	//  _6=1 _8
+      RSHIFT	//  _3
+    }>
+  }>
+  log2 PROCREF:<{
+    //  x
+    0 PUSHINT	//  x n=0
+    7 PUSHPOW2	//  x n=0 _3=128
+    exp INLINECALLDICT	//  x n=0 _4
+    s2 s(-1) PUXC	//  x n=0 x _4
+    GEQ	//  x n=0 _5
+    IF:<{	//  x n=0
+      DROP	//  x
+      128 RSHIFT#	//  x
+      7 PUSHPOW2	//  x n
+    }>	//  x n
+    64 PUSHINT	//  x n _10=64
+    exp INLINECALLDICT	//  x n _11
+    s2 s(-1) PUXC	//  x n x _11
+    GEQ	//  x n _12
+    IF:<{	//  x n
+      SWAP	//  n x
+      64 RSHIFT#	//  n x
+      SWAP	//  x n
+      64 ADDCONST	//  x n
+    }>	//  x n
+    32 PUSHINT	//  x n _17=32
+    exp INLINECALLDICT	//  x n _18
+    s2 s(-1) PUXC	//  x n x _18
+    GEQ	//  x n _19
+    IF:<{	//  x n
+      SWAP	//  n x
+      32 RSHIFT#	//  n x
+      SWAP	//  x n
+      32 ADDCONST	//  x n
+    }>	//  x n
+    16 PUSHINT	//  x n _24=16
+    exp INLINECALLDICT	//  x n _25
+    s2 s(-1) PUXC	//  x n x _25
+    GEQ	//  x n _26
+    IF:<{	//  x n
+      SWAP	//  n x
+      16 RSHIFT#	//  n x
+      SWAP	//  x n
+      16 ADDCONST	//  x n
+    }>	//  x n
+    8 PUSHINT	//  x n _31=8
+    exp INLINECALLDICT	//  x n _32
+    s2 s(-1) PUXC	//  x n x _32
+    GEQ	//  x n _33
+    IF:<{	//  x n
+      SWAP	//  n x
+      8 RSHIFT#	//  n x
+      SWAP	//  x n
+      8 ADDCONST	//  x n
+    }>	//  x n
+    4 PUSHINT	//  x n _38=4
+    exp INLINECALLDICT	//  x n _39
+    s2 s(-1) PUXC	//  x n x _39
+    GEQ	//  x n _40
+    IF:<{	//  x n
+      SWAP	//  n x
+      4 RSHIFT#	//  n x
+      SWAP	//  x n
+      4 ADDCONST	//  x n
+    }>	//  x n
+    2 PUSHINT	//  x n _45=2
+    exp INLINECALLDICT	//  x n _46
+    s2 s(-1) PUXC	//  x n x _46
+    GEQ	//  x n _47
+    IF:<{	//  x n
+      SWAP	//  n x
+      2 RSHIFT#	//  n x
+      SWAP	//  x n
+      2 ADDCONST	//  x n
+    }>	//  x n
+    1 PUSHINT	//  x n _52=1
+    exp INLINECALLDICT	//  x n _53
+    s1 s2 XCHG	//  n x _53
+    GEQ	//  n _54
+    IF:<{	//  n
+      INC	//  n
+    }>	//  n
+  }>
+  generate_empty_address PROC:<{
+    // 
+    0 PUSHINT	//  _0=0
+    NEWC	//  _0=0 _1
+    2 STU	//  _3
+    ENDC	//  _4
+    CTOS	//  _5
+  }>
+  generate_internal_address PROC:<{
+    // 
+    RANDU256	//  address
+    -1 PUSHINT	//  address _3=-1
+    0 PUSHINT	//  address _3=-1 _4=0
+    2 PUSHINT	//  address _3=-1 _4=0 _5=2
+    NEWC	//  address _3=-1 _4=0 _5=2 _6
+    2 STU	//  address _3=-1 _4=0 _8
+    1 STU	//  address _3=-1 _10
+    8 STI	//  address _12
+    256 STU	//  _14
+    ENDC	//  _15
+    CTOS	//  address_cell
+  }>
+  generate_internal_address_with_custom_data PROC:<{
+    //  anycast workchain_id address
+    2 PUSHINT	//  anycast workchain_id address _4=2
+    NEWC	//  anycast workchain_id address _4=2 _5
+    2 STU	//  anycast workchain_id address _7
+    s1 s3 XCHG	//  address workchain_id anycast _7
+    1 STU	//  address workchain_id _9
+    8 STI	//  address _11
+    256 STU	//  _13
+    ENDC	//  _14
+    CTOS	//  address_cell
+  }>
+  generate_external_address PROC:<{
+    //  address_length
+    RANDU256	//  address_length address
+    1 PUSHINT	//  address_length address _4=1
+    NEWC	//  address_length address _4=1 _5
+    2 STU	//  address_length address _7
+    s2 s(-1) PUXC	//  address_length address address_length _7
+    9 STU	//  address_length address _9
+    ROT	//  address _9 address_length
+    STUX	//  _10
+    ENDC	//  _11
+    CTOS	//  address_cell
+  }>
+  generate_external_address_with_custom_data PROC:<{
+    //  address_length address
+    1 PUSHINT	//  address_length address _3=1
+    NEWC	//  address_length address _3=1 _4
+    2 STU	//  address_length address _6
+    s2 s(-1) PUXC	//  address_length address address_length _6
+    9 STU	//  address_length address _8
+    ROT	//  address _8 address_length
+    STUX	//  _9
+    ENDC	//  _10
+    CTOS	//  address_cell
+  }>
+  generate_var_address PROC:<{
+    //  address_length
+    DUP
+    8 PUSHPOW2	//  address_length address_length _1=256
+    GREATER	//  address_length _2
+    IFJMP:<{	//  address_length
+      RANDU256	//  address_length address
+      RANDU256	//  address_length address address_secondpart
+      -1 PUSHINT	//  address_length address address_secondpart _8=-1
+      0 PUSHINT	//  address_length address address_secondpart _8=-1 _9=0
+      3 PUSHINT	//  address_length address address_secondpart _8=-1 _9=0 _10=3
+      NEWC	//  address_length address address_secondpart _8=-1 _9=0 _10=3 _11
+      2 STU	//  address_length address address_secondpart _8=-1 _9=0 _13
+      1 STU	//  address_length address address_secondpart _8=-1 _15
+      s1 s4 XCHG	//  _8=-1 address address_secondpart address_length _15
+      9 STU	//  _8=-1 address address_secondpart _17
+      s1 s3 XCHG	//  address_secondpart address _8=-1 _17
+      8 STI	//  address_secondpart address _19
+      256 STU	//  address_secondpart _21
+      256 STU	//  _23
+      ENDC	//  _24
+      CTOS	//  address_cell
+    }>	//  address_length
+    RANDU256	//  address_length address
+    -1 PUSHINT	//  address_length address _29=-1
+    0 PUSHINT	//  address_length address _29=-1 _30=0
+    3 PUSHINT	//  address_length address _29=-1 _30=0 _31=3
+    NEWC	//  address_length address _29=-1 _30=0 _31=3 _32
+    2 STU	//  address_length address _29=-1 _30=0 _34
+    1 STU	//  address_length address _29=-1 _36
+    s3 s(-1) PUXC	//  address_length address _29=-1 address_length _36
+    9 STU	//  address_length address _29=-1 _38
+    8 STI	//  address_length address _40
+    ROT	//  address _40 address_length
+    STUX	//  _41
+    ENDC	//  _42
+    CTOS	//  address_cell
+  }>
+  generate_var_address_with_custom_data PROC:<{
+    //  anycast workchain_id address_length address_slice
+    OVER
+    8 PUSHPOW2	//  anycast workchain_id address_length address_slice address_length _4=256
+    GREATER	//  anycast workchain_id address_length address_slice _5
+    IFJMP:<{	//  anycast workchain_id address_length address_slice
+      256 LDU	//  anycast workchain_id address_length addr address_slice
+      256 LDU	//  anycast workchain_id address_length addr _52 _51
+      DROP	//  anycast workchain_id address_length addr addr_second_part
+      3 PUSHINT	//  anycast workchain_id address_length addr addr_second_part _15=3
+      NEWC	//  anycast workchain_id address_length addr addr_second_part _15=3 _16
+      2 STU	//  anycast workchain_id address_length addr addr_second_part _18
+      s1 s5 XCHG	//  addr_second_part workchain_id address_length addr anycast _18
+      1 STU	//  addr_second_part workchain_id address_length addr _20
+      s1 s2 XCHG	//  addr_second_part workchain_id addr address_length _20
+      9 STU	//  addr_second_part workchain_id addr _22
+      s1 s2 XCHG	//  addr_second_part addr workchain_id _22
+      8 STI	//  addr_second_part addr _24
+      256 STU	//  addr_second_part _26
+      256 STU	//  _28
+      ENDC	//  _29
+      CTOS	//  address_cell
+    }>	//  anycast workchain_id address_length address_slice
+    256 LDU	//  anycast workchain_id address_length _54 _53
+    DROP	//  anycast workchain_id address_length addr
+    3 PUSHINT	//  anycast workchain_id address_length addr _36=3
+    NEWC	//  anycast workchain_id address_length addr _36=3 _37
+    2 STU	//  anycast workchain_id address_length addr _39
+    s1 s4 XCHG	//  addr workchain_id address_length anycast _39
+    1 STU	//  addr workchain_id address_length _41
+    s1 s(-1) PUXC	//  addr workchain_id address_length address_length _41
+    9 STU	//  addr workchain_id address_length _43
+    s1 s2 XCHG	//  addr address_length workchain_id _43
+    8 STI	//  addr address_length _45
+    SWAP	//  addr _45 address_length
+    STUX	//  _46
+    ENDC	//  _47
+    CTOS	//  address_cell
+  }>
+  generate_any_address PROC:<{
+    //  typeOfAddress
+    DUP	//  typeOfAddress typeOfAddress
+    0 EQINT	//  typeOfAddress _2
+    IFJMP:<{	//  typeOfAddress
+      DROP	// 
+      generate_empty_address CALLDICT	//  _3
+    }>	//  typeOfAddress
+    DUP	//  typeOfAddress typeOfAddress
+    1 EQINT	//  typeOfAddress _5
+    IFJMP:<{	//  typeOfAddress
+      DROP	// 
+      generate_internal_address CALLDICT	//  _6
+    }>	//  typeOfAddress
+    2 EQINT	//  _8
+    IFJMP:<{	// 
+      8 PUSHPOW2	//  _9=256
+      generate_external_address CALLDICT	//  _10
+    }>	// 
+    8 PUSHPOW2	//  _11=256
+    generate_var_address CALLDICT	//  _12
+  }>
+  init_environment PROC:<{
+    // 
+    PUSHNULL	//  _0
+    NEWC	//  _0 _1
+    STDICT	//  _2
+    ENDC	//  _3
+    c4 POP
+  }>
+  storage_key PROC:<{
+    //  tag
+    2824609491042946229920590003095732224 PUSHINTX	//  tag _3
+    SWAP	//  _3 tag
+    ADD	//  _4
+  }>
+  load_storage_with_tag PROC:<{
+    //  tag
+    storage_key CALLDICT	//  _1
+    c4 PUSH	//  _1 _2
+    CTOS	//  _1 _3
+    PLDDICT	//  _1 _4
+    8 PUSHPOW2	//  _1 _4 _5=256
+    DICTIGETOPTREF	//  _6
+  }>
+  save_storage_with_tag PROC:<{
+    //  tag storage
+    c4 PUSH	//  tag storage _3
+    CTOS	//  tag storage _4
+    PLDDICT	//  tag storage dict
+    s0 s2 XCHG	//  dict storage tag
+    storage_key CALLDICT	//  dict storage _7
+    ROT
+    8 PUSHPOW2	//  storage _7 dict _8=256
+    DICTISETREF	//  dict
+    NEWC	//  dict _10
+    STDICT	//  _11
+    ENDC	//  _12
+    c4 POP
+  }>
+  get_c7 PROCINLINE:<{
+    // 
+    124711402 PUSHINT	//  _2=124711402
+    0 PUSHINT	//  _2=124711402 _3=0
+    DUP	//  _2=124711402 _3=0 _4=0
+    NOW	//  _2=124711402 _3=0 _4=0 _5
+    1 PUSHINT	//  _2=124711402 _3=0 _4=0 _5 _6=1
+    DUP	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1
+    239 PUSHINT	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239
+    1000000000 PUSHINT	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239 _10=1000000000
+    PUSHNULL	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239 _10=1000000000 _11
+    PAIR	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239 _12
+    MYADDR	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239 _12 _13
+    CONFIGROOT	//  _2=124711402 _3=0 _4=0 _5 _6=1 _7=1 _8=239 _12 _13 _14
+    10 TUPLE	//  _15
+    SINGLE	//  _16
+  }>
+  invoke_method PROC:<{
+    //  fun args
+    {
+    c7 PUSH DUP FIRST
+    GASLIMITSTEMP SWAP DROP
+    11 SETINDEX 0 SETINDEX c7 POP
+    } : save-gas-remaining
+    {
+    GASLIMITSTEMP SWAP DROP
+    11 GETPARAM SWAP SUB
+    145 PUSHINT SUB
+    } : compute-gas-used
+    NEWC ENDC c5 POP
+    RESETLOADEDCELLS
+    255 PUSHINT EXPLODEVAR
+    DUP INC ROLLX
+    <{
+    <{
+    save-gas-remaining
+    EXECUTE
+    compute-gas-used
+    DEPTH DEC ROLLREVX
+    DEPTH DEC TUPLEVAR
+    ZERO ROTREV
+    }> PUSHCONT
+    <{
+    compute-gas-used
+    ROT DROP NIL
+    }> PUSHCONT
+    TRY
+    }> PUSHCONT
+    ROT INC -1 PUSHINT
+    CALLXVARARGS	//  exit_code gas_used return_values
+    s2 PUSH	//  exit_code gas_used return_values exit_code
+    0 NEQINT	//  exit_code gas_used return_values _7
+    s3 PUSH	//  exit_code gas_used return_values _7 exit_code
+    1 NEQINT	//  exit_code gas_used return_values _7 _9
+    AND	//  exit_code gas_used return_values _10
+    s1 s3 XCHG	//  return_values gas_used exit_code _10
+    THROWANYIF
+    SWAP	//  gas_used return_values
+  }>
+  invoke_method_expect_fail PROC:<{
+    //  fun args
+    {
+    c7 PUSH DUP FIRST
+    GASLIMITSTEMP SWAP DROP
+    11 SETINDEX 0 SETINDEX c7 POP
+    } : save-gas-remaining
+    {
+    GASLIMITSTEMP SWAP DROP
+    11 GETPARAM SWAP SUB
+    145 PUSHINT SUB
+    } : compute-gas-used
+    NEWC ENDC c5 POP
+    RESETLOADEDCELLS
+    255 PUSHINT EXPLODEVAR
+    DUP INC ROLLX
+    <{
+    <{
+    save-gas-remaining
+    EXECUTE
+    compute-gas-used
+    DEPTH DEC ROLLREVX
+    DEPTH DEC TUPLEVAR
+    ZERO ROTREV
+    }> PUSHCONT
+    <{
+    compute-gas-used
+    ROT DROP NIL
+    }> PUSHCONT
+    TRY
+    }> PUSHCONT
+    ROT INC -1 PUSHINT
+    CALLXVARARGS	//  _13 _14 _15
+    DROP	//  exit_code gas_used
+    OVER	//  exit_code gas_used exit_code
+    0 EQINT	//  exit_code gas_used _8
+    s0 s2 XCHG	//  _8 gas_used exit_code
+    1 EQINT	//  _8 gas_used _10
+    s1 s2 XCHG	//  gas_used _8 _10
+    OR	//  gas_used _11
+    201 THROWIF
+  }>
+  assert_no_actions PROCINLINE:<{
+    // 
+    c5 PUSH CTOS	//  _1
+    SEMPTY	//  _2
+    NOT	//  _3
+    202 THROWIF
+  }>
+  parse_send_raw_message PROCINLINE:<{
+    //  out_action
+    8 LDU	//  _1 out_action
+    LDREF	//  _1 _9 _8
+    DROP	//  _1 _4
+  }>
+  parse_lib_code PROCINLINE:<{
+    //  out_action
+    7 LDU	//  mode out_action
+    DUP	//  mode out_action out_action
+    SREFS	//  mode out_action _5
+    0 GTINT	//  mode out_action _7
+    IF:<{	//  mode out_action
+      LDREF	//  mode _20 _19
+      DROP	//  mode _8
+    }>ELSE<{	//  mode out_action
+      256 LDSLICE	//  mode _22 _21
+      DROP	//  mode loaded_bits
+      NEWC	//  mode loaded_bits _14
+      SWAP	//  mode _14 loaded_bits
+      STSLICER	//  mode _15
+      ENDC	//  mode _16
+    }>
+  }>
+  parse_raw_reserve PROCINLINE:<{
+    //  out_action
+    8 LDU	//  _1 out_action
+    LDDICT	//  _1 _9 _8
+    DROP	//  _1 _4
+  }>
+  parse_set_code PROCINLINE:<{
+    //  out_action
+    LDREF	//  _4 _3
+    DROP	//  _1
+  }>
+  parse_c5 PROCINLINE:<{
+    // 
+    NIL	//  list_of_actions_tuple
+    c5 PUSH	//  list_of_actions_tuple c5
+    NIL	//  list_of_actions_tuple c5 actions
+    SWAP	//  list_of_actions_tuple actions c5
+    CTOS	//  list_of_actions_tuple actions out_action_node
+    DUP	//  list_of_actions_tuple actions out_action_node out_action_node
+    SBITS	//  list_of_actions_tuple actions out_action_node _8
+    0 EQINT	//  list_of_actions_tuple actions out_action_node _10
+    IF:<{	//  list_of_actions_tuple actions out_action_node
+      3 BLKDROP	// 
+      PUSHNULL	//  _11
+    }>ELSE<{	//  list_of_actions_tuple actions out_action_node
+      0 PUSHINT	//  list_of_actions_tuple actions out_action_node num=0
+      UNTIL:<{
+        SWAP	//  list_of_actions_tuple actions num out_action_node
+        LDREF	//  list_of_actions_tuple actions num next out_action_node
+        s0 s3 XCHG2	//  list_of_actions_tuple next num out_action_node actions
+        CONS	//  list_of_actions_tuple next num actions
+        s0 s2 XCHG	//  list_of_actions_tuple actions num next
+        CTOS	//  list_of_actions_tuple actions num out_action_node
+        SWAP	//  list_of_actions_tuple actions out_action_node num
+        INC	//  list_of_actions_tuple actions out_action_node num
+        OVER	//  list_of_actions_tuple actions out_action_node num out_action_node
+        SBITS	//  list_of_actions_tuple actions out_action_node num _23
+        0 EQINT	//  list_of_actions_tuple actions out_action_node num break
+      }>	//  list_of_actions_tuple actions out_action_node num
+      NIP	//  list_of_actions_tuple actions num
+      0 PUSHINT	//  list_of_actions_tuple actions num i=0
+      UNTIL:<{
+        s0 s2 XCHG	//  list_of_actions_tuple i num actions
+        UNCONS	//  list_of_actions_tuple i num out_action actions
+        SWAP	//  list_of_actions_tuple i num actions out_action
+        32 LDU	//  list_of_actions_tuple i num actions action_code out_action
+        OVER
+        247711853 PUSHINT	//  list_of_actions_tuple i num actions action_code out_action action_code _35=247711853
+        EQUAL	//  list_of_actions_tuple i num actions action_code out_action _36
+        IF:<{	//  list_of_actions_tuple i num actions action_code out_action
+          NIP	//  list_of_actions_tuple i num actions out_action
+          parse_send_raw_message INLINECALLDICT	//  list_of_actions_tuple i num actions mode body
+          0 PUSHINT	//  list_of_actions_tuple i num actions mode body _42=0
+          s0 s2 XCHG	//  list_of_actions_tuple i num actions _42=0 body mode
+          TRIPLE	//  list_of_actions_tuple i num actions _41
+          s1 s4 XCHG	//  actions i num list_of_actions_tuple _41
+          TPUSH	//  actions i num list_of_actions_tuple
+        }>ELSE<{	//  list_of_actions_tuple i num actions action_code out_action
+          OVER
+          2907562126 PUSHINT	//  list_of_actions_tuple i num actions action_code out_action action_code _44=2907562126
+          EQUAL	//  list_of_actions_tuple i num actions action_code out_action _45
+          IF:<{	//  list_of_actions_tuple i num actions action_code out_action
+            NIP	//  list_of_actions_tuple i num actions out_action
+            parse_set_code INLINECALLDICT	//  list_of_actions_tuple i num actions new_setcode
+            1 PUSHINT	//  list_of_actions_tuple i num actions new_setcode _50=1
+            SWAP
+            -1 PUSHINT	//  list_of_actions_tuple i num actions _50=1 new_setcode _51=-1
+            TRIPLE	//  list_of_actions_tuple i num actions _49
+            s1 s4 XCHG	//  actions i num list_of_actions_tuple _49
+            TPUSH	//  actions i num list_of_actions_tuple
+          }>ELSE<{	//  list_of_actions_tuple i num actions action_code out_action
+            OVER
+            921090057 PUSHINT	//  list_of_actions_tuple i num actions action_code out_action action_code _53=921090057
+            EQUAL	//  list_of_actions_tuple i num actions action_code out_action _54
+            IF:<{	//  list_of_actions_tuple i num actions action_code out_action
+              NIP	//  list_of_actions_tuple i num actions out_action
+              parse_raw_reserve INLINECALLDICT	//  list_of_actions_tuple i num actions mode currencies
+              2 PUSHINT	//  list_of_actions_tuple i num actions mode currencies _60=2
+              s0 s2 XCHG	//  list_of_actions_tuple i num actions _60=2 currencies mode
+              TRIPLE	//  list_of_actions_tuple i num actions _59
+              s1 s4 XCHG	//  actions i num list_of_actions_tuple _59
+              TPUSH	//  actions i num list_of_actions_tuple
+            }>ELSE<{	//  list_of_actions_tuple i num actions action_code out_action
+              SWAP
+              653925844 PUSHINT	//  list_of_actions_tuple i num actions out_action action_code _62=653925844
+              EQUAL	//  list_of_actions_tuple i num actions out_action _63
+              IF:<{	//  list_of_actions_tuple i num actions out_action
+                parse_lib_code INLINECALLDICT	//  list_of_actions_tuple i num actions mode lib_cell_or_lib_hash
+                3 PUSHINT	//  list_of_actions_tuple i num actions mode lib_cell_or_lib_hash _69=3
+                s0 s2 XCHG	//  list_of_actions_tuple i num actions _69=3 lib_cell_or_lib_hash mode
+                TRIPLE	//  list_of_actions_tuple i num actions _68
+                s1 s4 XCHG	//  actions i num list_of_actions_tuple _68
+                TPUSH	//  actions i num list_of_actions_tuple
+                s0 s3 XCHG	//  list_of_actions_tuple i num actions
+              }>ELSE<{
+                DROP	//  list_of_actions_tuple i num actions
+              }>
+              s0 s3 XCHG	//  actions i num list_of_actions_tuple
+            }>
+          }>
+        }>
+        s0 s2 XCHG	//  actions list_of_actions_tuple num i
+        INC	//  actions list_of_actions_tuple num i
+        s0 s1 PUSH2	//  actions list_of_actions_tuple num i i num
+        GEQ	//  actions list_of_actions_tuple num i _73
+        s3 s4 XCHG	//  list_of_actions_tuple actions num i _73
+      }>	//  list_of_actions_tuple actions num i
+      3 BLKDROP	//  list_of_actions_tuple
+    }>
+  }>
+  generate_init_state PROC:<{
+    // 
+    0 PUSHINT	//  _0=0
+    s0 s0 s0 PUSH3	//  _0=0 _1=0 _2=0 _3=0
+    1 PUSHINT	//  _0=0 _1=0 _2=0 _3=0 _4=1
+    s0 s1 PUSH2	//  _0=0 _1=0 _2=0 _3=0 _4=1 _5=1 _6=0
+    NEWC	//  _0=0 _1=0 _2=0 _3=0 _4=1 _5=1 _6=0 _7
+    1 STU	//  _0=0 _1=0 _2=0 _3=0 _4=1 _5=1 _9
+    1 STU	//  _0=0 _1=0 _2=0 _3=0 _4=1 _11
+    1 STU	//  _0=0 _1=0 _2=0 _3=0 _13
+    1 STU	//  _0=0 _1=0 _2=0 _15
+    1 STU	//  _0=0 _1=0 _17
+    1 STU	//  _0=0 _19
+    1 STU	//  _21
+  }>
+  generate_init_state_with_data PROC:<{
+    //  code data library
+    1 PUSHINT	//  code data library _3=1
+    s0 s0 PUSH2	//  code data library _3=1 _4=1 _5=1
+    0 PUSHINT	//  code data library _3=1 _4=1 _5=1 _6=0
+    s1 s1 s0 PUSH3	//  code data library _3=1 _4=1 _5=1 _6=0 _7=1 _8=1 _9=0
+    NEWC	//  code data library _3=1 _4=1 _5=1 _6=0 _7=1 _8=1 _9=0 _10
+    1 STU	//  code data library _3=1 _4=1 _5=1 _6=0 _7=1 _8=1 _12
+    1 STU	//  code data library _3=1 _4=1 _5=1 _6=0 _7=1 _14
+    1 STU	//  code data library _3=1 _4=1 _5=1 _6=0 _16
+    1 STU	//  code data library _3=1 _4=1 _5=1 _18
+    1 STU	//  code data library _3=1 _4=1 _20
+    s1 s5 XCHG	//  _4=1 data library _3=1 code _20
+    STREF	//  _4=1 data library _3=1 _21
+    s1 s4 XCHG	//  _3=1 data library _4=1 _21
+    1 STU	//  _3=1 data library _23
+    s1 s2 XCHG	//  _3=1 library data _23
+    STREF	//  _3=1 library _24
+    s1 s2 XCHG	//  library _3=1 _24
+    1 STU	//  library _26
+    STREF	//  _27
+  }>
+  parse_init_state PROC:<{
+    //  cs
+    NIL	//  cs parsed_tuple
+    SWAP	//  parsed_tuple cs
+    1 LDU	//  parsed_tuple maybe_five cs
+    s2 s1 XCPU	//  cs maybe_five parsed_tuple maybe_five
+    TPUSH	//  cs maybe_five parsed_tuple
+    SWAP	//  cs parsed_tuple maybe_five
+    1 EQINT	//  cs parsed_tuple _10
+    IF:<{	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      5 LDU	//  parsed_tuple _12 cs
+      -ROT	//  cs parsed_tuple _12
+      TPUSH	//  cs parsed_tuple
+    }>	//  cs parsed_tuple
+    SWAP	//  parsed_tuple cs
+    1 LDU	//  parsed_tuple maybe_tick_tock cs
+    s2 s1 XCPU	//  cs maybe_tick_tock parsed_tuple maybe_tick_tock
+    TPUSH	//  cs maybe_tick_tock parsed_tuple
+    SWAP	//  cs parsed_tuple maybe_tick_tock
+    1 EQINT	//  cs parsed_tuple _23
+    IF:<{	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      1 LDU	//  parsed_tuple _25 cs
+      -ROT	//  cs parsed_tuple _25
+      TPUSH	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      1 LDU	//  parsed_tuple _30 cs
+      -ROT	//  cs parsed_tuple _30
+      TPUSH	//  cs parsed_tuple
+    }>	//  cs parsed_tuple
+    SWAP	//  parsed_tuple cs
+    1 LDU	//  parsed_tuple maybe_code cs
+    s2 s1 XCPU	//  cs maybe_code parsed_tuple maybe_code
+    TPUSH	//  cs maybe_code parsed_tuple
+    SWAP	//  cs parsed_tuple maybe_code
+    1 EQINT	//  cs parsed_tuple _41
+    IF:<{	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      LDREF	//  parsed_tuple _43 cs
+      -ROT	//  cs parsed_tuple _43
+      TPUSH	//  cs parsed_tuple
+    }>	//  cs parsed_tuple
+    SWAP	//  parsed_tuple cs
+    1 LDU	//  parsed_tuple maybe_data cs
+    s2 s1 XCPU	//  cs maybe_data parsed_tuple maybe_data
+    TPUSH	//  cs maybe_data parsed_tuple
+    SWAP	//  cs parsed_tuple maybe_data
+    1 EQINT	//  cs parsed_tuple _53
+    IF:<{	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      LDREF	//  parsed_tuple _55 cs
+      -ROT	//  cs parsed_tuple _55
+      TPUSH	//  cs parsed_tuple
+    }>	//  cs parsed_tuple
+    SWAP	//  parsed_tuple cs
+    1 LDU	//  parsed_tuple maybe_library cs
+    s2 s1 XCPU	//  cs maybe_library parsed_tuple maybe_library
+    TPUSH	//  cs maybe_library parsed_tuple
+    SWAP	//  cs parsed_tuple maybe_library
+    1 EQINT	//  cs parsed_tuple _65
+    IF:<{	//  cs parsed_tuple
+      SWAP	//  parsed_tuple cs
+      LDREF	//  parsed_tuple _91 _90
+      DROP	//  parsed_tuple _67
+      TPUSH	//  parsed_tuple
+    }>ELSE<{
+      NIP	//  parsed_tuple
+    }>
+  }>
+  random_query_id PROC:<{
+    // 
+    LTIME
+    ADDRAND
+    64 PUSHPOW2	//  _3
+    RAND	//  _4
+    INC	//  _6
+  }>
+  generate_internal_message_body PROC:<{
+    //  op query_id
+    SWAP
+    NEWC	//  query_id op _3
+    32 STU	//  query_id body
+    OVER	//  query_id body query_id
+    0 EQINT	//  query_id body _7
+    IF:<{	//  query_id body
+      NIP	//  body
+      random_query_id CALLDICT	//  body query_id
+      SWAP	//  query_id body
+    }>	//  query_id body
+    64 STU	//  _10
+  }>
+  generate_internal_message_custom PROC:<{
+    //  bounce ton_amount init_state payload src_addr dst_addr fwd_fee
+    s2 PUSH	//  bounce ton_amount init_state payload src_addr dst_addr fwd_fee src_addr
+    ISNULL	//  bounce ton_amount init_state payload src_addr dst_addr fwd_fee _8
+    IF:<{	//  bounce ton_amount init_state payload src_addr dst_addr fwd_fee
+      s2 POP	//  bounce ton_amount init_state payload fwd_fee dst_addr
+      generate_internal_address CALLDICT	//  bounce ton_amount init_state payload fwd_fee dst_addr _9
+    }>ELSE<{	//  bounce ton_amount init_state payload _9 dst_addr fwd_fee
+      s0 s2 XCHG	//  bounce ton_amount init_state payload fwd_fee dst_addr _9
+    }>	//  bounce ton_amount init_state payload fwd_fee dst_addr ssrc
+    OVER	//  bounce ton_amount init_state payload fwd_fee dst_addr ssrc dst_addr
+    ISNULL	//  bounce ton_amount init_state payload fwd_fee dst_addr ssrc _12
+    IF:<{	//  bounce ton_amount init_state payload fwd_fee dst_addr ssrc
+      NIP	//  bounce ton_amount init_state payload fwd_fee ssrc
+      generate_internal_address CALLDICT	//  bounce ton_amount init_state payload fwd_fee ssrc _13
+    }>ELSE<{	//  bounce ton_amount init_state payload fwd_fee _13 ssrc
+      SWAP	//  bounce ton_amount init_state payload fwd_fee ssrc _13
+    }>	//  bounce ton_amount init_state payload fwd_fee ssrc sdest
+    1000 PUSHINT	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000
+    DUP	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000
+    PUSHNULL	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18
+    0 PUSHINT	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _19=0
+    s0 s0 PUSH2	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _19=0 _20=0 _21=0
+    NEWC	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _19=0 _20=0 _21=0 _22
+    1 STU	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _19=0 _20=0 _24
+    1 STU	//  bounce ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _19=0 _26
+    s1 s11 XCHG	//  _19=0 ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 bounce _26
+    1 STU	//  _19=0 ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _18 _28
+    s1 s10 XCHG	//  _18 ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _19=0 _28
+    1 STU	//  _18 ton_amount init_state payload fwd_fee ssrc sdest _16=1000 _17=1000 _30
+    s0 s4 XCHG2	//  _18 ton_amount init_state payload fwd_fee _17=1000 sdest _16=1000 _30 ssrc
+    STSLICER	//  _18 ton_amount init_state payload fwd_fee _17=1000 sdest _16=1000 _31
+    ROT	//  _18 ton_amount init_state payload fwd_fee _17=1000 _16=1000 _31 sdest
+    STSLICER	//  _18 ton_amount init_state payload fwd_fee _17=1000 _16=1000 _32
+    s0 s6 XCHG2	//  _18 _16=1000 init_state payload fwd_fee _17=1000 _32 ton_amount
+    STGRAMS	//  _18 _16=1000 init_state payload fwd_fee _17=1000 _33
+    s1 s6 XCHG	//  _17=1000 _16=1000 init_state payload fwd_fee _18 _33
+    STDICT	//  _17=1000 _16=1000 init_state payload fwd_fee _34
+    0 PUSHINT	//  _17=1000 _16=1000 init_state payload fwd_fee _34 _35=0
+    STGRAMS	//  _17=1000 _16=1000 init_state payload fwd_fee _36
+    SWAP	//  _17=1000 _16=1000 init_state payload _36 fwd_fee
+    STGRAMS	//  _17=1000 _16=1000 init_state payload _37
+    s1 s4 XCHG	//  payload _16=1000 init_state _17=1000 _37
+    64 STU	//  payload _16=1000 init_state _39
+    s1 s2 XCHG	//  payload init_state _16=1000 _39
+    32 STU	//  payload init_state _41
+    s1 s(-1) PUXC	//  payload init_state init_state _41
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _45
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _48
+      OVER	//  payload msg init_state_builder _48 init_state_builder
+      BBITS	//  payload msg init_state_builder _48 _49
+      ADD	//  payload msg init_state_builder _50
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _50 _51=1023
+      GEQ	//  payload msg init_state_builder _52
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _53
+        1 PUSHINT
+        ROT	//  payload _53 _54=1 msg
+        1 STU	//  payload _53 _56
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _58=0 msg
+        1 STU	//  payload init_state_builder _60
+        SWAP	//  payload _60 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _62
+    s2 PUSH	//  payload msg _62 payload
+    BBITS	//  payload msg _62 _63
+    ADD	//  payload msg _64
+    10 PUSHPOW2DEC	//  payload msg _64 _65=1023
+    GEQ	//  payload msg _66
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _67
+      1 PUSHINT
+      ROT	//  _67 _68=1 msg
+      1 STU	//  _67 _70
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _72=0
+      SWAP	//  payload _72=0 msg
+      1 STU	//  payload _74
+      SWAP	//  _74 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _76
+  }>
+  generate_get_royalty_params PROC:<{
+    //  query_id
+    1765620048 PUSHINT	//  query_id _1=1765620048
+    SWAP	//  _1=1765620048 query_id
+    generate_internal_message_body CALLDICT	//  _2
+  }>
+  generate_nft_transfer_request PROC:<{
+    //  new_owner response_dst query_id custom_payload forward_amount forward_payload is_ref?
+    1607220500 PUSHINT	//  new_owner response_dst query_id custom_payload forward_amount forward_payload is_ref? _8=1607220500
+    s0 s5 XCHG2	//  new_owner response_dst is_ref? custom_payload forward_amount forward_payload _8=1607220500 query_id
+    generate_internal_message_body CALLDICT	//  new_owner response_dst is_ref? custom_payload forward_amount forward_payload _9
+    s0 s6 XCHG2	//  forward_payload response_dst is_ref? custom_payload forward_amount _9 new_owner
+    STSLICER	//  forward_payload response_dst is_ref? custom_payload forward_amount _10
+    s0 s4 XCHG2	//  forward_payload forward_amount is_ref? custom_payload _10 response_dst
+    STSLICER	//  forward_payload forward_amount is_ref? custom_payload req
+    OVER	//  forward_payload forward_amount is_ref? custom_payload req custom_payload
+    ISNULL	//  forward_payload forward_amount is_ref? custom_payload req _12
+    IF:<{	//  forward_payload forward_amount is_ref? custom_payload req
+      0 PUSHINT
+      s2 POP	//  forward_payload forward_amount is_ref? _13=0 req
+      1 STU	//  forward_payload forward_amount is_ref? req
+    }>ELSE<{	//  forward_payload forward_amount is_ref? custom_payload req
+      1 PUSHINT	//  forward_payload forward_amount is_ref? custom_payload req _16=1
+      SWAP	//  forward_payload forward_amount is_ref? custom_payload _16=1 req
+      1 STU	//  forward_payload forward_amount is_ref? custom_payload _18
+      STREF	//  forward_payload forward_amount is_ref? req
+    }>
+    ROT	//  forward_payload is_ref? req forward_amount
+    STGRAMS	//  forward_payload is_ref? req
+    s2 PUSH	//  forward_payload is_ref? req forward_payload
+    ISNULL	//  forward_payload is_ref? req _21
+    NOT	//  forward_payload is_ref? req _22
+    IF:<{	//  forward_payload is_ref? req
+      SWAP	//  forward_payload req is_ref?
+      IF:<{	//  forward_payload req
+        1 PUSHINT	//  forward_payload req _23=1
+        SWAP	//  forward_payload _23=1 req
+        1 STU	//  forward_payload _25
+        STREF	//  req
+      }>ELSE<{	//  forward_payload req
+        0 PUSHINT	//  forward_payload req _27=0
+        SWAP	//  forward_payload _27=0 req
+        1 STU	//  forward_payload _29
+        SWAP	//  _29 forward_payload
+        CTOS	//  _29 _30
+        STSLICER	//  req
+      }>
+    }>ELSE<{	//  forward_payload is_ref? req
+      NIP
+      0 PUSHINT
+      s2 POP	//  _32=0 req
+      1 STU	//  req
+    }>
+  }>
+  generate_nft_get_static_data_request PROC:<{
+    //  query_id
+    801842850 PUSHINT	//  query_id _1=801842850
+    NEWC	//  query_id _1=801842850 _2
+    32 STU	//  query_id _4
+    64 STU	//  _6
+  }>
+  generate_nft_deploy_request PROC:<{
+    //  idx content query_id forward_amount
+    1 PUSHINT
+    ROT	//  idx content forward_amount _4=1 query_id
+    generate_internal_message_body CALLDICT	//  idx content forward_amount _5
+    s1 s3 XCHG	//  forward_amount content idx _5
+    64 STU	//  forward_amount content _7
+    ROT	//  content _7 forward_amount
+    STGRAMS	//  content _8
+    STREF	//  _9
+  }>
+  generate_jetton_burn_request PROC:<{
+    //  query_id amount dst custom_payload
+    1499400124 PUSHINT	//  query_id amount dst custom_payload _5=1499400124
+    s0 s4 XCHG2	//  custom_payload amount dst _5=1499400124 query_id
+    generate_internal_message_body CALLDICT	//  custom_payload amount dst _6
+    ROT	//  custom_payload dst _6 amount
+    STGRAMS	//  custom_payload dst _7
+    SWAP	//  custom_payload _7 dst
+    STSLICER	//  custom_payload burn_msg
+    OVER	//  custom_payload burn_msg custom_payload
+    ISNULL	//  custom_payload burn_msg _9
+    NOT	//  custom_payload burn_msg _10
+    IF:<{	//  custom_payload burn_msg
+      1 PUSHINT	//  custom_payload burn_msg _11=1
+      SWAP	//  custom_payload _11=1 burn_msg
+      1 STU	//  custom_payload _13
+      STREF	//  burn_msg
+    }>ELSE<{	//  custom_payload burn_msg
+      0 PUSHINT
+      s2 POP	//  _15=0 burn_msg
+      1 STU	//  burn_msg
+    }>
+  }>
+  generate_jetton_burn_notification PROC:<{
+    //  query_id amount sender resp_dst
+    2078119902 PUSHINT	//  query_id amount sender resp_dst _4=2078119902
+    s0 s4 XCHG2	//  resp_dst amount sender _4=2078119902 query_id
+    generate_internal_message_body CALLDICT	//  resp_dst amount sender _5
+    ROT	//  resp_dst sender _5 amount
+    STGRAMS	//  resp_dst sender _6
+    SWAP	//  resp_dst _6 sender
+    STSLICER	//  resp_dst _7
+    SWAP	//  _7 resp_dst
+    STSLICER	//  _8
+  }>
+  generate_jetton_internal_transfer_request PROC:<{
+    //  query_id amount from resp_addr forward_amount forward_payload is_ref?
+    395134233 PUSHINT	//  query_id amount from resp_addr forward_amount forward_payload is_ref? _8=395134233
+    s0 s7 XCHG2	//  is_ref? amount from resp_addr forward_amount forward_payload _8=395134233 query_id
+    generate_internal_message_body CALLDICT	//  is_ref? amount from resp_addr forward_amount forward_payload _9
+    s0 s5 XCHG2	//  is_ref? forward_payload from resp_addr forward_amount _9 amount
+    STGRAMS	//  is_ref? forward_payload from resp_addr forward_amount _10
+    s0 s3 XCHG2	//  is_ref? forward_payload forward_amount resp_addr _10 from
+    STSLICER	//  is_ref? forward_payload forward_amount resp_addr _11
+    SWAP	//  is_ref? forward_payload forward_amount _11 resp_addr
+    STSLICER	//  is_ref? forward_payload forward_amount _12
+    SWAP	//  is_ref? forward_payload _12 forward_amount
+    STGRAMS	//  is_ref? forward_payload req
+    OVER	//  is_ref? forward_payload req forward_payload
+    ISNULL	//  is_ref? forward_payload req _14
+    NOT	//  is_ref? forward_payload req _15
+    IF:<{	//  is_ref? forward_payload req
+      s0 s2 XCHG	//  req forward_payload is_ref?
+      IF:<{	//  req forward_payload
+        1 PUSHINT
+        ROT	//  forward_payload _16=1 req
+        1 STU	//  forward_payload _18
+        STREF	//  req
+      }>ELSE<{	//  req forward_payload
+        0 PUSHINT
+        ROT	//  forward_payload _20=0 req
+        1 STU	//  forward_payload _22
+        SWAP	//  _22 forward_payload
+        CTOS	//  _22 _23
+        STSLICER	//  req
+      }>
+    }>ELSE<{	//  is_ref? forward_payload req
+      NIP
+      0 PUSHINT
+      s2 POP	//  _25=0 req
+      1 STU	//  req
+    }>
+  }>
+  generate_jetton_transfer_request PROC:<{
+    //  query_id amount dst resp_dst custom_payload forward_amount forward_payload is_ref?
+    260734629 PUSHINT	//  query_id amount dst resp_dst custom_payload forward_amount forward_payload is_ref? _9=260734629
+    s0 s8 XCHG2	//  is_ref? amount dst resp_dst custom_payload forward_amount forward_payload _9=260734629 query_id
+    generate_internal_message_body CALLDICT	//  is_ref? amount dst resp_dst custom_payload forward_amount forward_payload _10
+    s0 s6 XCHG2	//  is_ref? forward_payload dst resp_dst custom_payload forward_amount _10 amount
+    STGRAMS	//  is_ref? forward_payload dst resp_dst custom_payload forward_amount _11
+    s0 s4 XCHG2	//  is_ref? forward_payload forward_amount resp_dst custom_payload _11 dst
+    STSLICER	//  is_ref? forward_payload forward_amount resp_dst custom_payload _12
+    ROT	//  is_ref? forward_payload forward_amount custom_payload _12 resp_dst
+    STSLICER	//  is_ref? forward_payload forward_amount custom_payload req
+    OVER	//  is_ref? forward_payload forward_amount custom_payload req custom_payload
+    ISNULL	//  is_ref? forward_payload forward_amount custom_payload req _14
+    IF:<{	//  is_ref? forward_payload forward_amount custom_payload req
+      0 PUSHINT
+      s2 POP	//  is_ref? forward_payload forward_amount _15=0 req
+      1 STU	//  is_ref? forward_payload forward_amount req
+    }>ELSE<{	//  is_ref? forward_payload forward_amount custom_payload req
+      1 PUSHINT	//  is_ref? forward_payload forward_amount custom_payload req _18=1
+      SWAP	//  is_ref? forward_payload forward_amount custom_payload _18=1 req
+      1 STU	//  is_ref? forward_payload forward_amount custom_payload _20
+      STREF	//  is_ref? forward_payload forward_amount req
+    }>
+    SWAP	//  is_ref? forward_payload req forward_amount
+    STGRAMS	//  is_ref? forward_payload req
+    OVER	//  is_ref? forward_payload req forward_payload
+    ISNULL	//  is_ref? forward_payload req _23
+    NOT	//  is_ref? forward_payload req _24
+    IF:<{	//  is_ref? forward_payload req
+      s0 s2 XCHG	//  req forward_payload is_ref?
+      IF:<{	//  req forward_payload
+        1 PUSHINT
+        ROT	//  forward_payload _25=1 req
+        1 STU	//  forward_payload _27
+        STREF	//  req
+      }>ELSE<{	//  req forward_payload
+        0 PUSHINT
+        ROT	//  forward_payload _29=0 req
+        1 STU	//  forward_payload _31
+        SWAP	//  _31 forward_payload
+        CTOS	//  _31 _32
+        STSLICER	//  req
+      }>
+    }>ELSE<{	//  is_ref? forward_payload req
+      NIP
+      0 PUSHINT
+      s2 POP	//  _34=0 req
+      1 STU	//  req
+    }>
+  }>
+  generate_internal_message PROC:<{
+    //  bounce ton_amount init_state payload
+    generate_internal_address CALLDICT	//  bounce ton_amount init_state payload ssrc
+    generate_internal_address CALLDICT	//  bounce ton_amount init_state payload ssrc sdest
+    1000 PUSHINT	//  bounce ton_amount init_state payload ssrc sdest _9=1000
+    DUP	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000
+    PUSHNULL	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11
+    0 PUSHINT	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _12=0
+    s0 s0 PUSH2	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _12=0 _13=0 _14=0
+    NEWC	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _12=0 _13=0 _14=0 _15
+    1 STU	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _12=0 _13=0 _17
+    1 STU	//  bounce ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _12=0 _19
+    s1 s10 XCHG	//  _12=0 ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 bounce _19
+    1 STU	//  _12=0 ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _11 _21
+    s1 s9 XCHG	//  _11 ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _12=0 _21
+    1 STU	//  _11 ton_amount init_state payload ssrc sdest _9=1000 _10=1000 _23
+    s0 s4 XCHG2	//  _11 ton_amount init_state payload _10=1000 sdest _9=1000 _23 ssrc
+    STSLICER	//  _11 ton_amount init_state payload _10=1000 sdest _9=1000 _24
+    ROT	//  _11 ton_amount init_state payload _10=1000 _9=1000 _24 sdest
+    STSLICER	//  _11 ton_amount init_state payload _10=1000 _9=1000 _25
+    s0 s5 XCHG2	//  _11 _9=1000 init_state payload _10=1000 _25 ton_amount
+    STGRAMS	//  _11 _9=1000 init_state payload _10=1000 _26
+    s1 s5 XCHG	//  _10=1000 _9=1000 init_state payload _11 _26
+    STDICT	//  _10=1000 _9=1000 init_state payload _27
+    0 PUSHINT	//  _10=1000 _9=1000 init_state payload _27 _28=0
+    STGRAMS	//  _10=1000 _9=1000 init_state payload _29
+    0 PUSHINT	//  _10=1000 _9=1000 init_state payload _29 _30=0
+    STGRAMS	//  _10=1000 _9=1000 init_state payload _31
+    s1 s4 XCHG	//  payload _9=1000 init_state _10=1000 _31
+    64 STU	//  payload _9=1000 init_state _33
+    s1 s2 XCHG	//  payload init_state _9=1000 _33
+    32 STU	//  payload init_state _35
+    s1 s(-1) PUXC	//  payload init_state init_state _35
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _39
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _42
+      OVER	//  payload msg init_state_builder _42 init_state_builder
+      BBITS	//  payload msg init_state_builder _42 _43
+      ADD	//  payload msg init_state_builder _44
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _44 _45=1023
+      GEQ	//  payload msg init_state_builder _46
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _47
+        1 PUSHINT
+        ROT	//  payload _47 _48=1 msg
+        1 STU	//  payload _47 _50
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _52=0 msg
+        1 STU	//  payload init_state_builder _54
+        SWAP	//  payload _54 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _56
+    s2 PUSH	//  payload msg _56 payload
+    BBITS	//  payload msg _56 _57
+    ADD	//  payload msg _58
+    10 PUSHPOW2DEC	//  payload msg _58 _59=1023
+    GEQ	//  payload msg _60
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _61
+      1 PUSHINT
+      ROT	//  _61 _62=1 msg
+      1 STU	//  _61 _64
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _66=0
+      SWAP	//  payload _66=0 msg
+      1 STU	//  payload _68
+      SWAP	//  _68 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _70
+  }>
+  generate_internal_message_relaxed PROC:<{
+    //  bounce ton_amount init_state payload typeOfAnyAddress
+    generate_any_address CALLDICT	//  bounce ton_amount init_state payload ssrc
+    generate_internal_address CALLDICT	//  bounce ton_amount init_state payload ssrc sdest
+    1000 PUSHINT	//  bounce ton_amount init_state payload ssrc sdest _10=1000
+    DUP	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000
+    PUSHNULL	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12
+    0 PUSHINT	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _13=0
+    s0 s0 PUSH2	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _13=0 _14=0 _15=0
+    NEWC	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _13=0 _14=0 _15=0 _16
+    1 STU	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _13=0 _14=0 _18
+    1 STU	//  bounce ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _13=0 _20
+    s1 s10 XCHG	//  _13=0 ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 bounce _20
+    1 STU	//  _13=0 ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _12 _22
+    s1 s9 XCHG	//  _12 ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _13=0 _22
+    1 STU	//  _12 ton_amount init_state payload ssrc sdest _10=1000 _11=1000 _24
+    s0 s4 XCHG2	//  _12 ton_amount init_state payload _11=1000 sdest _10=1000 _24 ssrc
+    STSLICER	//  _12 ton_amount init_state payload _11=1000 sdest _10=1000 _25
+    ROT	//  _12 ton_amount init_state payload _11=1000 _10=1000 _25 sdest
+    STSLICER	//  _12 ton_amount init_state payload _11=1000 _10=1000 _26
+    s0 s5 XCHG2	//  _12 _10=1000 init_state payload _11=1000 _26 ton_amount
+    STGRAMS	//  _12 _10=1000 init_state payload _11=1000 _27
+    s1 s5 XCHG	//  _11=1000 _10=1000 init_state payload _12 _27
+    STDICT	//  _11=1000 _10=1000 init_state payload _28
+    0 PUSHINT	//  _11=1000 _10=1000 init_state payload _28 _29=0
+    STGRAMS	//  _11=1000 _10=1000 init_state payload _30
+    0 PUSHINT	//  _11=1000 _10=1000 init_state payload _30 _31=0
+    STGRAMS	//  _11=1000 _10=1000 init_state payload _32
+    s1 s4 XCHG	//  payload _10=1000 init_state _11=1000 _32
+    64 STU	//  payload _10=1000 init_state _34
+    s1 s2 XCHG	//  payload init_state _10=1000 _34
+    32 STU	//  payload init_state _36
+    s1 s(-1) PUXC	//  payload init_state init_state _36
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _40
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _43
+      OVER	//  payload msg init_state_builder _43 init_state_builder
+      BBITS	//  payload msg init_state_builder _43 _44
+      ADD	//  payload msg init_state_builder _45
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _45 _46=1023
+      GEQ	//  payload msg init_state_builder _47
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _48
+        1 PUSHINT
+        ROT	//  payload _48 _49=1 msg
+        1 STU	//  payload _48 _51
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _53=0 msg
+        1 STU	//  payload init_state_builder _55
+        SWAP	//  payload _55 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _57
+    s2 PUSH	//  payload msg _57 payload
+    BBITS	//  payload msg _57 _58
+    ADD	//  payload msg _59
+    10 PUSHPOW2DEC	//  payload msg _59 _60=1023
+    GEQ	//  payload msg _61
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _62
+      1 PUSHINT
+      ROT	//  _62 _63=1 msg
+      1 STU	//  _62 _65
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _67=0
+      SWAP	//  payload _67=0 msg
+      1 STU	//  payload _69
+      SWAP	//  _69 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _71
+  }>
+  generate_external_in_message PROC:<{
+    //  import_fee init_state payload
+    8 PUSHPOW2	//  import_fee init_state payload _4=256
+    generate_external_address CALLDICT	//  import_fee init_state payload ssrc
+    generate_internal_address CALLDICT	//  import_fee init_state payload ssrc sdest
+    2 PUSHINT	//  import_fee init_state payload ssrc sdest _9=2
+    NEWC	//  import_fee init_state payload ssrc sdest _9=2 _10
+    2 STU	//  import_fee init_state payload ssrc sdest _12
+    ROT	//  import_fee init_state payload sdest _12 ssrc
+    STSLICER	//  import_fee init_state payload sdest _13
+    SWAP	//  import_fee init_state payload _13 sdest
+    STSLICER	//  import_fee init_state payload _14
+    s0 s3 XCHG2	//  payload init_state _14 import_fee
+    STGRAMS	//  payload init_state _15
+    s1 s(-1) PUXC	//  payload init_state init_state _15
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _19
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _22
+      OVER	//  payload msg init_state_builder _22 init_state_builder
+      BBITS	//  payload msg init_state_builder _22 _23
+      ADD	//  payload msg init_state_builder _24
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _24 _25=1023
+      GEQ	//  payload msg init_state_builder _26
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _27
+        1 PUSHINT
+        ROT	//  payload _27 _28=1 msg
+        1 STU	//  payload _27 _30
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _32=0 msg
+        1 STU	//  payload init_state_builder _34
+        SWAP	//  payload _34 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _36
+    s2 PUSH	//  payload msg _36 payload
+    BBITS	//  payload msg _36 _37
+    ADD	//  payload msg _38
+    10 PUSHPOW2DEC	//  payload msg _38 _39=1023
+    GREATER	//  payload msg _40
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _41
+      1 PUSHINT
+      ROT	//  _41 _42=1 msg
+      1 STU	//  _41 _44
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _46=0
+      SWAP	//  payload _46=0 msg
+      1 STU	//  payload _48
+      SWAP	//  _48 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _50
+  }>
+  generate_external_in_message_with_empty_source_address PROC:<{
+    //  import_fee init_state payload
+    generate_empty_address CALLDICT	//  import_fee init_state payload ssrc
+    generate_internal_address CALLDICT	//  import_fee init_state payload ssrc sdest
+    2 PUSHINT	//  import_fee init_state payload ssrc sdest _8=2
+    NEWC	//  import_fee init_state payload ssrc sdest _8=2 _9
+    2 STU	//  import_fee init_state payload ssrc sdest _11
+    ROT	//  import_fee init_state payload sdest _11 ssrc
+    STSLICER	//  import_fee init_state payload sdest _12
+    SWAP	//  import_fee init_state payload _12 sdest
+    STSLICER	//  import_fee init_state payload _13
+    s0 s3 XCHG2	//  payload init_state _13 import_fee
+    STGRAMS	//  payload init_state _14
+    s1 s(-1) PUXC	//  payload init_state init_state _14
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _18
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _21
+      OVER	//  payload msg init_state_builder _21 init_state_builder
+      BBITS	//  payload msg init_state_builder _21 _22
+      ADD	//  payload msg init_state_builder _23
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _23 _24=1023
+      GEQ	//  payload msg init_state_builder _25
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _26
+        1 PUSHINT
+        ROT	//  payload _26 _27=1 msg
+        1 STU	//  payload _26 _29
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _31=0 msg
+        1 STU	//  payload init_state_builder _33
+        SWAP	//  payload _33 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _35
+    s2 PUSH	//  payload msg _35 payload
+    BBITS	//  payload msg _35 _36
+    ADD	//  payload msg _37
+    10 PUSHPOW2DEC	//  payload msg _37 _38=1023
+    GEQ	//  payload msg _39
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _40
+      1 PUSHINT
+      ROT	//  _40 _41=1 msg
+      1 STU	//  _40 _43
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _45=0
+      SWAP	//  payload _45=0 msg
+      1 STU	//  payload _47
+      SWAP	//  _47 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _49
+  }>
+  generate_external_out_message PROC:<{
+    //  import_fee init_state payload
+    s2 POP	//  payload init_state
+    generate_internal_address CALLDICT	//  payload init_state ssrc
+    8 PUSHPOW2	//  payload init_state ssrc _6=256
+    generate_external_address CALLDICT	//  payload init_state ssrc sdest
+    1000 PUSHINT	//  payload init_state ssrc sdest _9=1000
+    DUP	//  payload init_state ssrc sdest _9=1000 _10=1000
+    3 PUSHINT	//  payload init_state ssrc sdest _9=1000 _10=1000 _11=3
+    NEWC	//  payload init_state ssrc sdest _9=1000 _10=1000 _11=3 _12
+    2 STU	//  payload init_state ssrc sdest _9=1000 _10=1000 _14
+    s0 s4 XCHG2	//  payload init_state _10=1000 sdest _9=1000 _14 ssrc
+    STSLICER	//  payload init_state _10=1000 sdest _9=1000 _15
+    ROT	//  payload init_state _10=1000 _9=1000 _15 sdest
+    STSLICER	//  payload init_state _10=1000 _9=1000 _16
+    s1 s2 XCHG	//  payload init_state _9=1000 _10=1000 _16
+    64 STU	//  payload init_state _9=1000 _18
+    32 STU	//  payload init_state _20
+    s1 s(-1) PUXC	//  payload init_state init_state _20
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _24
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _27
+      OVER	//  payload msg init_state_builder _27 init_state_builder
+      BBITS	//  payload msg init_state_builder _27 _28
+      ADD	//  payload msg init_state_builder _29
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _29 _30=1023
+      GEQ	//  payload msg init_state_builder _31
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _32
+        1 PUSHINT
+        ROT	//  payload _32 _33=1 msg
+        1 STU	//  payload _32 _35
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _37=0 msg
+        1 STU	//  payload init_state_builder _39
+        SWAP	//  payload _39 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _41
+    s2 PUSH	//  payload msg _41 payload
+    BBITS	//  payload msg _41 _42
+    ADD	//  payload msg _43
+    10 PUSHPOW2DEC	//  payload msg _43 _44=1023
+    GEQ	//  payload msg _45
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _46
+      1 PUSHINT
+      ROT	//  _46 _47=1 msg
+      1 STU	//  _46 _49
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _51=0
+      SWAP	//  payload _51=0 msg
+      1 STU	//  payload _53
+      SWAP	//  _53 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _55
+  }>
+  generate_external_out_message_with_empty_destination_address PROC:<{
+    //  import_fee init_state payload
+    s2 POP	//  payload init_state
+    generate_internal_address CALLDICT	//  payload init_state ssrc
+    generate_empty_address CALLDICT	//  payload init_state ssrc sdest
+    1000 PUSHINT	//  payload init_state ssrc sdest _8=1000
+    DUP	//  payload init_state ssrc sdest _8=1000 _9=1000
+    3 PUSHINT	//  payload init_state ssrc sdest _8=1000 _9=1000 _10=3
+    NEWC	//  payload init_state ssrc sdest _8=1000 _9=1000 _10=3 _11
+    2 STU	//  payload init_state ssrc sdest _8=1000 _9=1000 _13
+    s0 s4 XCHG2	//  payload init_state _9=1000 sdest _8=1000 _13 ssrc
+    STSLICER	//  payload init_state _9=1000 sdest _8=1000 _14
+    ROT	//  payload init_state _9=1000 _8=1000 _14 sdest
+    STSLICER	//  payload init_state _9=1000 _8=1000 _15
+    s1 s2 XCHG	//  payload init_state _8=1000 _9=1000 _15
+    64 STU	//  payload init_state _8=1000 _17
+    32 STU	//  payload init_state _19
+    s1 s(-1) PUXC	//  payload init_state init_state _19
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _23
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _26
+      OVER	//  payload msg init_state_builder _26 init_state_builder
+      BBITS	//  payload msg init_state_builder _26 _27
+      ADD	//  payload msg init_state_builder _28
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _28 _29=1023
+      GEQ	//  payload msg init_state_builder _30
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _31
+        1 PUSHINT
+        ROT	//  payload _31 _32=1 msg
+        1 STU	//  payload _31 _34
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _36=0 msg
+        1 STU	//  payload init_state_builder _38
+        SWAP	//  payload _38 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _40
+    s2 PUSH	//  payload msg _40 payload
+    BBITS	//  payload msg _40 _41
+    ADD	//  payload msg _42
+    10 PUSHPOW2DEC	//  payload msg _42 _43=1023
+    GEQ	//  payload msg _44
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _45
+      1 PUSHINT
+      ROT	//  _45 _46=1 msg
+      1 STU	//  _45 _48
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _50=0
+      SWAP	//  payload _50=0 msg
+      1 STU	//  payload _52
+      SWAP	//  _52 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _54
+  }>
+  generate_external_out_message_relaxed PROC:<{
+    //  ton_amount init_state payload typeOfAnyAddress
+    s3 POP	//  typeOfAnyAddress init_state payload
+    s0 s2 XCHG	//  payload init_state typeOfAnyAddress
+    generate_any_address CALLDICT	//  payload init_state ssrc
+    8 PUSHPOW2	//  payload init_state ssrc _7=256
+    generate_external_address CALLDICT	//  payload init_state ssrc sdest
+    1000 PUSHINT	//  payload init_state ssrc sdest _10=1000
+    DUP	//  payload init_state ssrc sdest _10=1000 _11=1000
+    3 PUSHINT	//  payload init_state ssrc sdest _10=1000 _11=1000 _12=3
+    NEWC	//  payload init_state ssrc sdest _10=1000 _11=1000 _12=3 _13
+    2 STU	//  payload init_state ssrc sdest _10=1000 _11=1000 _15
+    s0 s4 XCHG2	//  payload init_state _11=1000 sdest _10=1000 _15 ssrc
+    STSLICER	//  payload init_state _11=1000 sdest _10=1000 _16
+    ROT	//  payload init_state _11=1000 _10=1000 _16 sdest
+    STSLICER	//  payload init_state _11=1000 _10=1000 _17
+    s1 s2 XCHG	//  payload init_state _10=1000 _11=1000 _17
+    64 STU	//  payload init_state _10=1000 _19
+    32 STU	//  payload init_state _21
+    s1 s(-1) PUXC	//  payload init_state init_state _21
+    1 STU	//  payload init_state msg
+    SWAP	//  payload msg init_state
+    1 EQINT	//  payload msg _25
+    IF:<{	//  payload msg
+      generate_init_state CALLDICT	//  payload msg init_state_builder
+      OVER	//  payload msg init_state_builder msg
+      BBITS	//  payload msg init_state_builder _28
+      OVER	//  payload msg init_state_builder _28 init_state_builder
+      BBITS	//  payload msg init_state_builder _28 _29
+      ADD	//  payload msg init_state_builder _30
+      10 PUSHPOW2DEC	//  payload msg init_state_builder _30 _31=1023
+      GEQ	//  payload msg init_state_builder _32
+      IF:<{	//  payload msg init_state_builder
+        ENDC	//  payload msg _33
+        1 PUSHINT
+        ROT	//  payload _33 _34=1 msg
+        1 STU	//  payload _33 _36
+        STREF	//  payload msg
+      }>ELSE<{	//  payload msg init_state_builder
+        0 PUSHINT
+        ROT	//  payload init_state_builder _38=0 msg
+        1 STU	//  payload init_state_builder _40
+        SWAP	//  payload _40 init_state_builder
+        STBR	//  payload msg
+      }>
+    }>	//  payload msg
+    DUP	//  payload msg msg
+    BBITS	//  payload msg _42
+    s2 PUSH	//  payload msg _42 payload
+    BBITS	//  payload msg _42 _43
+    ADD	//  payload msg _44
+    10 PUSHPOW2DEC	//  payload msg _44 _45=1023
+    GEQ	//  payload msg _46
+    IF:<{	//  payload msg
+      SWAP	//  msg payload
+      ENDC	//  msg _47
+      1 PUSHINT
+      ROT	//  _47 _48=1 msg
+      1 STU	//  _47 _50
+      STREF	//  msg
+    }>ELSE<{	//  payload msg
+      0 PUSHINT	//  payload msg _52=0
+      SWAP	//  payload _52=0 msg
+      1 STU	//  payload _54
+      SWAP	//  _54 payload
+      STBR	//  msg
+    }>
+    ENDC	//  _56
+  }>
+  parse_internal_message PROC:<{
+    //  message
+    CTOS	//  cs
+    112 PUSHINT	//  cs _3
+    SWAP	//  _3 cs
+    1 LDU	//  _3 _4 cs
+    SWAP	//  _3 cs _4
+    0 NEQINT	//  _3 cs _8
+    s1 s2 XCHG	//  cs _3 _8
+    THROWANYIF
+    1 LDU	//  ihr_disabled cs
+    1 LDU	//  ihr_disabled bounce cs
+    1 LDU	//  ihr_disabled bounce bounced cs
+    LDMSGADDR	//  ihr_disabled bounce bounced src cs
+    LDMSGADDR	//  ihr_disabled bounce bounced src to_address cs
+    LDVARUINT16	//  ihr_disabled bounce bounced src to_address money cs
+    LDDICT	//  ihr_disabled bounce bounced src to_address money _86 _85
+    NIP	//  ihr_disabled bounce bounced src to_address money cs
+    LDGRAMS	//  ihr_disabled bounce bounced src to_address money _88 _87
+    NIP	//  ihr_disabled bounce bounced src to_address money cs
+    LDGRAMS	//  ihr_disabled bounce bounced src to_address money _90 _89
+    NIP	//  ihr_disabled bounce bounced src to_address money cs
+    96 LDU	//  ihr_disabled bounce bounced src to_address money timestamps cs
+    1 LDU	//  ihr_disabled bounce bounced src to_address money timestamps maybe_init_state cs
+    NIL	//  ihr_disabled bounce bounced src to_address money timestamps maybe_init_state cs init_state
+    s0 s2 XCHG	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs maybe_init_state
+    1 EQINT	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs _50
+    IF:<{	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs
+      NIP	//  ihr_disabled bounce bounced src to_address money timestamps cs
+      1 LDU	//  ihr_disabled bounce bounced src to_address money timestamps _51 cs
+      SWAP	//  ihr_disabled bounce bounced src to_address money timestamps cs _51
+      IF:<{	//  ihr_disabled bounce bounced src to_address money timestamps cs
+        LDREF	//  ihr_disabled bounce bounced src to_address money timestamps _54 cs
+        SWAP	//  ihr_disabled bounce bounced src to_address money timestamps cs _54
+        CTOS	//  ihr_disabled bounce bounced src to_address money timestamps cs _56
+        parse_init_state CALLDICT	//  ihr_disabled bounce bounced src to_address money timestamps cs init_state
+      }>ELSE<{	//  ihr_disabled bounce bounced src to_address money timestamps cs
+        DUP	//  ihr_disabled bounce bounced src to_address money timestamps cs cs
+        parse_init_state CALLDICT	//  ihr_disabled bounce bounced src to_address money timestamps cs init_state
+      }>
+      SWAP	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs
+    }>	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs
+    1 LDU	//  ihr_disabled bounce bounced src to_address money timestamps init_state body_flag cs
+    SWAP	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs body_flag
+    0 EQINT	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs _66
+    IF:<{	//  ihr_disabled bounce bounced src to_address money timestamps init_state body
+    }>ELSE<{	//  ihr_disabled bounce bounced src to_address money timestamps init_state cs
+      LDREF	//  ihr_disabled bounce bounced src to_address money timestamps init_state _102 _101
+      DROP	//  ihr_disabled bounce bounced src to_address money timestamps init_state _67
+      CTOS	//  ihr_disabled bounce bounced src to_address money timestamps init_state body
+    }>
+    9 TUPLE	//  _70
+  }>
+  parse_external_message PROC:<{
+    //  message
+    CTOS	//  cs
+    2 LDU	//  msg_info cs
+    113 PUSHINT	//  msg_info cs _7
+    s2 PUSH	//  msg_info cs _7 msg_info
+    2 NEQINT	//  msg_info cs _7 _9
+    s3 PUSH	//  msg_info cs _7 _9 msg_info
+    3 NEQINT	//  msg_info cs _7 _9 _11
+    AND	//  msg_info cs _7 _12
+    THROWANYIF
+    LDMSGADDR	//  msg_info src cs
+    LDMSGADDR	//  msg_info src to_address cs
+    0 PUSHINT	//  msg_info src to_address cs import_fee=0
+    s0 s4 PUXC	//  timestamps=0 src to_address cs import_fee=0 msg_info
+    2 EQINT	//  timestamps=0 src to_address cs import_fee=0 _25
+    IF:<{	//  timestamps=0 src to_address cs import_fee=0
+      DROP	//  timestamps=0 src to_address cs
+      LDGRAMS	//  timestamps=0 src to_address import_fee cs
+    }>ELSE<{	//  timestamps=0 src to_address cs import_fee=0
+      s4 POP	//  import_fee=0 src to_address cs
+      96 LDU	//  import_fee=0 src to_address timestamps cs
+      s1 s4 XCHG	//  timestamps src to_address import_fee cs
+    }>
+    1 LDU	//  timestamps src to_address import_fee maybe_init_state cs
+    NIL	//  timestamps src to_address import_fee maybe_init_state cs init_state
+    s0 s2 XCHG	//  timestamps src to_address import_fee init_state cs maybe_init_state
+    1 EQINT	//  timestamps src to_address import_fee init_state cs _38
+    IF:<{	//  timestamps src to_address import_fee init_state cs
+      NIP	//  timestamps src to_address import_fee cs
+      DUP	//  timestamps src to_address import_fee cs cs
+      parse_init_state CALLDICT	//  timestamps src to_address import_fee cs init_state
+      SWAP	//  timestamps src to_address import_fee init_state cs
+    }>	//  timestamps src to_address import_fee init_state cs
+    1 LDU	//  timestamps src to_address import_fee init_state body_flag cs
+    SWAP	//  timestamps src to_address import_fee init_state cs body_flag
+    0 EQINT	//  timestamps src to_address import_fee init_state cs _47
+    IF:<{	//  timestamps src to_address import_fee init_state body
+    }>ELSE<{	//  timestamps src to_address import_fee init_state cs
+      LDREF	//  timestamps src to_address import_fee init_state _67 _66
+      DROP	//  timestamps src to_address import_fee init_state _48
+      CTOS	//  timestamps src to_address import_fee init_state body
+    }>
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s2 s3 XCHG	//  src to_address import_fee timestamps init_state body
+    6 TUPLE	//  _51
+  }>
+  generate_external_out_message_with_bad_source_address PROC:<{
+    // 
+    1 PUSHINT	//  _1=1
+    -1 PUSHINT	//  _1=1 _2=-1
+    0 PUSHINT	//  _1=1 _2=-1 _3=0
+    2 PUSHINT	//  _1=1 _2=-1 _3=0 _4=2
+    NEWC	//  _1=1 _2=-1 _3=0 _4=2 _5
+    2 STU	//  _1=1 _2=-1 _3=0 _7
+    1 STU	//  _1=1 _2=-1 _9
+    8 STI	//  _1=1 _11
+    10 STU	//  _13
+    ENDC	//  _14
+    CTOS	//  ssrc_invalid
+    0 PUSHINT	//  ssrc_invalid _16=0
+    3 PUSHINT	//  ssrc_invalid _16=0 _17=3
+    NEWC	//  ssrc_invalid _16=0 _17=3 _18
+    2 STU	//  ssrc_invalid _16=0 _20
+    1 STI	//  ssrc_invalid _22
+    SWAP	//  _22 ssrc_invalid
+    STSLICER	//  _23
+    ENDC	//  _24
+  }>
+  generate_external_out_message_with_bad_destination_address PROC:<{
+    // 
+    generate_internal_address CALLDICT	//  ssrc
+    0 PUSHINT	//  ssrc _2=0
+    3 PUSHINT	//  ssrc _2=0 _3=3
+    NEWC	//  ssrc _2=0 _3=3 _4
+    2 STU	//  ssrc _2=0 _6
+    ROT	//  _2=0 _6 ssrc
+    STSLICER	//  _2=0 _7
+    1 STI	//  _9
+    ENDC	//  _10
+  }>
+  generate_external_in_message_with_bad_source_address PROC:<{
+    // 
+    0 PUSHINT	//  _1=0
+    7 PUSHPOW2	//  _1=0 _2=128
+    1 PUSHINT	//  _1=0 _2=128 _3=1
+    NEWC	//  _1=0 _2=128 _3=1 _4
+    2 STU	//  _1=0 _2=128 _6
+    9 STU	//  _1=0 _8
+    10 STU	//  _10
+    ENDC	//  _11
+    CTOS	//  ssrc_invalid
+    2 PUSHINT	//  ssrc_invalid _13=2
+    NEWC	//  ssrc_invalid _13=2 _14
+    2 STU	//  ssrc_invalid _16
+    SWAP	//  _16 ssrc_invalid
+    STSLICER	//  _17
+    ENDC	//  _18
+  }>
+  generate_external_in_message_with_bad_destination_address PROC:<{
+    // 
+    8 PUSHPOW2	//  _1=256
+    generate_external_address CALLDICT	//  ssrc
+    0 PUSHINT	//  ssrc _3=0
+    2 PUSHINT	//  ssrc _3=0 _4=2
+    NEWC	//  ssrc _3=0 _4=2 _5
+    2 STU	//  ssrc _3=0 _7
+    ROT	//  _3=0 _7 ssrc
+    STSLICER	//  _3=0 _8
+    1 STI	//  _10
+    ENDC	//  _11
+  }>
+  generate_internal_message_with_bad_grams_data PROC:<{
+    // 
+    generate_internal_address CALLDICT	//  ssrc
+    generate_internal_address CALLDICT	//  ssrc sdest
+    1 PUSHINT	//  ssrc sdest _4=1
+    8 PUSHINT	//  ssrc sdest _4=1 _5=8
+    0 PUSHINT	//  ssrc sdest _4=1 _5=8 _6=0
+    s0 s0 s0 PUSH3	//  ssrc sdest _4=1 _5=8 _6=0 _7=0 _8=0 _9=0
+    NEWC	//  ssrc sdest _4=1 _5=8 _6=0 _7=0 _8=0 _9=0 _10
+    1 STU	//  ssrc sdest _4=1 _5=8 _6=0 _7=0 _8=0 _12
+    1 STU	//  ssrc sdest _4=1 _5=8 _6=0 _7=0 _14
+    1 STU	//  ssrc sdest _4=1 _5=8 _6=0 _16
+    1 STU	//  ssrc sdest _4=1 _5=8 _18
+    s0 s4 XCHG2	//  _5=8 sdest _4=1 _18 ssrc
+    STSLICER	//  _5=8 sdest _4=1 _19
+    ROT	//  _5=8 _4=1 _19 sdest
+    STSLICER	//  _5=8 _4=1 _20
+    s1 s2 XCHG	//  _4=1 _5=8 _20
+    4 STU	//  _4=1 _22
+    1 STU	//  _24
+    ENDC	//  _25
+  }>
+  generate_internal_message_with_bad_init_state_data PROC:<{
+    // 
+    generate_internal_address CALLDICT	//  ssrc
+    generate_internal_address CALLDICT	//  ssrc sdest
+    1 PUSHINT	//  ssrc sdest _5=1
+    s0 s0 PUSH2	//  ssrc sdest _5=1 _6=1 _7=1
+    0 PUSHINT	//  ssrc sdest _5=1 _6=1 _7=1 _8=0
+    s1 s1 s0 PUSH3	//  ssrc sdest _5=1 _6=1 _7=1 _8=0 _9=1 _10=1 _11=0
+    NEWC	//  ssrc sdest _5=1 _6=1 _7=1 _8=0 _9=1 _10=1 _11=0 _12
+    1 STU	//  ssrc sdest _5=1 _6=1 _7=1 _8=0 _9=1 _10=1 _14
+    1 STU	//  ssrc sdest _5=1 _6=1 _7=1 _8=0 _9=1 _16
+    1 STU	//  ssrc sdest _5=1 _6=1 _7=1 _8=0 _18
+    1 STU	//  ssrc sdest _5=1 _6=1 _7=1 _20
+    1 STU	//  ssrc sdest _5=1 _6=1 _22
+    1 STU	//  ssrc sdest _5=1 _24
+    1 STU	//  ssrc sdest init_state_with_bad_data
+    0 PUSHINT	//  ssrc sdest init_state_with_bad_data _27=0
+    SWAP	//  ssrc sdest _27=0 init_state_with_bad_data
+    ENDC	//  ssrc sdest _27=0 _28
+    1 PUSHINT	//  ssrc sdest _27=0 _28 _29=1
+    DUP	//  ssrc sdest _27=0 _28 _29=1 _30=1
+    1000 PUSHINT	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000
+    DUP	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000
+    PUSHNULL	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33
+    s6 s6 s6 PUSH3	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _35=0 _36=0
+    DUP	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _35=0 _36=0 _37=0
+    NEWC	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _35=0 _36=0 _37=0 _38
+    1 STU	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _35=0 _36=0 _40
+    1 STU	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _35=0 _42
+    1 STU	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _34=0 _44
+    1 STU	//  ssrc sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _33 _46
+    s0 s9 XCHG2	//  _33 sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _46 ssrc
+    STSLICER	//  _33 sdest _27=0 _28 _29=1 _30=1 _31=1000 _32=1000 _47
+    s0 s7 XCHG2	//  _33 _32=1000 _27=0 _28 _29=1 _30=1 _31=1000 _47 sdest
+    STSLICER	//  _33 _32=1000 _27=0 _28 _29=1 _30=1 _31=1000 _48
+    s5 PUSH	//  _33 _32=1000 _27=0 _28 _29=1 _30=1 _31=1000 _48 _49=0
+    STGRAMS	//  _33 _32=1000 _27=0 _28 _29=1 _30=1 _31=1000 _50
+    s1 s7 XCHG	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _33 _50
+    STDICT	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _51
+    s4 PUSH	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _51 _52=0
+    STGRAMS	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _53
+    s4 PUSH	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _53 _54=0
+    STGRAMS	//  _31=1000 _32=1000 _27=0 _28 _29=1 _30=1 _55
+    s1 s5 XCHG	//  _31=1000 _30=1 _27=0 _28 _29=1 _32=1000 _55
+    64 STU	//  _31=1000 _30=1 _27=0 _28 _29=1 _57
+    s1 s5 XCHG	//  _29=1 _30=1 _27=0 _28 _31=1000 _57
+    32 STU	//  _29=1 _30=1 _27=0 _28 _59
+    s1 s3 XCHG	//  _29=1 _28 _27=0 _30=1 _59
+    1 STU	//  _29=1 _28 _27=0 _61
+    s1 s3 XCHG	//  _27=0 _28 _29=1 _61
+    1 STU	//  _27=0 _28 _63
+    STREF	//  _27=0 _64
+    1 STU	//  _66
+    ENDC	//  _67
+  }>
+  token_snake_len PROCINLINE:<{
+    //  content
+    0 PUSHINT	//  content len=0
+    WHILE:<{
+      OVER	//  content len content
+      ISNULL	//  content len _3
+      NOT	//  content len _4
+    }>DO<{	//  content len
+      OVER	//  content len content
+      SBITS	//  content len _5
+      ADD	//  content len
+      OVER	//  content len content
+      SREFS	//  content len _7
+      IF:<{	//  content len
+        SWAP	//  len content
+        LDREF	//  len _14 _13
+        DROP	//  len _9
+        CTOS	//  len _8
+      }>ELSE<{	//  content len
+        NIP	//  len
+        PUSHNULL	//  len _8
+      }>	//  len content
+      SWAP	//  content len
+    }>	//  content len
+    NIP	//  len
+  }>
+  get_snake_tail PROCINLINE:<{
+    //  tail
+    WHILE:<{
+      DUP	//  tail tail
+      ISNULL	//  tail _1
+      NOT	//  tail _2
+    }>DO<{	//  tail
+      CTOS	//  tail_slice
+      DUP	//  tail_slice tail_slice
+      SREFS	//  tail_slice _5
+      IF:<{	//  tail_slice
+        LDREF	//  _11 _10
+        DROP	//  _6
+      }>ELSE<{	//  tail_slice
+        DROP	// 
+        PUSHNULL	//  _6
+      }>	//  tail
+    }>	//  tail
+  }>
+  snake_concat PROC:<{
+    //  head tail
+    SWAP	//  tail head
+    CTOS	//  tail head_sl
+    NEWC	//  tail head_sl _5
+    OVER	//  tail head_sl _5 head_sl
+    SBITS	//  tail head_sl _5 _7
+    s1 s2 XCHG	//  tail _5 head_sl _7
+    LDSLICEX	//  tail _5 _6 head_sl
+    -ROT	//  tail head_sl _5 _6
+    STSLICER	//  tail head_sl snake
+    OVER	//  tail head_sl snake head_sl
+    SREFS	//  tail head_sl snake _10
+    IF:<{	//  tail head_sl snake
+      SWAP	//  tail snake head_sl
+      LDREF	//  tail snake _20 _19
+      DROP	//  tail snake _11
+      ROT	//  snake _11 tail
+      snake_concat CALLDICT	//  snake _13
+      SWAP	//  _13 snake
+      STREF	//  snake
+    }>ELSE<{	//  tail head_sl snake
+      NIP	//  tail snake
+      STREF	//  snake
+    }>
+    ENDC	//  _16
+  }>
+  snake_concat_tagged PROCINLINE:<{
+    //  tag head tail
+    OVER	//  tag head tail head
+    CTOS	//  tag head tail head_sl
+    s0 s3 XCHG
+    NEWC	//  head_sl head tail tag _6
+    8 STU	//  head_sl head tail snake
+    1015 PUSHINT	//  head_sl head tail snake lbits
+    s4 PUSH	//  head_sl head tail snake lbits head_sl
+    SBITS	//  head_sl head tail snake lbits _15
+    SWAP	//  head_sl head tail snake _15 lbits
+    GREATER	//  head_sl head tail snake _16
+    IF:<{	//  head_sl head tail snake
+      s3 POP	//  snake head tail
+      snake_concat CALLDICT	//  snake _17
+      SWAP	//  _17 snake
+      STREF	//  _18
+      ENDC	//  tagged
+    }>ELSE<{	//  head_sl head tail snake
+      s2 POP	//  head_sl snake tail
+      s0 s2 XCHG	//  tail snake head_sl
+      STSLICER	//  tail _20
+      ENDC	//  tail _21
+      SWAP	//  _21 tail
+      snake_concat CALLDICT	//  tagged
+    }>
+  }>
+  snake_equal? PROCINLINE:<{
+    //  snake1 snake2
+    TRUE	//  snake1 snake2 equal
+    UNTIL:<{
+      s2 PUSH	//  snake1 snake2 equal snake1
+      SBITS	//  snake1 snake2 equal s1_data
+      s2 PUSH	//  snake1 snake2 equal s1_data snake2
+      SBITS	//  snake1 snake2 equal s1_data s2_data
+      2DUP	//  snake1 snake2 equal s1_data s2_data s1_data s2_data
+      LEQ	//  snake1 snake2 equal s1_data s2_data _8
+      IF:<{	//  snake1 snake2 equal s1_data s2_data
+        OVER	//  snake1 snake2 equal s1_data s2_data s1_data
+        0 GTINT	//  snake1 snake2 equal s1_data s2_data _10
+        IF:<{	//  snake1 snake2 equal s1_data s2_data
+          s2 POP	//  snake1 snake2 s2_data s1_data
+          s2 s2 XCPU	//  snake1 s1_data s2_data snake2 s1_data
+          LDSLICEX	//  snake1 s1_data s2_data _11 snake2
+          s4 s1 PUXC	//  snake1 s1_data s2_data snake2 snake1 _11
+          SDEQ	//  snake1 s1_data s2_data snake2 equal
+          2SWAP	//  snake1 snake2 equal s1_data s2_data
+        }>	//  snake1 snake2 equal s1_data s2_data
+        s4 PUSH	//  snake1 snake2 equal s1_data s2_data snake1
+        SREFS	//  snake1 snake2 equal s1_data s2_data _14
+        IF:<{	//  snake1 snake2 equal s1_data s2_data
+          s0 s4 XCHG	//  s2_data snake2 equal s1_data snake1
+          LDREF	//  s2_data snake2 equal s1_data _48 _47
+          DROP	//  s2_data snake2 equal s1_data _16
+          CTOS	//  s2_data snake2 equal s1_data _15
+        }>ELSE<{	//  snake1 snake2 equal s1_data s2_data
+          s4 POP	//  s2_data snake2 equal s1_data
+          PUSHNULL	//  s2_data snake2 equal s1_data _15
+        }>	//  s2_data snake2 equal s1_data snake1
+        DUP	//  s2_data snake2 equal s1_data snake1 snake1
+        ISNULL	//  s2_data snake2 equal s1_data snake1 _20
+        s5 PUSH	//  s2_data snake2 equal s1_data snake1 _20 s2_data
+        AND	//  s2_data snake2 equal s1_data snake1 _21
+        s2 PUSH	//  s2_data snake2 equal s1_data snake1 _21 s1_data
+        GREATER	//  s2_data snake2 equal s1_data snake1 _22
+        IF:<{	//  s2_data snake2 equal s1_data snake1
+          s4 POP
+          2DROP	//  snake1 snake2
+          FALSE	//  snake1 snake2 equal
+        }>ELSE<{	//  s2_data snake2 equal s1_data snake1
+          s4 s4 XCHG2	//  snake1 snake2 equal s2_data s1_data
+          EQUAL	//  snake1 snake2 equal _24
+          IF:<{	//  snake1 snake2 equal
+            OVER	//  snake1 snake2 equal snake2
+            SREFS	//  snake1 snake2 equal _25
+            IF:<{	//  snake1 snake2 equal
+              SWAP	//  snake1 equal snake2
+              LDREF	//  snake1 equal _50 _49
+              DROP	//  snake1 equal _27
+              CTOS	//  snake1 equal _26
+            }>ELSE<{	//  snake1 snake2 equal
+              NIP	//  snake1 equal
+              PUSHNULL	//  snake1 equal _26
+            }>	//  snake1 equal snake2
+            SWAP	//  snake1 snake2 equal
+          }>	//  snake1 snake2 equal
+        }>
+      }>ELSE<{	//  snake1 snake2 equal s1_data s2_data
+        2 1 BLKDROP2	//  snake1 snake2 s2_data
+        s1 s2 XCHG	//  snake2 snake1 s2_data
+        LDSLICEX	//  snake2 _31 snake1
+        s2 s1 PUXC	//  snake2 snake1 snake2 _31
+        SDEQ	//  snake2 snake1 equal
+        s2 PUSH	//  snake2 snake1 equal snake2
+        SREFS	//  snake2 snake1 equal _34
+        IF:<{	//  snake2 snake1 equal
+          s0 s2 XCHG	//  equal snake1 snake2
+          LDREF	//  equal snake1 _54 _53
+          DROP	//  equal snake1 _36
+          CTOS	//  equal snake1 _35
+        }>ELSE<{	//  snake2 snake1 equal
+          s2 POP	//  equal snake1
+          PUSHNULL	//  equal snake1 _35
+        }>	//  equal snake1 snake2
+        ROT	//  snake1 snake2 equal
+      }>
+      DUP	//  snake1 snake2 equal equal
+      NOT	//  snake1 snake2 equal _40
+      s3 PUSH	//  snake1 snake2 equal _40 snake1
+      ISNULL	//  snake1 snake2 equal _40 _41
+      s3 PUSH	//  snake1 snake2 equal _40 _41 snake2
+      ISNULL	//  snake1 snake2 equal _40 _41 _42
+      AND	//  snake1 snake2 equal _40 _43
+      OR	//  snake1 snake2 equal _44
+    }>	//  snake1 snake2 equal
+    2 1 BLKDROP2	//  equal
+  }>
+  force_chain PROC:<{
+    //  addr
+    REWRITESTDADDR	//  _8 _9
+    DROP	//  wc
+    0 EQINT	//  _6
+    333 THROWIFNOT
+  }>
+  load_data PROCINLINE:<{
+    // 
+    c4 PUSH	//  _1
+    CTOS	//  ds
+    LDMSGADDR	//  _3 ds
+    64 LDU	//  _3 _5 ds
+    LDREF	//  _3 _5 _8 ds
+    LDREF	//  _3 _5 _8 _10 ds
+    LDREF	//  _3 _5 _8 _10 _23 _22
+    DROP	//  _3 _5 _8 _10 _12
+  }>
+  save_data PROCINLINE:<{
+    //  owner_address next_item_index content nft_item_code royalty_params
+    NEWC	//  owner_address next_item_index content nft_item_code royalty_params _5
+    s0 s5 XCHG2	//  royalty_params next_item_index content nft_item_code _5 owner_address
+    STSLICER	//  royalty_params next_item_index content nft_item_code _6
+    s1 s3 XCHG	//  royalty_params nft_item_code content next_item_index _6
+    64 STU	//  royalty_params nft_item_code content _8
+    STREF	//  royalty_params nft_item_code _9
+    STREF	//  royalty_params _10
+    STREF	//  _11
+    ENDC	//  _12
+    c4 POP
+  }>
+  calculate_nft_item_state_init PROC:<{
+    //  item_index nft_item_code
+    SWAP
+    NEWC	//  nft_item_code item_index _3
+    64 STU	//  nft_item_code _5
+    MYADDR	//  nft_item_code _5 _6
+    STSLICER	//  nft_item_code _7
+    ENDC	//  nft_item_code data
+    0 PUSHINT	//  nft_item_code data _9=0
+    DUP	//  nft_item_code data _9=0 _10=0
+    NEWC	//  nft_item_code data _9=0 _10=0 _11
+    2 STU	//  nft_item_code data _9=0 _13
+    s1 s3 XCHG	//  _9=0 data nft_item_code _13
+    STDICT	//  _9=0 data _14
+    STDICT	//  _9=0 _15
+    1 STU	//  _17
+    ENDC	//  _18
+  }>
+  calculate_nft_item_address PROC:<{
+    //  wc state_init
+    HASHCU	//  wc _2
+    4 PUSHINT	//  wc _2 _3=4
+    NEWC	//  wc _2 _3=4 _4
+    3 STU	//  wc _2 _6
+    s1 s2 XCHG	//  _2 wc _6
+    8 STI	//  _2 _8
+    256 STU	//  _10
+    ENDC	//  _11
+    CTOS	//  _12
+  }>
+  deploy_nft_item PROC:<{
+    //  item_index nft_item_code amount nft_content
+    2SWAP	//  amount nft_content item_index nft_item_code
+    calculate_nft_item_state_init CALLDICT	//  amount nft_content state_init
+    0 PUSHINT	//  amount nft_content state_init _7=0
+    OVER	//  amount nft_content state_init _7=0 state_init
+    calculate_nft_item_address CALLDICT	//  amount nft_content state_init nft_address
+    7 PUSHINT	//  amount nft_content state_init nft_address _14
+    24 PUSHINT	//  amount nft_content state_init nft_address _14 _15=24
+    NEWC	//  amount nft_content state_init nft_address _14 _15=24 _16
+    6 STU	//  amount nft_content state_init nft_address _14 _18
+    ROT	//  amount nft_content state_init _14 _18 nft_address
+    STSLICER	//  amount nft_content state_init _14 _19
+    s0 s4 XCHG2	//  _14 nft_content state_init _19 amount
+    STVARUINT16	//  _14 nft_content state_init _20
+    s1 s3 XCHG	//  state_init nft_content _14 _20
+    108 STU	//  state_init nft_content _36
+    s1 s2 XCHG	//  nft_content state_init _36
+    STREF	//  nft_content _37
+    STREF	//  msg
+    ENDC	//  _39
+    1 PUSHINT	//  _39 _40=1
+    SENDRAWMSG
+  }>
+  send_royalty_params PROCINLINE:<{
+    //  to_address query_id data
+    2831876269 PUSHINT	//  to_address query_id data _4=2831876269
+    0 PUSHINT	//  to_address query_id data _4=2831876269 _5=0
+    16 PUSHINT	//  to_address query_id data _4=2831876269 _5=0 _6=16
+    NEWC	//  to_address query_id data _4=2831876269 _5=0 _6=16 _7
+    6 STU	//  to_address query_id data _4=2831876269 _5=0 _9
+    s0 s5 XCHG2	//  _5=0 query_id data _4=2831876269 _9 to_address
+    STSLICER	//  _5=0 query_id data _4=2831876269 _10
+    s4 PUSH	//  _5=0 query_id data _4=2831876269 _10 _11=0
+    STVARUINT16	//  _5=0 query_id data _4=2831876269 _12
+    s1 s4 XCHG	//  _4=2831876269 query_id data _5=0 _12
+    107 STU	//  _4=2831876269 query_id data _26
+    s1 s3 XCHG	//  data query_id _4=2831876269 _26
+    32 STU	//  data query_id _28
+    64 STU	//  data _30
+    SWAP	//  _30 data
+    STSLICER	//  msg
+    ENDC	//  _32
+    64 PUSHINT	//  _32 _33=64
+    SENDRAWMSG
+  }>
+  recv_internal PROC:<{
+    //  in_msg_full in_msg_body
+    DUP	//  in_msg_full in_msg_body in_msg_body
+    SEMPTY	//  in_msg_full in_msg_body _2
+    IFJMP:<{	//  in_msg_full in_msg_body
+      2DROP	// 
+    }>	//  in_msg_full in_msg_body
+    SWAP	//  in_msg_body in_msg_full
+    CTOS	//  in_msg_body cs
+    4 LDU	//  in_msg_body flags cs
+    SWAP
+    1 PUSHINT	//  in_msg_body cs flags _9=1
+    AND	//  in_msg_body cs _10
+    IFJMP:<{	//  in_msg_body cs
+      2DROP	// 
+    }>	//  in_msg_body cs
+    LDMSGADDR	//  in_msg_body _98 _97
+    DROP	//  in_msg_body sender_address
+    SWAP	//  sender_address in_msg_body
+    32 LDU	//  sender_address op in_msg_body
+    64 LDU	//  sender_address op query_id in_msg_body
+    load_data INLINECALLDICT	//  sender_address op query_id in_msg_body owner_address next_item_index content nft_item_code royalty_params
+    s7 PUSH
+    1765620048 PUSHINT	//  sender_address op query_id in_msg_body owner_address next_item_index content nft_item_code royalty_params op _28=1765620048
+    EQUAL	//  sender_address op query_id in_msg_body owner_address next_item_index content nft_item_code royalty_params _29
+    IFJMP:<{	//  sender_address op query_id in_msg_body owner_address next_item_index content nft_item_code royalty_params
+      s7 POP
+      5 BLKDROP	//  sender_address royalty_params query_id
+      SWAP	//  sender_address query_id royalty_params
+      CTOS	//  sender_address query_id _30
+      send_royalty_params INLINECALLDICT
+    }>	//  sender_address op query_id in_msg_body owner_address next_item_index content nft_item_code royalty_params
+    s6 POP	//  sender_address op royalty_params in_msg_body owner_address next_item_index content nft_item_code
+    s7 s3 XCPU	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content sender_address owner_address
+    SDEQ	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content _33
+    401 THROWIFNOT
+    s5 PUSH	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content op
+    1 EQINT	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content _36
+    IFJMP:<{	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content
+      s5 POP	//  nft_item_code content royalty_params in_msg_body owner_address next_item_index
+      s0 s2 XCHG	//  nft_item_code content royalty_params next_item_index owner_address in_msg_body
+      64 LDU	//  nft_item_code content royalty_params next_item_index owner_address item_index in_msg_body
+      s1 s3 PUSH2	//  nft_item_code content royalty_params next_item_index owner_address item_index in_msg_body item_index next_item_index
+      LEQ	//  nft_item_code content royalty_params next_item_index owner_address item_index in_msg_body _42
+      402 THROWIFNOT
+      s1 s3 PUSH2	//  nft_item_code content royalty_params next_item_index owner_address item_index in_msg_body item_index next_item_index
+      EQUAL	//  nft_item_code content royalty_params next_item_index owner_address item_index in_msg_body is_last
+      SWAP	//  nft_item_code content royalty_params next_item_index owner_address item_index is_last in_msg_body
+      LDVARUINT16	//  nft_item_code content royalty_params next_item_index owner_address item_index is_last _46 in_msg_body
+      LDREF	//  nft_item_code content royalty_params next_item_index owner_address item_index is_last _46 _113 _112
+      DROP	//  nft_item_code content royalty_params next_item_index owner_address item_index is_last _46 _48
+      s8 PUSH
+      s3 s4 XCHG
+      -ROT	//  nft_item_code content royalty_params next_item_index owner_address is_last item_index nft_item_code _46 _48
+      deploy_nft_item CALLDICT
+      IF:<{	//  nft_item_code content royalty_params next_item_index owner_address
+        SWAP	//  nft_item_code content royalty_params owner_address next_item_index
+        INC	//  nft_item_code content royalty_params owner_address next_item_index
+        s3 s4 s3 XCHG3	//  owner_address next_item_index content nft_item_code royalty_params
+        save_data INLINECALLDICT
+      }>ELSE<{
+        5 BLKDROP	// 
+      }>
+    }>	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content
+    s5 PUSH	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content op
+    2 EQINT	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content _55
+    IFJMP:<{	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content
+      s5 POP	//  nft_item_code content royalty_params in_msg_body owner_address next_item_index
+      0 PUSHINT	//  nft_item_code content royalty_params in_msg_body owner_address next_item_index counter=0
+      s0 s3 XCHG	//  nft_item_code content royalty_params counter=0 owner_address next_item_index in_msg_body
+      LDREF	//  nft_item_code content royalty_params counter=0 owner_address next_item_index _115 _114
+      DROP	//  nft_item_code content royalty_params counter=0 owner_address next_item_index deploy_list
+      UNTIL:<{
+        64 PUSHINT	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list _65=64
+        DICTUREMMIN
+        NULLSWAPIFNOT2	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list item item_index f?
+        DUP	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list item item_index f? f?
+        IF:<{	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list item item_index f?
+          s0 s6 XCHG	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter
+          INC	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter
+          DUP
+          250 PUSHINT	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter counter _69=250
+          GEQ	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _70
+          IF:<{	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter
+            399 THROW
+          }>	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter
+          403 PUSHINT	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _73=403
+          OVER	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _73=403 counter
+          ADD	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _74
+          s2 s5 PUSH2	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _74 item_index next_item_index
+          LEQ	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list item item_index counter _74 _75
+          THROWANYIFNOT
+          s0 s2 XCHG	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index item
+          LDVARUINT16	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index _77 item
+          LDREF	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index _77 _126 _125
+          DROP	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index _77 _79
+          s2 PUSH
+          s11 s2 s(-1) PUXC2	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index item_index nft_item_code _77 _79
+          deploy_nft_item CALLDICT
+          s3 PUSH	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter item_index next_item_index
+          EQUAL	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter _82
+          IF:<{	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter
+            s0 s2 XCHG	//  nft_item_code content royalty_params f? owner_address counter deploy_list next_item_index
+            INC	//  nft_item_code content royalty_params f? owner_address counter deploy_list next_item_index
+            s0 s2 XCHG	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter
+          }>	//  nft_item_code content royalty_params f? owner_address next_item_index deploy_list counter
+          s0 s4 XCHG	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list f?
+        }>ELSE<{
+          2 1 BLKDROP2	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list f?
+        }>
+        NOT	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list _85
+      }>	//  nft_item_code content royalty_params counter owner_address next_item_index deploy_list
+      DROP
+      s2 POP	//  nft_item_code content royalty_params next_item_index owner_address
+      s4 s4 XCHG2
+      s3 s1 s3 XCHG3	//  owner_address next_item_index content nft_item_code royalty_params
+      save_data INLINECALLDICT
+    }>	//  nft_item_code op royalty_params in_msg_body owner_address next_item_index content
+    s2 POP	//  nft_item_code op royalty_params in_msg_body content next_item_index
+    s0 s4 XCHG	//  nft_item_code next_item_index royalty_params in_msg_body content op
+    3 EQINT	//  nft_item_code next_item_index royalty_params in_msg_body content _88
+    IFJMP:<{	//  nft_item_code next_item_index royalty_params in_msg_body content
+      SWAP	//  nft_item_code next_item_index royalty_params content in_msg_body
+      LDMSGADDR	//  nft_item_code next_item_index royalty_params content _128 _127
+      DROP	//  nft_item_code next_item_index royalty_params content new_owner
+      s1 s4 s4 XCHG3	//  new_owner next_item_index content nft_item_code royalty_params
+      save_data INLINECALLDICT
+    }>	//  nft_item_code next_item_index royalty_params in_msg_body content
+    5 BLKDROP	// 
+    16 PUSHPOW2DEC	//  _93=65535
+    THROWANY
+  }>
+  get_collection_data PROC:<{
+    // 
+    load_data INLINECALLDICT	//  _10 _11 _12 _13 _14
+    2DROP	//  owner_address next_item_index content
+    CTOS	//  owner_address next_item_index cs
+    LDREF	//  owner_address next_item_index _16 _15
+    DROP	//  owner_address next_item_index _8
+    ROT	//  next_item_index _8 owner_address
+  }>
+  get_nft_address_by_index PROC:<{
+    //  index
+    load_data INLINECALLDICT	//  index _11 _12 _13 _14 _15
+    s1 s4 XCHG
+    4 BLKDROP	//  index nft_item_code
+    calculate_nft_item_state_init CALLDICT	//  state_init
+    0 PUSHINT	//  state_init _9=0
+    SWAP	//  _9=0 state_init
+    calculate_nft_item_address CALLDICT	//  _10
+  }>
+  royalty_params PROC:<{
+    // 
+    load_data INLINECALLDICT	//  _16 _17 _18 _19 _20
+    4 1 BLKDROP2	//  royalty
+    CTOS	//  rs
+    16 LDU	//  _8 rs
+    16 LDU	//  _8 _11 rs
+    LDMSGADDR	//  _8 _11 _26 _25
+    DROP	//  _8 _11 _14
+  }>
+  get_nft_content PROC:<{
+    //  index individual_nft_content
+    NIP	//  individual_nft_content
+    load_data INLINECALLDICT	//  individual_nft_content _23 _24 _25 _26 _27
+    s2 s4 XCHG
+    4 BLKDROP	//  individual_nft_content content
+    CTOS	//  individual_nft_content cs
+    LDREF	//  individual_nft_content _29 _28
+    NIP	//  individual_nft_content cs
+    LDREF	//  individual_nft_content _31 _30
+    DROP	//  individual_nft_content _13
+    CTOS	//  individual_nft_content common_content
+    1 PUSHINT	//  individual_nft_content common_content _16=1
+    NEWC	//  individual_nft_content common_content _16=1 _17
+    8 STU	//  individual_nft_content common_content _19
+    SWAP	//  individual_nft_content _19 common_content
+    STSLICER	//  individual_nft_content _20
+    STREF	//  _21
+    ENDC	//  _22
+  }>
+  load_test_data PROCINLINE:<{
+    // 
+    c4 PUSH	//  _1
+    CTOS	//  ds
+    LDMSGADDR	//  _3 ds
+    64 LDU	//  _3 _5 ds
+    LDREF	//  _3 _5 _8 ds
+    LDREF	//  _3 _5 _8 _10 ds
+    LDREF	//  _3 _5 _8 _10 _23 _22
+    DROP	//  _3 _5 _8 _10 _12
+  }>
+  get_owner PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _6 _7 _8 _9 _10
+    4 BLKDROP	//  owner
+  }>
+  get_content PROCINLINE:<{
+    // 
+    load_test_data INLINECALLDICT	//  _6 _7 _8 _9 _10
+    s2 s4 XCHG
+    4 BLKDROP	//  content
+  }>
+  get_nft_index PROCINLINE:<{
+    // 
+    load_test_data INLINECALLDICT	//  _6 _7 _8 _9 _10
+    s3 s4 XCHG
+    4 BLKDROP	//  idx
+  }>
+  load_test_royalty PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _16 _17 _18 _19 _20
+    4 1 BLKDROP2	//  royalty
+    CTOS	//  ds
+    16 LDU	//  _8 ds
+    16 LDU	//  _8 _11 ds
+    LDMSGADDR	//  _8 _11 _26 _25
+    DROP	//  _8 _11 _14
+  }>
+  get_test_royalty PROC:<{
+    // 
+    CONT:<{
+      royalty_params CALLDICT
+    }>	//  _2
+    0 TUPLE	//  _2 _3
+    invoke_method CALLDICT	//  _8 _9
+    NIP	//  stack
+    DUP	//  stack stack
+    FIRST	//  stack _5
+    OVER	//  stack _5 stack
+    SECOND	//  stack _5 _6
+    s0 s2 XCHG	//  _6 _5 stack
+    THIRD	//  _6 _5 _7
+    s1 s2 XCHG	//  _5 _6 _7
+  }>
+  get_state_init_field PROCINLINE:<{
+    //  state_init idx
+    PUSHNULL	//  state_init idx res
+    0 PUSHINT	//  state_init idx res next_idx=0
+    UNTIL:<{
+      s3 s0 PUSH2	//  state_init idx res next_idx state_init next_idx
+      INDEXVAR	//  state_init idx res next_idx flag
+      DUP	//  state_init idx res next_idx flag flag
+      IF:<{	//  state_init idx res next_idx flag
+        SWAP	//  state_init idx res flag next_idx
+        2 ADDCONST	//  state_init idx res flag _8
+      }>ELSE<{	//  state_init idx res next_idx flag
+        SWAP	//  state_init idx res flag next_idx
+        INC	//  state_init idx res flag _8
+      }>	//  state_init idx res flag next_idx
+      s0 s3 XCHG	//  state_init next_idx res flag idx
+      DEC	//  state_init next_idx res flag idx
+      0 PUSHINT
+      ROT	//  state_init next_idx res idx _15=0 flag
+      AND	//  state_init next_idx res idx _16
+      s1 s(-1) PUXC	//  state_init next_idx res idx idx _16
+      EQUAL	//  state_init next_idx res idx _17
+      IF:<{	//  state_init next_idx res idx
+        NIP	//  state_init next_idx idx
+        OVER	//  state_init next_idx idx next_idx
+        DEC	//  state_init next_idx idx _19
+        s3 s(-1) PUXC	//  state_init next_idx idx state_init _19
+        INDEXVAR	//  state_init next_idx idx res
+        SWAP	//  state_init next_idx res idx
+      }>	//  state_init next_idx res idx
+      OVER	//  state_init next_idx res idx res
+      ISNULL	//  state_init next_idx res idx _21
+      NOT	//  state_init next_idx res idx _22
+      OVER	//  state_init next_idx res idx _22 idx
+      OR	//  state_init next_idx res idx _23
+      1 LESSINT	//  state_init next_idx res idx _25
+      s1 s3 XCHG	//  state_init idx res next_idx _25
+    }>	//  state_init idx res next_idx
+    s1 s3 XCHG
+    3 BLKDROP	//  res
+  }>
+  validate_TIP_64 PROCINLINE:<{
+    //  content_data
+    8 LDU	//  content_layout content_data
+    OVER	//  content_layout content_data content_layout
+    1 EQINT	//  content_layout content_data _7
+    s2 PUSH	//  content_layout content_data _7 content_layout
+    0 EQINT	//  content_layout content_data _7 _9
+    OR	//  content_layout content_data _10
+    305 THROWIFNOT
+    SWAP	//  content_data content_layout
+    1 EQINT	//  content_data _13
+    IF:<{	//  content_data
+      token_snake_len INLINECALLDICT	//  _15
+      8 GTINT	//  _17
+      306 THROWIFNOT
+    }>ELSE<{	//  content_data
+      PLDDICT	//  _20
+      DICTEMPTY	//  _21
+      306 THROWIFNOT
+    }>
+  }>
+  __test_change_owner PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _56 _57 _58 _59 _60
+    4 BLKDROP	//  owner_address
+    3 PUSHINT	//  owner_address change_owner=3
+    1337 PUSHINT	//  owner_address change_owner=3 _9=1337
+    RAND	//  owner_address change_owner=3 _10
+    INC	//  owner_address change_owner=3 query_id
+    0 PUSHINT	//  owner_address change_owner=3 query_id _14=0
+    DUP	//  owner_address change_owner=3 query_id _14=0 _15=0
+    RANDU256	//  owner_address change_owner=3 query_id _14=0 _15=0 _16
+    generate_internal_address_with_custom_data CALLDICT	//  owner_address change_owner=3 query_id rand_addr
+    -ROT	//  owner_address rand_addr change_owner=3 query_id
+    generate_internal_message_body CALLDICT	//  owner_address rand_addr _19
+    OVER	//  owner_address rand_addr _19 rand_addr
+    STSLICER	//  owner_address rand_addr msg_body
+    0 PUSHINT	//  owner_address rand_addr msg_body _22=0
+    s0 s0 PUSH2	//  owner_address rand_addr msg_body _22=0 _23=0 _24=0
+    PUSHNULL	//  owner_address rand_addr msg_body _22=0 _23=0 _24=0 _25
+    s4 s1 s(-2) PU2XC
+    s7 PUSH
+    s0 s2 XCHG	//  owner_address rand_addr msg_body _22=0 _23=0 _24=0 msg_body rand_addr _25 _26=0
+    generate_internal_message_custom CALLDICT	//  owner_address rand_addr msg_body msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  owner_address rand_addr msg_body msg _29
+    1000000000 PUSHINT	//  owner_address rand_addr msg_body msg _29 _31=1000000000
+    s0 s3 PUSH2	//  owner_address rand_addr msg_body msg _29 _31=1000000000 _32=1000000000 msg_body
+    ENDC	//  owner_address rand_addr msg_body msg _29 _31=1000000000 _32=1000000000 _33
+    CTOS	//  owner_address rand_addr msg_body msg _29 _31=1000000000 _32=1000000000 _34
+    s1 s3 s0 XCHG3
+    s1 s4 XCHG	//  owner_address rand_addr msg_body _29 _31=1000000000 _32=1000000000 msg _34
+    4 TUPLE	//  owner_address rand_addr msg_body _29 _30
+    invoke_method_expect_fail CALLDICT	//  owner_address rand_addr msg_body gas_failed
+    0 PUSHINT	//  owner_address rand_addr msg_body gas_failed _36=0
+    s0 s0 PUSH2	//  owner_address rand_addr msg_body gas_failed _36=0 _37=0 _38=0
+    PUSHNULL	//  owner_address rand_addr msg_body gas_failed _36=0 _37=0 _38=0 _39
+    s1 s5 PUSH2
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s0 s3 XCHG
+    s0 s4 XCHG
+    s9 s9 s9 XCHG3	//  gas_failed rand_addr msg_body _36=0 _37=0 _38=0 msg_body owner_address _39 _40=0
+    generate_internal_message_custom CALLDICT	//  gas_failed rand_addr msg_body msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  gas_failed rand_addr msg_body msg _44
+    1000000000 PUSHINT	//  gas_failed rand_addr msg_body msg _44 _46=1000000000
+    0 PUSHINT	//  gas_failed rand_addr msg_body msg _44 _46=1000000000 _47=0
+    s0 s4 XCHG	//  gas_failed rand_addr _47=0 msg _44 _46=1000000000 msg_body
+    ENDC	//  gas_failed rand_addr _47=0 msg _44 _46=1000000000 _48
+    CTOS	//  gas_failed rand_addr _47=0 msg _44 _46=1000000000 _49
+    s4 s3 s0 XCHG3	//  gas_failed rand_addr _44 _46=1000000000 _47=0 msg _49
+    4 TUPLE	//  gas_failed rand_addr _44 _45
+    invoke_method CALLDICT	//  gas_failed rand_addr _61 _62
+    DROP	//  gas_failed rand_addr gas_success
+    get_owner CALLDICT	//  gas_failed rand_addr gas_success _52
+    s1 s2 XCHG	//  gas_failed gas_success rand_addr _52
+    SDEQ	//  gas_failed gas_success _53
+    500 THROWIFNOT
+    SWAP	//  gas_success gas_failed
+    ADD	//  _55
+  }>
+  __test_deploy_item PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _116 _117 _118 _119 _120
+    3 BLKDROP	//  owner_address prev_item_index
+    0 PUSHINT	//  owner_address prev_item_index _7=0
+    DUP	//  owner_address prev_item_index _7=0 _8=0
+    RANDU256	//  owner_address prev_item_index _7=0 _8=0 _9
+    generate_internal_address_with_custom_data CALLDICT	//  owner_address prev_item_index rand_addr
+    NEWC	//  owner_address prev_item_index rand_addr _12
+    x{6d795f6e66742e6a736f6e} PUSHSLICE	//  owner_address prev_item_index rand_addr _12 _13
+    STSLICER	//  owner_address prev_item_index rand_addr _14
+    ENDC	//  owner_address prev_item_index rand_addr nft_content
+    NEWC	//  owner_address prev_item_index rand_addr nft_content _17
+    s4 PUSH	//  owner_address prev_item_index rand_addr nft_content _17 owner_address
+    STSLICER	//  owner_address prev_item_index rand_addr nft_content _18
+    STREF	//  owner_address prev_item_index rand_addr _19
+    ENDC	//  owner_address prev_item_index rand_addr nft_init
+    1337 PUSHINT	//  owner_address prev_item_index rand_addr nft_init _22=1337
+    RAND	//  owner_address prev_item_index rand_addr nft_init _23
+    INC	//  owner_address prev_item_index rand_addr nft_init query_id
+    100000000 PUSHINT	//  owner_address prev_item_index rand_addr nft_init query_id forward_amount
+    0 PUSHINT	//  owner_address prev_item_index rand_addr nft_init query_id forward_amount _31=0
+    s0 s3 s2 XCPUXC
+    s3 PUSH	//  owner_address prev_item_index rand_addr nft_init forward_amount _31=0 nft_init query_id forward_amount
+    generate_nft_deploy_request CALLDICT	//  owner_address prev_item_index rand_addr nft_init forward_amount msg_body
+    0 PUSHINT	//  owner_address prev_item_index rand_addr nft_init forward_amount msg_body _34=0
+    s0 s0 PUSH2	//  owner_address prev_item_index rand_addr nft_init forward_amount msg_body _34=0 _35=0 _36=0
+    PUSHNULL	//  owner_address prev_item_index rand_addr nft_init forward_amount msg_body _34=0 _35=0 _36=0 _37
+    s1 s4 PUSH2
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s9 s9 s9 XCHG3	//  owner_address prev_item_index msg_body nft_init forward_amount _34=0 _35=0 _36=0 msg_body rand_addr _37 _38=0
+    generate_internal_message_custom CALLDICT	//  owner_address prev_item_index msg_body nft_init forward_amount msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41
+    1000000000 PUSHINT	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41 _43=1000000000
+    0 PUSHINT	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41 _43=1000000000 _44=0
+    s6 PUSH	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41 _43=1000000000 _44=0 msg_body
+    ENDC	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41 _43=1000000000 _44=0 _45
+    CTOS	//  owner_address prev_item_index msg_body nft_init forward_amount msg _41 _43=1000000000 _44=0 _46
+    s1 s3 s0 XCHG3
+    s1 s4 XCHG	//  owner_address prev_item_index msg_body nft_init forward_amount _41 _43=1000000000 _44=0 msg _46
+    4 TUPLE	//  owner_address prev_item_index msg_body nft_init forward_amount _41 _42
+    invoke_method_expect_fail CALLDICT	//  owner_address prev_item_index msg_body nft_init forward_amount gas_used
+    assert_no_actions INLINECALLDICT
+    0 PUSHINT	//  owner_address prev_item_index msg_body nft_init forward_amount gas_used _50=0
+    s0 s0 PUSH2	//  owner_address prev_item_index msg_body nft_init forward_amount gas_used _50=0 _51=0 _52=0
+    PUSHNULL	//  owner_address prev_item_index msg_body nft_init forward_amount gas_used _50=0 _51=0 _52=0 _53
+    s1 s7 PUSH2
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s0 s3 XCHG
+    s0 s4 XCHG
+    s11 s11 s11 XCHG3	//  gas_used prev_item_index msg_body nft_init forward_amount _50=0 _51=0 _52=0 msg_body owner_address _53 _54=0
+    generate_internal_message_custom CALLDICT	//  gas_used prev_item_index msg_body nft_init forward_amount msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  gas_used prev_item_index msg_body nft_init forward_amount msg _58
+    1000000000 PUSHINT	//  gas_used prev_item_index msg_body nft_init forward_amount msg _58 _60=1000000000
+    0 PUSHINT	//  gas_used prev_item_index msg_body nft_init forward_amount msg _58 _60=1000000000 _61=0
+    s0 s6 XCHG	//  gas_used prev_item_index _61=0 nft_init forward_amount msg _58 _60=1000000000 msg_body
+    ENDC	//  gas_used prev_item_index _61=0 nft_init forward_amount msg _58 _60=1000000000 _62
+    CTOS	//  gas_used prev_item_index _61=0 nft_init forward_amount msg _58 _60=1000000000 _63
+    s6 s3 s0 XCHG3	//  gas_used prev_item_index _58 nft_init forward_amount _60=1000000000 _61=0 msg _63
+    4 TUPLE	//  gas_used prev_item_index _58 nft_init forward_amount _59
+    s1 s3 XCHG	//  gas_used prev_item_index forward_amount nft_init _58 _59
+    invoke_method CALLDICT	//  gas_used prev_item_index forward_amount nft_init _121 _122
+    DROP	//  gas_used prev_item_index forward_amount nft_init gas_success
+    parse_c5 INLINECALLDICT	//  gas_used prev_item_index forward_amount nft_init gas_success actions
+    DUP	//  gas_used prev_item_index forward_amount nft_init gas_success actions actions
+    TLEN	//  gas_used prev_item_index forward_amount nft_init gas_success actions _68
+    1 EQINT	//  gas_used prev_item_index forward_amount nft_init gas_success actions _70
+    500 THROWIFNOT
+    0 INDEX	//  gas_used prev_item_index forward_amount nft_init gas_success _76
+    UNTRIPLE	//  gas_used prev_item_index forward_amount nft_init gas_success _123 _124 _125
+    DROP	//  gas_used prev_item_index forward_amount nft_init gas_success action_type body
+    SWAP	//  gas_used prev_item_index forward_amount nft_init gas_success body action_type
+    0 EQINT	//  gas_used prev_item_index forward_amount nft_init gas_success body _80
+    501 THROWIFNOT
+    parse_internal_message CALLDICT	//  gas_used prev_item_index forward_amount nft_init gas_success parsed_msg
+    DUP	//  gas_used prev_item_index forward_amount nft_init gas_success parsed_msg parsed_msg
+    5 INDEX	//  gas_used prev_item_index forward_amount nft_init gas_success parsed_msg _87
+    s1 s4 XCHG	//  gas_used prev_item_index parsed_msg nft_init gas_success forward_amount _87
+    EQUAL	//  gas_used prev_item_index parsed_msg nft_init gas_success _88
+    502 THROWIFNOT
+    s2 PUSH	//  gas_used prev_item_index parsed_msg nft_init gas_success parsed_msg
+    7 INDEX	//  gas_used prev_item_index parsed_msg nft_init gas_success state_init
+    DUP	//  gas_used prev_item_index parsed_msg nft_init gas_success state_init state_init
+    TLEN	//  gas_used prev_item_index parsed_msg nft_init gas_success state_init state_len
+    0 GTINT	//  gas_used prev_item_index parsed_msg nft_init gas_success state_init _97
+    503 THROWIFNOT
+    4 PUSHINT	//  gas_used prev_item_index parsed_msg nft_init gas_success state_init _100=4
+    get_state_init_field INLINECALLDICT	//  gas_used prev_item_index parsed_msg nft_init gas_success init_data
+    ISNULL	//  gas_used prev_item_index parsed_msg nft_init gas_success _103
+    504 THROWIF
+    SWAP	//  gas_used prev_item_index parsed_msg gas_success nft_init
+    CTOS	//  gas_used prev_item_index parsed_msg gas_success _106
+    s0 s2 XCHG	//  gas_used prev_item_index _106 gas_success parsed_msg
+    8 INDEX	//  gas_used prev_item_index _106 gas_success _108
+    s1 s2 XCHG	//  gas_used prev_item_index gas_success _106 _108
+    SDEQ	//  gas_used prev_item_index gas_success _109
+    505 THROWIFNOT
+    get_nft_index INLINECALLDICT	//  gas_used prev_item_index gas_success _112
+    ROT	//  gas_used gas_success _112 prev_item_index
+    GREATER	//  gas_used gas_success _113
+    506 THROWIFNOT
+    ADD	//  _115
+  }>
+  __test_royalty_msg PROC:<{
+    // 
+    get_test_royalty CALLDICT	//  numirator denominator dst
+    1337 PUSHINT	//  numirator denominator dst _5=1337
+    RAND	//  numirator denominator dst _6
+    INC	//  numirator denominator dst query_id
+    0 PUSHINT	//  numirator denominator dst query_id _10=0
+    DUP	//  numirator denominator dst query_id _10=0 _11=0
+    RANDU256	//  numirator denominator dst query_id _10=0 _11=0 _12
+    generate_internal_address_with_custom_data CALLDICT	//  numirator denominator dst query_id src_addr
+    OVER	//  numirator denominator dst query_id src_addr query_id
+    generate_get_royalty_params CALLDICT	//  numirator denominator dst query_id src_addr msg_body
+    0 PUSHINT	//  numirator denominator dst query_id src_addr msg_body _17=0
+    s0 s0 PUSH2	//  numirator denominator dst query_id src_addr msg_body _17=0 _18=0 _19=0
+    PUSHNULL	//  numirator denominator dst query_id src_addr msg_body _17=0 _18=0 _19=0 _20
+    s4 s1 s(-2) PU2XC
+    s7 PUSH
+    s0 s2 XCHG	//  numirator denominator dst query_id src_addr msg_body _17=0 _18=0 _19=0 msg_body src_addr _20 _21=0
+    generate_internal_message_custom CALLDICT	//  numirator denominator dst query_id src_addr msg_body msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  numirator denominator dst query_id src_addr msg_body msg _25
+    1000000000 PUSHINT	//  numirator denominator dst query_id src_addr msg_body msg _25 _27=1000000000
+    s0 s3 PUXC	//  numirator denominator dst query_id src_addr _28=1000000000 msg _25 _27=1000000000 msg_body
+    ENDC	//  numirator denominator dst query_id src_addr _28=1000000000 msg _25 _27=1000000000 _29
+    CTOS	//  numirator denominator dst query_id src_addr _28=1000000000 msg _25 _27=1000000000 _30
+    s4 s3 s0 XCHG3	//  numirator denominator dst query_id src_addr _25 _27=1000000000 _28=1000000000 msg _30
+    4 TUPLE	//  numirator denominator dst query_id src_addr _25 _26
+    invoke_method CALLDICT	//  numirator denominator dst query_id src_addr _96 _97
+    DROP	//  numirator denominator dst query_id src_addr gas_used
+    parse_c5 INLINECALLDICT	//  numirator denominator dst query_id src_addr gas_used actions
+    DUP	//  numirator denominator dst query_id src_addr gas_used actions actions
+    TLEN	//  numirator denominator dst query_id src_addr gas_used actions _35
+    1 EQINT	//  numirator denominator dst query_id src_addr gas_used actions _37
+    500 THROWIFNOT
+    FIRST	//  numirator denominator dst query_id src_addr gas_used _42
+    UNTRIPLE	//  numirator denominator dst query_id src_addr gas_used action_type body mode
+    s0 s2 XCHG	//  numirator denominator dst query_id src_addr gas_used mode body action_type
+    0 EQINT	//  numirator denominator dst query_id src_addr gas_used mode body _46
+    501 THROWIFNOT
+    SWAP	//  numirator denominator dst query_id src_addr gas_used body mode
+    64 EQINT	//  numirator denominator dst query_id src_addr gas_used body _50
+    502 THROWIFNOT
+    parse_internal_message CALLDICT	//  numirator denominator dst query_id src_addr gas_used parsed_msg
+    DUP	//  numirator denominator dst query_id src_addr gas_used parsed_msg parsed_msg
+    4 INDEX	//  numirator denominator dst query_id src_addr gas_used parsed_msg _57
+    s1 s3 XCHG	//  numirator denominator dst query_id parsed_msg gas_used src_addr _57
+    SDEQ	//  numirator denominator dst query_id parsed_msg gas_used _58
+    503 THROWIFNOT
+    SWAP	//  numirator denominator dst query_id gas_used parsed_msg
+    8 INDEX	//  numirator denominator dst query_id gas_used msg_body
+    2831876269 PUSHINT	//  numirator denominator dst query_id gas_used msg_body _64=2831876269
+    SWAP	//  numirator denominator dst query_id gas_used _64=2831876269 msg_body
+    32 LDU	//  numirator denominator dst query_id gas_used _64=2831876269 _65 msg_body
+    -ROT	//  numirator denominator dst query_id gas_used msg_body _64=2831876269 _65
+    EQUAL	//  numirator denominator dst query_id gas_used msg_body _68
+    504 THROWIFNOT
+    64 LDU	//  numirator denominator dst query_id gas_used _71 msg_body
+    s3 s3 XCHG2	//  numirator denominator dst msg_body gas_used query_id _71
+    EQUAL	//  numirator denominator dst msg_body gas_used _74
+    505 THROWIFNOT
+    SWAP	//  numirator denominator dst gas_used msg_body
+    16 LDU	//  numirator denominator dst gas_used _77 msg_body
+    s5 s5 XCHG2	//  msg_body denominator dst gas_used numirator _77
+    EQUAL	//  msg_body denominator dst gas_used _80
+    506 THROWIFNOT
+    s0 s3 XCHG	//  gas_used denominator dst msg_body
+    16 LDU	//  gas_used denominator dst _83 msg_body
+    s3 s3 XCHG2	//  gas_used msg_body dst denominator _83
+    EQUAL	//  gas_used msg_body dst _86
+    507 THROWIFNOT
+    SWAP	//  gas_used dst msg_body
+    LDMSGADDR	//  gas_used dst _110 _109
+    DROP	//  gas_used dst _89
+    SDEQ	//  gas_used _91
+    508 THROWIFNOT
+  }>
+  __test_get_collection_data PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _40 _41 _42 _43 _44
+    2DROP	//  owner_address next_item_index content
+    CONT:<{
+      get_collection_data CALLDICT
+    }>	//  owner_address next_item_index content _8
+    0 TUPLE	//  owner_address next_item_index content _8 _9
+    invoke_method CALLDICT	//  owner_address next_item_index content gas_used stack
+    DUP	//  owner_address next_item_index content gas_used stack stack
+    TLEN	//  owner_address next_item_index content gas_used stack _12
+    3 EQINT	//  owner_address next_item_index content gas_used stack _14
+    600 THROWIFNOT
+    DUP	//  owner_address next_item_index content gas_used stack stack
+    FIRST	//  owner_address next_item_index content gas_used stack res_idx
+    s1 s4 XCHG	//  owner_address stack content gas_used next_item_index res_idx
+    EQUAL	//  owner_address stack content gas_used _19
+    601 THROWIFNOT
+    s2 PUSH	//  owner_address stack content gas_used stack
+    SECOND	//  owner_address stack content gas_used res_content
+    s0 s2 XCHG	//  owner_address stack res_content gas_used content
+    CTOS	//  owner_address stack res_content gas_used cont_slice
+    LDREF	//  owner_address stack res_content gas_used _48 _47
+    DROP	//  owner_address stack res_content gas_used coll_content
+    DUP	//  owner_address stack res_content gas_used coll_content coll_content
+    CTOS	//  owner_address stack res_content gas_used coll_content _29
+    s0 s3 XCHG	//  owner_address stack _29 gas_used coll_content res_content
+    CTOS	//  owner_address stack _29 gas_used coll_content _30
+    s1 s3 XCHG	//  owner_address stack coll_content gas_used _29 _30
+    SDEQ	//  owner_address stack coll_content gas_used _31
+    602 THROWIFNOT
+    s0 s2 XCHG	//  owner_address gas_used coll_content stack
+    THIRD	//  owner_address gas_used coll_content res_owner
+    s1 s3 XCHG	//  coll_content gas_used owner_address res_owner
+    SDEQ	//  coll_content gas_used _36
+    603 THROWIFNOT
+    SWAP	//  gas_used coll_content
+    CTOS	//  gas_used _38
+    validate_TIP_64 INLINECALLDICT
+  }>
+  __test_get_nft_content PROC:<{
+    // 
+    load_test_data INLINECALLDICT	//  _38 _39 _40 _41 _42
+    s2 s4 XCHG
+    4 BLKDROP	//  content
+    CTOS	//  coll_slice
+    NEWC	//  coll_slice _9
+    x{6d795f6e66742e6a736f6e} PUSHSLICE	//  coll_slice _9 _10
+    STSLICER	//  coll_slice _11
+    ENDC	//  coll_slice nft_content
+    SWAP	//  nft_content coll_slice
+    LDREF	//  nft_content _44 _43
+    NIP	//  nft_content coll_slice
+    LDREF	//  nft_content _46 _45
+    DROP	//  nft_content collection_comm
+    1 PUSHINT	//  nft_content collection_comm _20=1
+    s1 s2 XCPU	//  nft_content _20=1 collection_comm nft_content
+    snake_concat_tagged INLINECALLDICT	//  nft_content concat_content
+    CONT:<{
+      get_nft_content CALLDICT
+    }>	//  nft_content concat_content _24
+    0 PUSHINT	//  nft_content concat_content _24 _26=0
+    s0 s3 XCHG2	//  _24 concat_content _26=0 nft_content
+    PAIR	//  _24 concat_content _25
+    s1 s2 XCHG	//  concat_content _24 _25
+    invoke_method CALLDICT	//  concat_content gas_used stack
+    0 INDEX	//  concat_content gas_used res
+    CTOS	//  concat_content gas_used res_slice
+    s0 s2 XCHG	//  res_slice gas_used concat_content
+    CTOS	//  res_slice gas_used _34
+    s2 PUSH	//  res_slice gas_used _34 res_slice
+    snake_equal? INLINECALLDICT	//  res_slice gas_used _35
+    601 THROWIFNOT
+    SWAP	//  gas_used res_slice
+    validate_TIP_64 INLINECALLDICT
+  }>
+  __test_royalty_params PROC:<{
+    // 
+    CONT:<{
+      royalty_params CALLDICT
+    }>	//  _2
+    0 TUPLE	//  _2 _3
+    invoke_method CALLDICT	//  gas_used stack
+    DUP	//  gas_used stack stack
+    TLEN	//  gas_used stack _6
+    3 EQINT	//  gas_used stack _8
+    700 THROWIFNOT
+    DUP	//  gas_used stack stack
+    FIRST	//  gas_used stack _11
+    <{ TRY:<{ 0 PUSHINT ADD DROP -1 PUSHINT }>CATCH<{ 2DROP 0 PUSHINT }> }>CONT 1 1 CALLXARGS	//  gas_used stack _12
+    701 THROWIFNOT
+    DUP	//  gas_used stack stack
+    SECOND	//  gas_used stack _15
+    <{ TRY:<{ 0 PUSHINT ADD DROP -1 PUSHINT }>CATCH<{ 2DROP 0 PUSHINT }> }>CONT 1 1 CALLXARGS	//  gas_used stack _16
+    702 THROWIFNOT
+    DUP	//  gas_used stack stack
+    THIRD	//  gas_used stack _19
+    NIP	//  gas_used _19
+    <{ TRY:<{ SBITS DROP -1 PUSHINT }>CATCH<{ 2DROP 0 PUSHINT }> }>CONT 1 1 CALLXARGS	//  gas_used _20
+    703 THROWIFNOT
+  }>
+  __test_get_collection_data_deploy PROC:<{
+    // 
+    CONT:<{
+      get_collection_data CALLDICT
+    }>	//  _2
+    0 TUPLE	//  _2 _3
+    invoke_method CALLDICT	//  gas_before stack
+    DUP	//  gas_before stack stack
+    FIRST	//  gas_before stack idx_next
+    100000000 PUSHINT	//  gas_before stack idx_next forward_amount
+    1337 PUSHINT	//  gas_before stack idx_next forward_amount _12=1337
+    RAND	//  gas_before stack idx_next forward_amount _13
+    INC	//  gas_before stack idx_next forward_amount query_id
+    s3 PUSH	//  gas_before stack idx_next forward_amount query_id stack
+    SECOND	//  gas_before stack idx_next forward_amount query_id coll_content
+    s0 s4 XCHG	//  gas_before coll_content idx_next forward_amount query_id stack
+    THIRD	//  gas_before coll_content idx_next forward_amount query_id owner
+    NEWC	//  gas_before coll_content idx_next forward_amount query_id owner _21
+    x{6d795f6e66742e6a736f6e} PUSHSLICE	//  gas_before coll_content idx_next forward_amount query_id owner _21 _22
+    STSLICER	//  gas_before coll_content idx_next forward_amount query_id owner _23
+    ENDC	//  gas_before coll_content idx_next forward_amount query_id owner nft_content
+    NEWC	//  gas_before coll_content idx_next forward_amount query_id owner nft_content _26
+    s2 PUSH	//  gas_before coll_content idx_next forward_amount query_id owner nft_content _26 owner
+    STSLICER	//  gas_before coll_content idx_next forward_amount query_id owner nft_content _27
+    STREF	//  gas_before coll_content idx_next forward_amount query_id owner _28
+    ENDC	//  gas_before coll_content idx_next forward_amount query_id owner nft_init
+    s4 PUSH
+    s1 s3 s3 XCHG3
+    s0 s4 XCHG	//  gas_before coll_content idx_next owner idx_next nft_init query_id forward_amount
+    generate_nft_deploy_request CALLDICT	//  gas_before coll_content idx_next owner msg_body
+    0 PUSHINT	//  gas_before coll_content idx_next owner msg_body _33=0
+    s0 s0 PUSH2	//  gas_before coll_content idx_next owner msg_body _33=0 _34=0 _35=0
+    PUSHNULL	//  gas_before coll_content idx_next owner msg_body _33=0 _34=0 _35=0 _36
+    s4 s1 s(-2) PU2XC
+    s7 PUSH
+    s0 s2 XCHG	//  gas_before coll_content idx_next owner msg_body _33=0 _34=0 _35=0 msg_body owner _36 _37=0
+    generate_internal_message_custom CALLDICT	//  gas_before coll_content idx_next owner msg_body msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  gas_before coll_content idx_next owner msg_body msg _41
+    1000000000 PUSHINT	//  gas_before coll_content idx_next owner msg_body msg _41 _43=1000000000
+    s0 s3 PUXC	//  gas_before coll_content idx_next owner _44=1000000000 msg _41 _43=1000000000 msg_body
+    ENDC	//  gas_before coll_content idx_next owner _44=1000000000 msg _41 _43=1000000000 _45
+    CTOS	//  gas_before coll_content idx_next owner _44=1000000000 msg _41 _43=1000000000 _46
+    s4 s3 s0 XCHG3	//  gas_before coll_content idx_next owner _41 _43=1000000000 _44=1000000000 msg _46
+    4 TUPLE	//  gas_before coll_content idx_next owner _41 _42
+    invoke_method CALLDICT	//  gas_before coll_content idx_next owner _73 _74
+    DROP	//  gas_before coll_content idx_next owner gas_deploy
+    CONT:<{
+      get_collection_data CALLDICT
+    }>	//  gas_before coll_content idx_next owner gas_deploy _50
+    0 TUPLE	//  gas_before coll_content idx_next owner gas_deploy _50 _51
+    invoke_method CALLDICT	//  gas_before coll_content idx_next owner gas_deploy gas_after stack
+    DUP	//  gas_before coll_content idx_next owner gas_deploy gas_after stack stack
+    FIRST	//  gas_before coll_content idx_next owner gas_deploy gas_after stack _54
+    s0 s5 XCHG	//  gas_before coll_content _54 owner gas_deploy gas_after stack idx_next
+    INC	//  gas_before coll_content _54 owner gas_deploy gas_after stack _56
+    s1 s5 XCHG	//  gas_before coll_content stack owner gas_deploy gas_after _54 _56
+    EQUAL	//  gas_before coll_content stack owner gas_deploy gas_after _57
+    500 THROWIFNOT
+    s0 s4 XCHG	//  gas_before gas_after stack owner gas_deploy coll_content
+    CTOS	//  gas_before gas_after stack owner gas_deploy _60
+    s3 PUSH	//  gas_before gas_after stack owner gas_deploy _60 stack
+    SECOND	//  gas_before gas_after stack owner gas_deploy _60 _61
+    CTOS	//  gas_before gas_after stack owner gas_deploy _60 _62
+    SDEQ	//  gas_before gas_after stack owner gas_deploy _63
+    501 THROWIFNOT
+    s0 s2 XCHG	//  gas_before gas_after gas_deploy owner stack
+    THIRD	//  gas_before gas_after gas_deploy owner _66
+    SDEQ	//  gas_before gas_after gas_deploy _67
+    502 THROWIFNOT
+    -ROT	//  gas_deploy gas_before gas_after
+    ADD	//  gas_deploy _69
+    SWAP	//  _69 gas_deploy
+    ADD	//  _70
+  }>
+  __test_get_collection_data_change_owner PROC:<{
+    // 
+    CONT:<{
+      get_collection_data CALLDICT
+    }>	//  _2
+    0 TUPLE	//  _2 _3
+    invoke_method CALLDICT	//  gas_before stack
+    1337 PUSHINT	//  gas_before stack _6=1337
+    RAND	//  gas_before stack _7
+    INC	//  gas_before stack query_id
+    3 PUSHINT	//  gas_before stack query_id change_owner=3
+    s0 s2 XCHG	//  gas_before change_owner=3 query_id stack
+    THIRD	//  gas_before change_owner=3 query_id owner
+    0 PUSHINT	//  gas_before change_owner=3 query_id owner _15=0
+    DUP	//  gas_before change_owner=3 query_id owner _15=0 _16=0
+    RANDU256	//  gas_before change_owner=3 query_id owner _15=0 _16=0 _17
+    generate_internal_address_with_custom_data CALLDICT	//  gas_before change_owner=3 query_id owner new_owner
+    2SWAP	//  gas_before owner new_owner change_owner=3 query_id
+    generate_internal_message_body CALLDICT	//  gas_before owner new_owner _20
+    OVER	//  gas_before owner new_owner _20 new_owner
+    STSLICER	//  gas_before owner new_owner msg_body
+    0 PUSHINT	//  gas_before owner new_owner msg_body _23=0
+    s0 s0 PUSH2	//  gas_before owner new_owner msg_body _23=0 _24=0 _25=0
+    PUSHNULL	//  gas_before owner new_owner msg_body _23=0 _24=0 _25=0 _26
+    s1 s4 PUSH2
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s8 s8 s8 XCHG3	//  gas_before msg_body new_owner _23=0 _24=0 _25=0 msg_body owner _26 _27=0
+    generate_internal_message_custom CALLDICT	//  gas_before msg_body new_owner msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  gas_before msg_body new_owner msg _31
+    1000000000 PUSHINT	//  gas_before msg_body new_owner msg _31 _33=1000000000
+    s0 s4 PUXC	//  gas_before _34=1000000000 new_owner msg _31 _33=1000000000 msg_body
+    ENDC	//  gas_before _34=1000000000 new_owner msg _31 _33=1000000000 _35
+    CTOS	//  gas_before _34=1000000000 new_owner msg _31 _33=1000000000 _36
+    s5 s3 s0 XCHG3	//  gas_before _31 new_owner _33=1000000000 _34=1000000000 msg _36
+    4 TUPLE	//  gas_before _31 new_owner _32
+    s1 s2 XCHG	//  gas_before new_owner _31 _32
+    invoke_method CALLDICT	//  gas_before new_owner _51 _52
+    DROP	//  gas_before new_owner gas_change
+    CONT:<{
+      get_collection_data CALLDICT
+    }>	//  gas_before new_owner gas_change _40
+    0 TUPLE	//  gas_before new_owner gas_change _40 _41
+    invoke_method CALLDICT	//  gas_before new_owner gas_change gas_after stack
+    THIRD	//  gas_before new_owner gas_change gas_after _44
+    s1 s3 XCHG	//  gas_before gas_after gas_change new_owner _44
+    SDEQ	//  gas_before gas_after gas_change _45
+    500 THROWIFNOT
+    s1 s2 XCHG	//  gas_after gas_before gas_change
+    ADD	//  gas_after _47
+    SWAP	//  _47 gas_after
+    ADD	//  _48
+  }>
+  __test_get_nft_address_by_index PROC:<{
+    // 
+    get_owner CALLDICT	//  owner
+    NEWC	//  owner _3
+    x{6d795f6e66742e6a736f6e} PUSHSLICE	//  owner _3 _4
+    STSLICER	//  owner _5
+    ENDC	//  owner nft_content
+    NEWC	//  owner nft_content _8
+    s2 PUSH	//  owner nft_content _8 owner
+    STSLICER	//  owner nft_content _9
+    STREF	//  owner _10
+    ENDC	//  owner nft_init
+    1337 PUSHINT	//  owner nft_init _13=1337
+    RAND	//  owner nft_init _14
+    INC	//  owner nft_init query_id
+    100000000 PUSHINT	//  owner nft_init query_id forward_amount
+    0 PUSHINT	//  owner nft_init query_id forward_amount deploy_idx=0
+    s3 s2 s2 XC2PU
+    s0 s4 XCHG	//  owner deploy_idx=0 deploy_idx=0 nft_init query_id forward_amount
+    generate_nft_deploy_request CALLDICT	//  owner deploy_idx=0 msg_body
+    s1 s1 s1 PUSH3	//  owner deploy_idx=0 msg_body _26=0 _27=0 _28=0
+    PUSHNULL	//  owner deploy_idx=0 msg_body _26=0 _27=0 _28=0 _29
+    s1 s4 PUSH2
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s8 s8 s8 XCHG3	//  msg_body deploy_idx=0 _26=0 _27=0 _28=0 msg_body owner _29 _30=0
+    generate_internal_message_custom CALLDICT	//  msg_body deploy_idx=0 msg
+    CONT:<{
+      recv_internal CALLDICT
+    }>	//  msg_body deploy_idx=0 msg _34
+    1000000000 PUSHINT	//  msg_body deploy_idx=0 msg _34 _36=1000000000
+    s3 PUSH	//  msg_body deploy_idx=0 msg _34 _36=1000000000 _37=0
+    s0 s5 XCHG	//  _37=0 deploy_idx=0 msg _34 _36=1000000000 msg_body
+    ENDC	//  _37=0 deploy_idx=0 msg _34 _36=1000000000 _38
+    CTOS	//  _37=0 deploy_idx=0 msg _34 _36=1000000000 _39
+    s5 s3 s0 XCHG3	//  _34 deploy_idx=0 _36=1000000000 _37=0 msg _39
+    4 TUPLE	//  _34 deploy_idx=0 _35
+    s1 s2 XCHG	//  deploy_idx=0 _34 _35
+    invoke_method CALLDICT	//  deploy_idx=0 _78 _79
+    DROP	//  deploy_idx=0 gas_used
+    parse_c5 INLINECALLDICT	//  deploy_idx=0 gas_used actions
+    DUP	//  deploy_idx=0 gas_used actions actions
+    TLEN	//  deploy_idx=0 gas_used actions _44
+    1 EQINT	//  deploy_idx=0 gas_used actions _46
+    500 THROWIFNOT
+    0 INDEX	//  deploy_idx=0 gas_used _52
+    UNTRIPLE	//  deploy_idx=0 gas_used _80 _81 _82
+    DROP	//  deploy_idx=0 gas_used action_type body
+    SWAP	//  deploy_idx=0 gas_used body action_type
+    0 EQINT	//  deploy_idx=0 gas_used body _56
+    501 THROWIFNOT
+    parse_internal_message CALLDICT	//  deploy_idx=0 gas_used parsed_msg
+    4 INDEX	//  deploy_idx=0 gas_used nft_address
+    CONT:<{
+      get_nft_address_by_index CALLDICT
+    }>	//  deploy_idx=0 gas_used nft_address _66
+    s0 s3 XCHG	//  _66 gas_used nft_address deploy_idx=0
+    SINGLE	//  _66 gas_used nft_address _67
+    s1 s3 XCHG	//  nft_address gas_used _66 _67
+    invoke_method CALLDICT	//  nft_address gas_used _83 _84
+    NIP	//  nft_address gas_used stack
+    DUP	//  nft_address gas_used stack stack
+    TLEN	//  nft_address gas_used stack _70
+    1 EQINT	//  nft_address gas_used stack _72
+    502 THROWIFNOT
+    FIRST	//  nft_address gas_used _75
+    s1 s2 XCHG	//  gas_used nft_address _75
+    SDEQ	//  gas_used _76
+    503 THROWIFNOT
+  }>
+}END>c

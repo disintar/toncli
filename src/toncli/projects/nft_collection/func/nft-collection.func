@@ -9,9 +9,9 @@
 ;;           = Storage;
 
 #pragma version >=0.2.0;
-#include "helpers.func";
-#include "params.func";
-#include "op-codes.func";
+#include "utils/helpers.func";
+#include "utils/params.func";
+#include "utils/op-codes.func";
 
 (slice, int, cell, cell, cell) load_data() inline {
   var ds = get_data().begin_parse();
