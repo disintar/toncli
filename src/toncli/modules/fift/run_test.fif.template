@@ -40,7 +40,7 @@ constant test_code         // save code cell as constant
 0                    // msgs_sent
 now                  // unixtime
 1                    // block_lt
-1                    // trans_lt
+now                  // trans_lt (use now to work with random)
 239                  // randseed
 1000000000 null pair // balance_remaining
 <b address Addr, b> <s // myself
