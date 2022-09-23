@@ -1,0 +1,67 @@
+// This is simple LCG random number generator  aimed to bring TVM like RAND functionality to fift.
+
+variable rnd_state
+now rnd_state ! // Initializing rnd_state with current timestamp
+
+
+1 255 << dup 1 - + =: max_int // 2^256 - 1 == ( 2^255 - 1 + 2^255 )
+1 32 <<  1 -       =: max_u32
+1 64 <<  1 -       =: max_u64
+1 128 << dup       =: max_range // 2 ^ 128 * max_u128 <  max_int otherwise int overflow
+1 -                =: max_u128
+
+
+// Taken from https://www.pcg-random.org/posts/does-it-beat-the-minimal-standard.html
+0x96704a6bb5d2c4fb3aa645df0540268d =: multiplier_128
+0x3cbec79d =: multiplier_32
+0x7facc0f7a00541bd =: multiplier_64
+
+
+{
+  dup rnd_state @ * + // state *= multiplier; state += multiplier
+  dup // Pushing the return value
+  max_u128 mod // Limit state to 128 bit
+  rnd_state ! // Saving the state
+} : lcg_rand
+
+{
+  multiplier_32 lcg_rand
+  max_u32 mod
+} : lcg_rand_32
+
+{
+  multiplier_64 lcg_rand
+  max_u64 mod
+} : lcg_rand_64
+
+{
+  multiplier_128 lcg_rand
+  max_u128 mod
+} : lcg_rand_128
+
+{
+  lcg_rand_128 u>B Bhashu
+
+} : random_256
+
+{
+  // Takes range as argument
+  dup max_range > abort"Max range is 2^128"
+
+dup max_u32 <= {
+
+	lcg_rand_32 * max_u32 / // x * range / max_val as in  FuC rand
+
+	} {
+		dup max_u64 <=
+		{
+			lcg_rand_64 * max_u64 /
+		} {
+			lcg_rand_128 * max_u128 / // Here int overflow on mult would be possible
+		} cond
+
+		// We can go furter with % max_int for > 128-bit ranges but it would not be fair range
+
+	} cond
+
+} : rand
