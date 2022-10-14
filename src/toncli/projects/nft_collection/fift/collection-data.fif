@@ -54,8 +54,8 @@ nft_path include constant nft_code
   0 64 u, // start nft index
 
   <b
-    collection_base offchain-token-data ref, // Storing collection base data ref
     collection_json offchain-token-data ref, // Storing common ref
+    <b collection_base $>B B, b> ref,
   b> ref, // content cell
 
   nft_code ref, // nft code
