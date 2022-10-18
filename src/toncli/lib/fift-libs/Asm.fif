@@ -1183,6 +1183,7 @@ x{FEEF10} @Defop GASLIMITSTEMP
 x{FEEF11} @Defop PRIVTOPUB
 x{FEEF12} @Defop SIGN
 x{FEEF13} @Defop RESETLOADEDCELLS
+x{FEEF14} @Defop SIGNS
 
 //
 // codepage primitives
