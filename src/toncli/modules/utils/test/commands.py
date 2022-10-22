@@ -1,3 +1,5 @@
+# Copyright (c) 2022 Disintar LLP Licensed under the Apache License Version 2.0
+
 """
 Build file(s) and save result fift file to location
 """

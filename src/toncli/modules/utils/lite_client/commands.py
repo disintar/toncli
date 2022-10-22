@@ -1,3 +1,5 @@
+# Copyright (c) 2022 Disintar LLP Licensed under the Apache License Version 2.0
+
 # Run fift file with fift-libs folder
 import os
 import subprocess

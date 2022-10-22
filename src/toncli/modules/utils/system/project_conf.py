@@ -1,3 +1,5 @@
+# Copyright (c) 2022 Disintar LLP Licensed under the Apache License Version 2.0
+
 import os.path
 import platform
 import sys

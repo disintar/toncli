@@ -119,3 +119,7 @@ directory `~/.config/toncli`
 
 Feel free to ask questions and help in official telegram chats: [Russian](https://t.me/tondev)
 / [English](https://t.me/tondev_eng)
+
+## License 
+
+Copyright (c) 2022 Disintar LLP Licensed under the Apache License

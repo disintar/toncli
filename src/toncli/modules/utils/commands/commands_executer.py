@@ -1,3 +1,5 @@
+# Copyright (c) 2022 Disintar LLP Licensed under the Apache License Version 2.0
+
 import sys
 from toncli.modules.utils.commands.command_classes.help_or_h_command import HelpOrHCommand
 from toncli.modules.utils.commands.command_classes.lite_client_or_lc_command import LiteClientOrLcCommand
@@ -20,22 +22,23 @@ from toncli.modules.utils.commands.command_classes.to_integer_command import ToI
 from toncli.modules.utils.commands.command_classes.update_libs_command import UpdateLibsCommand
 from toncli.modules.utils.commands.command_classes.wallet_command import WalletCommand
 
+
 class CommandsExecuter():
-    command= ""
-    string_kwargs= []
+    command = ""
+    string_kwargs = []
     parser: ArgumentParser
 
-    def __init__(self, command, string_kwargs, parser):        
+    def __init__(self, command, string_kwargs, parser):
         _, kwargs = argv_fix(sys.argv, string_kwargs)
 
         if len(kwargs) == 0 and not command:
             parser.print_help()
             sys.exit(0)
-        
+
         self.command = command
         self.string_kwargs = string_kwargs
         self.parser = parser
-        if(command in self.command_mapper):
+        if command in self.command_mapper:
             self.command_mapper[command](self)
         else:
             logger.error("🔎 Can't find such command")
@@ -98,24 +101,24 @@ class CommandsExecuter():
         "--help": help_or_h_command,
         "-v": local_version_command,
         "--version": local_version_command,
-        "build_cli_libs" : build_cli_libs_command,
-        "run" : run_or_fift_or_f_command,
-        "fift" : run_or_fift_or_f_command,
-        "f" : run_or_fift_or_f_command,
-        "lite-client" : lite_client_or_lc_command,
-        "lc" : lite_client_or_lc_command,
-        "func" : func_or_fc_or_build_command,
-        "fc" : func_or_fc_or_build_command,
-        "build" : func_or_fc_or_build_command,
+        "build_cli_libs": build_cli_libs_command,
+        "run": run_or_fift_or_f_command,
+        "fift": run_or_fift_or_f_command,
+        "f": run_or_fift_or_f_command,
+        "lite-client": lite_client_or_lc_command,
+        "lc": lite_client_or_lc_command,
+        "func": func_or_fc_or_build_command,
+        "fc": func_or_fc_or_build_command,
+        "build": func_or_fc_or_build_command,
         "tointeger": tointeger_command,
-        "addrs" : addrs_command,
-        "start" : start_command,
-        "run_tests" : run_tests_command,
-        "sendboc" : send_boc_command,
-        "send" : send_command,
-        "get" : get_command,
-        "deploy" : deploy_command,
-        "wallet" : wallet_command,
-        "update_libs" : update_libs,
-        "run_transaction" : run_transaction
+        "addrs": addrs_command,
+        "start": start_command,
+        "run_tests": run_tests_command,
+        "sendboc": send_boc_command,
+        "send": send_command,
+        "get": get_command,
+        "deploy": deploy_command,
+        "wallet": wallet_command,
+        "update_libs": update_libs,
+        "run_transaction": run_transaction
     }
