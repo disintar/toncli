@@ -67,7 +67,7 @@ We are trying to process all tasks through issues. You can take own one 🥳
 
 ## Commands
 
-All commands could be fined in [docs/advanced/commands.md](/docs/advanced/commands.md)
+[List of all commands](/docs/advanced/commands.md)
 
 ### Configuration
 

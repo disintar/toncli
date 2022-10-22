@@ -17,6 +17,20 @@ gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 
+def inclide_func_files(include_path: str) -> List[str]:
+    init_path    = os.path.join(include_path, "__init__.func")
+    include_list = []
+
+    if os.path.isfile(init_path):
+        include_list.append(init_path)
+    else:
+        for root, _, files in os.walk(include_path):
+            for file in files:
+                if file.endswith((".func", ".fc")):
+                    include_list.append(os.path.join(root, file))
+
+    return include_list
+
 def build_test(project_root: str,
                cwd: Optional[str] = None,
                func_args: List[str] = None,
@@ -43,15 +57,9 @@ def build_test(project_root: str,
     func_and_test_files = []
     for contract in contracts:
         if len(contract.func_tests_files_locations):
-            for root, _, files in os.walk(f"{config_folder}/func-libs/"):
-                for file in files:
-                    if file.endswith((".func", ".fc")):
-                        func_and_test_files.append(os.path.join(root, file))
-            
-            for root, _, files in os.walk(f"{config_folder}/test-libs/"):
-                for file in files:
-                    if file.endswith((".func", ".fc")):
-                        func_and_test_files.append(os.path.join(root, file))
+
+            func_and_test_files.extend(inclide_func_files(f"{config_folder}/func-libs/"))
+            func_and_test_files.extend(inclide_func_files(f"{config_folder}/test-libs/"))
 
             if compile_tests_with_contract:
                 output.append(

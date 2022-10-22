@@ -72,6 +72,13 @@ forall F, A, R -> (int, int, R) invoke_method_full(F fun, A args) impure asm
     "145 PUSHINT SUB"
   "} : compute-gas-used"
 
+  "{"                                ;; <- this functions saves c5 value to be used between invokes
+    "c7 PUSH DUP FIRST"              ;; Getting c7 tuple
+    "10 GETPARAM c5 PUSH SETSECOND"  ;; setting cur c5 into [prev_c4, prev_c5] tuple
+    "10 SETINDEX SETFIRST c7 POP"    ;; saving updated tuple to c7
+  "} : save-c5"
+
+  "save-c5"                          ;; saving c5 to prev_c5
   "NEWC ENDC c5 POP"                 ;; clear actions cell
   "RESETLOADEDCELLS"                 ;; <- make sure first cell load cost 100 gas, not 25
   "255 PUSHINT EXPLODEVAR"           ;; (fun, arg_1, arg_2, ..., arg_n, n)
