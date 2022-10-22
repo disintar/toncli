@@ -1,5 +1,4 @@
 
-#!/usr/bin/fift -s
 "TonUtil.fif" include
 "Asm.fif" include
 "Color.fif" include
