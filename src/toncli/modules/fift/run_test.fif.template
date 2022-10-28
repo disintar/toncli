@@ -190,7 +190,7 @@ verbose 0>
 
     @init_c4 @           // starts  empty or pre-initialized c4, developers could get prev-c4 from c7
     add-c4-c5-to-c7 // c7
-    1000000000      // gas limit
+    1000000000      // gas max
     calc-vm-mode
     runvmx
     // TODO: check what happens if it returns more elements
