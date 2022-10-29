@@ -17,9 +17,12 @@
     }
 }
 
-(int, cell) parse_raw_reserve(slice out_action) impure inline
+(int, [int, cell]) parse_raw_reserve(slice out_action) impure inline
 {
-    return (out_action~load_uint(8), out_action~load_dict());
+    ;; currencies$_ grams:Grams other:ExtraCurrencyCollection
+    ;; = CurrencyCollection;
+
+    return (out_action~load_uint(8), pair(out_action~load_grams(), out_action~load_dict()));
 }
 
 
@@ -95,8 +98,8 @@ tuple parse_c5() impure inline
                 }
                 elseif(action_code == 921090057)
                 {
-                    (int mode, cell currencies) = parse_raw_reserve(out_action);
-                    list_of_actions_tuple~tpush([2, currencies, mode]);
+                    (int mode, [int, cell]  reserve) = parse_raw_reserve(out_action);
+                    list_of_actions_tuple~tpush([2, reserve, mode]);
                 }
                 elseif(action_code == 653925844)
                 {
