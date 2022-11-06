@@ -3,6 +3,12 @@
 "TonUtil.fif" include
 "Color.fif" include
 
+variable @count_success
+@count_success 0!
+
+variable @count_fail
+@count_fail 0!
+
 // TODO: just use Lists.fif
 variable @tests            // here we will store all test functions in a format [function_name, method_id]
 variable @prev_c4            // prev test c4
@@ -206,8 +212,14 @@ verbose 0>
     ."INFO: Test [" ^green @' test_name type ^reset ."] status: ["
 
     @' exit_code 1 >
-    { ^red ."FAIL" ^reset ."], code: [" ^cyan @' exit_code (dump) type ^reset ."]"  }
-    { ^green ."SUCCESS" ^reset ."] Test result: [" ^green @' test_result (dump)  type ^reset ."]" } cond
+    {
+        ^red ."FAIL" ^reset ."], code: [" ^cyan @' exit_code (dump) type ^reset ."]"
+         @count_fail 1+!
+    }
+    {
+        ^green ."SUCCESS" ^reset ."] Test result: [" ^green @' test_result (dump)  type ^reset ."]"
+        @count_success 1+!
+    } cond
 
     ." Total gas used (including testing code): [" ^green @' total_gas_used (dump) type ^reset ."]" cr
 
@@ -234,3 +246,8 @@ verbose 0>
     { write-tuple-to-file } { drop } cond
 }
 while  // run all tests
+
+make-esc"[1m" ^bold
+
+."Final status: [" ^green ."SUCCESS" ^reset ."] - " @count_success @ (dump) ^bold type ." cases" ^reset cr
+."Final status: [" ^red ."FAILED" ^reset ."] - " @count_fail @ (dump) ^bold type ." cases" ^reset cr
