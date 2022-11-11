@@ -5,7 +5,7 @@ import os
 import tempfile
 from typing import List
 
-from toncli.modules.utils.fift.fift import Fift
+from toncli.modules.utils.fift.fift import Fift, FiftParser
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.system.conf import getcwd, project_root
 from toncli.modules.utils.system.project_conf import ProjectConf
@@ -24,9 +24,8 @@ class TestsRunner:
     def __init__(self):
         self.project_config = ProjectConf(getcwd())
 
-    def run(self, contracts: List[str], verbose: int, output_results: bool = False, run_tests_old_way: bool = False):
+    def run(self, contracts: List[str], tests: List[str], verbose: int, output_results: bool = False, run_tests_old_way: bool = False):
         logger.info(f"🌈 Start tests")
-
         if contracts is not None and len(contracts) > 0:
             real_contracts = []
 
@@ -56,6 +55,7 @@ class TestsRunner:
 
         for contract in real_contracts:
             # Add info to Jinja template
+
             render_kwargs = {
                 'code_path': contract.to_save_location,
                 'test_path': contract.to_save_tests_location,
@@ -64,6 +64,16 @@ class TestsRunner:
                 'contract_data': contract.data,
                 'verbose': verbose
             }
+
+            if tests is not None and len(tests) > 0:
+                parser      = FiftParser(contract.to_save_tests_location)
+                tests_found = parser.lookup_tests(tests)
+                if len(tests_found) > 0:
+                    render_kwargs['tests'] = tests_found
+                else:
+                    # Skip contract if tests specified and not found
+                    logger.error(f"😥 No tests found for:{rd}{contract.name}{rs}")
+                    continue
 
             # Load template of transaction_debug
             loader = FileSystemLoader(f"{project_root}/modules/fift")

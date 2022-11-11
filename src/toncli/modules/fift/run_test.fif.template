@@ -70,6 +70,16 @@ variable @cnt        // here we will store tests list length
 { @cnt @ 1 + @cnt ! } : next-cnt // increase count in box by 1
 { @cnt @ 1 - @cnt ! } : prev-cnt
 
+{% if tests %}
+  // Test names specified making use of fift dictionary
+  {% for test in tests %}
+  -1 constant {{test}}
+  {% endfor %}
+
+// Checking that function name is in fift word dict (Kinda hacky)
+// Somehow def? didn't work here instad of find
+{ find dup  { nip } if } : is-valid-test-name
+{% else %}
 // (test_name -> bool)
 {
     // This is a hacky way to check if name starts with "__test".
@@ -78,6 +88,7 @@ variable @cnt        // here we will store tests list length
     swap "__test~" $cmp 0<
     and
 } : is-valid-test-name
+{% endif %}
 
 {
     dup null? not
