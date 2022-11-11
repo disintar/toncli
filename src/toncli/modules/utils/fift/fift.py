@@ -6,6 +6,7 @@ import shlex
 import subprocess
 import sys
 import tempfile
+import re
 from typing import List, Optional
 
 from colorama import Fore, Style
@@ -192,3 +193,52 @@ class Fift:
         except KeyboardInterrupt:
             logger.info("🖥  Bye! Have a good code!)")
             sys.exit()
+
+class FiftParser:
+    # Wannabe fift parser. Currently only proc specs and tests
+    def __init__(self, path: str):
+        self.path      = path
+        self.code      = None
+        self.proc_find = re.compile('(\d*)\s?(?:DECLMETHOD|DECLPROC)\s(\S+)$', re.MULTILINE)
+        self.load(path)
+
+    def load(self, path: Optional[str] = None) -> int:
+        if path is not None:
+            self.path = path
+        with open(self.path, 'r', encoding='utf-8') as code_file:
+            self.code = code_file.read()
+        return len(self.code)
+
+    def list_proc(self) -> List[tuple]:
+        return self.proc_find.findall(self.code)
+
+    def lookup_tests(self, names: List[str]) -> List[tuple]:
+        found = []
+        for test_name in names:
+            #Escaping any regex chars and replacing astrisks win non-space char class
+            mask_parts = list(map(lambda x: re.escape(x), test_name.split('*')))
+            proc_clean = "\S+".join(mask_parts)
+            no_mask    = len(mask_parts) == 1
+            if not test_name.startswith("__test"):
+                #- or _ are allowed delimiters. Being an exotic type comes at a price
+                proc_clean = "__test[-_]*" + proc_clean
+
+            name_re    = re.compile("(?:DECLMETHOD|DECLPROC)\s(" + proc_clean + ")$", re.MULTILINE)
+            found_proc = False
+
+            if no_mask:
+                #Return on first find
+                proc_match = name_re.search(self.code)
+                if proc_match is not None:
+                    found.append(proc_match.group(1))
+                    found_proc = True
+            else:
+                #Find all matching mask
+                proc_match = name_re.findall(self.code)
+                if len(proc_match) > 0:
+                    found.extend(proc_match)
+                    found_proc = True
+
+            if not found_proc:
+                logger.error(f"No tests matching {rd}{test_name}{rs} found!")
+        return found

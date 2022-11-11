@@ -161,6 +161,11 @@ class ParserUtil():
         run_tests = self.subparser.add_parser('run_tests')
         run_tests.add_argument("--contracts", "-c", type=str,
                                help='Set contract name from project.yaml to run tests on')
+        run_tests.add_argument("tests", nargs='*',
+                               help='Execute specific test(s) by name or mask. '
+                                    'Could be full name (__test_somecase) '
+                                    'or short (somecase) '
+                                    'mask is also possible via astrisks symbol __test_somecases_*')
         run_tests.add_argument("--verbose", "-v", type=int, default=0,
                                help='Prints more debug information')
         run_tests.add_argument("--output-results", "-o", action='store_true',
