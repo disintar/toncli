@@ -207,7 +207,7 @@ int cell_null?(cell c) asm "ISNULL";
 int random() impure asm "RANDU256";
 int rand(int range) impure asm "RAND";
 int get_seed() impure asm "RANDSEED";
-int set_seed() impure asm "SETRAND";
+() set_seed(int) impure asm "SETRAND";
 () randomize(int x) impure asm "ADDRAND";
 () randomize_lt() impure asm "LTIME" "ADDRAND";
 
