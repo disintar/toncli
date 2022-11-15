@@ -3,16 +3,16 @@
 "Color.fif" include
 
 // Just helpers for output exit codes
-variable items   dictnew items !
+variable error-descriptions dictnew error-descriptions !
 
 { <b swap $>B B, b> <s } : $>slice
 { swap $>slice swap
-  items @ 64 idict!+ not abort"cannot add item to dictionary"
-  items !
+  error-descriptions @ 64 idict!+ not abort"cannot add item to dictionary"
+  error-descriptions !
 } : add-error-description
 
 {
-  items @ 64 idict@ { dup sbits 8 / B@ B>$ } { "Smart contract error" } cond
+  error-descriptions @ 64 idict@ { dup sbits 8 / B@ B>$ } { "Smart contract error" } cond
 } : get-error-description
 
 "Standard successful execution exit code" 0 add-error-description
