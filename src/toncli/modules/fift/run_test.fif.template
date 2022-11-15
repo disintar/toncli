@@ -1,7 +1,37 @@
-
 "AsmTests.fif" include
 "TonUtil.fif" include
 "Color.fif" include
+
+// Just helpers for output exit codes
+variable items   dictnew items !
+
+{ <b swap $>B B, b> <s } : $>slice
+{ swap $>slice swap
+  items @ 64 idict!+ not abort"cannot add item to dictionary"
+  items !
+} : add-error-description
+
+{
+  items @ 64 idict@ { dup sbits 8 / B@ B>$ } { "Smart contract error" } cond
+} : get-error-description
+
+"Standard successful execution exit code" 0 add-error-description
+"Alternative successful execution exit code" 1 add-error-description
+"Stack underflow. Last op-code consume more elements than there are on stacks. (most probably means a error in asm declarations)" 2 add-error-description
+"Stack overflow. More values have been stored on a stack than allowed by this version of TVM" 3 add-error-description
+"Integer overflow. Integer does not fit into −2^256 ≤ x < 2^256 or a division by zero has occurred" 4 add-error-description
+"Integer out of expected range" 5 add-error-description
+"Invalid opcode. Instruction in unknown to current TVM version" 6 add-error-description
+"Type check error. An argument to a primitive is of incorrect value type  (most probably means a error in asm declarations)" 7 add-error-description
+"Cell overflow. Writing to builder is not possible since after operation there would be more than 1023 bits or 4 references" 8 add-error-description
+"Cell underflow. Read from slice primitive tried to read more bits or references than there are" 9 add-error-description
+"Dictionary error. Error during manipulation with dictionary (hashmaps)" 10 add-error-description
+"Out of gas error. Thrown by TVM when the remaining gas becomes negative" 13 add-error-description
+"Action list is invalid (OR) (Method id not found)" 32 add-error-description
+"Action is invalid or not supported. Set during action phase if current action can not be applied" 34 add-error-description
+"Not enough TONs. Message sends too much TON (or there is no enough TONs after deducting fees)" 37 add-error-description
+"Not enough extra-currencies" 38 add-error-description
+
 
 variable @count_success
 @count_success 0!
@@ -211,7 +241,6 @@ verbose 0>
     calc-vm-mode
     runvmx
     // TODO: check what happens if it returns more elements
-    // be careful and don't add ".s" here, it could crash fift as c4/c5 could be null pointers
     =: total_gas_used
     =: next_c5
     =: next_c4
@@ -224,7 +253,7 @@ verbose 0>
 
     @' exit_code 1 >
     {
-        ^red ."FAIL" ^reset ."], code: [" ^cyan @' exit_code (dump) type ^reset ."]"
+        ^red ."FAIL" ^reset ."], code: [" ^cyan @' exit_code dup (dump) type ^reset ."], error description [" ^cyan get-error-description type ^reset ."]"
          @count_fail 1+!
     }
     {
