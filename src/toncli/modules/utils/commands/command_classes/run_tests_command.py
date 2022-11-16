@@ -3,6 +3,7 @@ import sys
 from toncli.modules.utils.test.tests import TestsRunner
 from toncli.modules.utils.system.argparse_fix import argv_fix
 
+
 class RunTestsCommand():
     def __init__(self, string_kwargs, parser: ArgumentParser):
         # Meh
@@ -14,4 +15,5 @@ class RunTestsCommand():
                         tests=real_argv[2:],
                         verbose=args.verbose,
                         output_results=args.output_results,
-                        run_tests_old_way=args.old)
+                        run_tests_old_way=args.old,
+                        silent=bool(args.silent))
