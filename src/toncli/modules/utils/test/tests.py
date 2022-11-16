@@ -24,7 +24,8 @@ class TestsRunner:
     def __init__(self):
         self.project_config = ProjectConf(getcwd())
 
-    def run(self, contracts: List[str], tests: List[str], verbose: int, output_results: bool = False, run_tests_old_way: bool = False):
+    def run(self, contracts: List[str], tests: List[str], verbose: int, output_results: bool = False,
+            run_tests_old_way: bool = False, silent: bool = False):
         logger.info(f"🌈 Start tests")
         if contracts is not None and len(contracts) > 0:
             real_contracts = []
@@ -34,7 +35,8 @@ class TestsRunner:
                     if config.name == item:
                         real_contracts.append(config)
         else:
-            real_contracts = list( filter( lambda p: len(p.func_tests_files_locations ) > 0, self.project_config.contracts ) )
+            real_contracts = list(
+                filter(lambda p: len(p.func_tests_files_locations) > 0, self.project_config.contracts))
 
         if not len(real_contracts):
             logger.error(f"😥 No contracts [{contracts}] are founded in project.yaml")
@@ -62,11 +64,12 @@ class TestsRunner:
                 'output_results': int(output_results),
                 'output_path': output_path,
                 'contract_data': contract.data,
-                'verbose': verbose
+                'verbose': verbose,
+                'silent': int(silent)
             }
 
             if tests is not None and len(tests) > 0:
-                parser      = FiftParser(contract.to_save_tests_location)
+                parser = FiftParser(contract.to_save_tests_location)
                 tests_found = parser.lookup_tests(tests)
                 if len(tests_found) > 0:
                     render_kwargs['tests'] = tests_found

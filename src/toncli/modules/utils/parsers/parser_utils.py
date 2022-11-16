@@ -168,6 +168,8 @@ class ParserUtil():
                                     'mask is also possible via astrisks symbol __test_somecases_*')
         run_tests.add_argument("--verbose", "-v", type=int, default=0,
                                help='Prints more debug information')
+        run_tests.add_argument("--silent", "-s", type=int, default=0,
+                               help='Do not abort if tests have failed')
         run_tests.add_argument("--output-results", "-o", action='store_true',
                                help='Stores results as json')
         run_tests.add_argument("--old", action='store_true', help='In old versions of toncli tests had to have '
