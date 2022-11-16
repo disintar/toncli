@@ -46,12 +46,15 @@ def getcwd():
 
     return path
 
-def get_subdirs( path: str ) -> list:
-    return [ sub_dir.name for sub_dir in os.scandir( path ) if sub_dir.is_dir() ]
+
+def get_subdirs(path: str) -> list:
+    return [sub_dir.name for sub_dir in os.scandir(path) if sub_dir.is_dir()]
+
 
 def get_projects() -> list:
-    project_loc = os.path.join( project_root, "projects" )
-    return get_subdirs( project_loc )
+    project_loc = os.path.join(project_root, "projects")
+    return get_subdirs(project_loc)
+
 
 # Create if not exist
 if not os.path.exists(os.path.abspath(f"{config_folder}/config.ini")):
