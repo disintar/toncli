@@ -1,0 +1,25 @@
+"TonUtil.fif" include
+"Asm.fif" include
+"Color.fif" include
+
+$# 2 < { abort"At least two arguments is needed" } if
+2 :$1..n
+
+$1 "/" $+ constant build-path
+$2 constant code-file-name
+
+build-path +"boc/" code-file-name +".boc" $+ constant boc-path
+build-path code-file-name +".fif" $+ constant code-path
+build-path code-file-name +".json" $+ constant json-path
+
+code-path include constant code
+
+code 2 boc+>B boc-path B>file
+
+{ 34 chr $+ } : db-quote
+
+
+"{" db-quote  +"code" db-quote +": " db-quote code 2 boc+>B B>base64url db-quote $+ +"}" $>B  json-path B>file
+
+
+`
