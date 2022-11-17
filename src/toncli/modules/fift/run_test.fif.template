@@ -246,7 +246,7 @@ verbose 0>
     =: next_c5
     =: next_c4
 
-    dup 0 < { -1 * } if
+    dup -14 = { drop 13 } if
     =: exit_code
 
     depth tuple =: test_result
