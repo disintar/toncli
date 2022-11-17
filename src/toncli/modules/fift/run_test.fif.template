@@ -27,7 +27,7 @@ variable error-descriptions dictnew error-descriptions !
 "Cell underflow. Read from slice primitive tried to read more bits or references than there are" 9 add-error-description
 "Dictionary error. Error during manipulation with dictionary (hashmaps)" 10 add-error-description
 "Out of gas error. Thrown by TVM when the remaining gas becomes negative" 13 add-error-description
-"Out of gas error. Thrown by TVM when the remaining gas becomes negative" 14 add-error-description
+"VM virtualization error" 14 add-error-description
 "Action list is invalid (OR) (Method id not found)" 32 add-error-description
 "Action is invalid or not supported. Set during action phase if current action can not be applied" 34 add-error-description
 "Not enough TONs. Message sends too much TON (or there is no enough TONs after deducting fees)" 37 add-error-description
