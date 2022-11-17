@@ -246,6 +246,7 @@ verbose 0>
     =: next_c5
     =: next_c4
 
+    // https://github.com/ton-blockchain/ton/blob/20758d6bdd0c1327091287e8a620f660d1a9f4da/crypto/vm/vm.cpp#L492
     dup -14 = { drop 13 } if
     =: exit_code
 
