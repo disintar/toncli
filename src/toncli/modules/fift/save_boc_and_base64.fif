@@ -26,7 +26,7 @@ code 2 boc+>B boc-path B>file
 
 "{"
 "code" code-base64 add-key-value +", "  $+
-"code_hash" code hashu (dump) add-key-value +", "  $+
+"code-hash" code hashu (dump) add-key-value +", "  $+
 "fift-version"  fift-version add-key-value +", " $+
 "date" now (dump) add-key-value +", " $+
 "contract-name" contract-name add-key-value +", " $+
