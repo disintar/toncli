@@ -1,6 +1,6 @@
-colorama
-appdirs
-requests
-pyyaml
-Jinja2
-bitstring
+colorama==0.4.5
+appdirs==1.4.4
+requests==2.28.1
+pyyaml==6.0
+Jinja2==3.1.2
+bitstring==3.1.9
