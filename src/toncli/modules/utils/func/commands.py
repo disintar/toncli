@@ -9,6 +9,7 @@ from typing import Optional, List
 
 from colorama import Fore, Style
 
+from toncli.modules.utils.system.check_executable import safe_get_version
 from toncli.modules.utils.system.conf import config_folder, executable, getcwd, project_root
 from toncli.modules.utils.system.project_conf import ProjectConf, TonProjectConfig
 
@@ -37,6 +38,10 @@ def build(ton_project_root: str,
         func_args = []
 
     output = []
+
+    fift_version = safe_get_version(executable['fift'], False).replace("\n", " ")
+    func_version = safe_get_version(executable['func'], False).replace("\n", " ")
+
     for contract in contracts:
         output.append(
             build_files(contract.func_files_locations, contract.to_save_location, func_args, cwd))
@@ -45,7 +50,8 @@ def build(ton_project_root: str,
 
         save_boc_and_json_path = os.path.join(project_root, "modules/fift/save_boc_and_base64.fif")
         save_boc_and_json = [os.path.abspath(executable['fift']), "-I", os.path.abspath(f"{config_folder}/fift-libs"),
-                             "-s", save_boc_and_json_path, os.path.join(real_cwd, "build"), contract.name]
+                             "-s", save_boc_and_json_path, os.path.join(real_cwd, "build"), contract.name, fift_version,
+                             func_version, contract.name]
 
         check_output(save_boc_and_json, cwd=real_cwd, shell=False)
 

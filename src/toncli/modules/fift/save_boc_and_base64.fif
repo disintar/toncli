@@ -2,24 +2,36 @@
 "Asm.fif" include
 "Color.fif" include
 
-$# 2 < { abort"At least two arguments is needed" } if
-2 :$1..n
+$# 4 < { abort"At least 4 arguments is needed" } if
+5 :$1..n
 
 $1 "/" $+ constant build-path
 $2 constant code-file-name
+$3 constant fift-version
+$4 constant func-version
+$5 constant contract-name
 
 build-path +"boc/" code-file-name +".boc" $+ constant boc-path
 build-path code-file-name +".fif" $+ constant code-path
 build-path code-file-name +".json" $+ constant json-path
 
 code-path include constant code
-
+code 2 boc+>B B>base64url constant code-base64
 code 2 boc+>B boc-path B>file
 
 { 34 chr $+ } : db-quote
 
 
-"{" db-quote  +"code" db-quote +": " db-quote code 2 boc+>B B>base64url db-quote $+ +"}" $>B  json-path B>file
+{ "" db-quote rot $+ db-quote +": " db-quote swap $+ db-quote } : add-key-value
+
+"{"
+"code" code-base64 add-key-value +", "  $+
+"code_hash" code hashu (dump) add-key-value +", "  $+
+"fift-version"  fift-version add-key-value +", " $+
+"date" now (dump) add-key-value +", " $+
+"contract-name" contract-name add-key-value +", " $+
+"func-version"  func-version add-key-value $+
++"}" .s $>B json-path B>file
 
 
 `

@@ -4,7 +4,7 @@ import os
 import platform
 import shutil
 import subprocess
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict, Tuple, Union
 from colorama import Fore, Style
 from toncli.modules.utils.system.log import logger
 
@@ -13,18 +13,22 @@ gr = Fore.GREEN
 rs = Style.RESET_ALL
 
 
-def safe_get_version(executable: str) -> Optional[List[str]]:
+def safe_get_version(executable: str, only_build_info: bool = True) -> Union[List[str], str]:
     try:
         output = subprocess.check_output([os.path.abspath(executable), '-V'])
         output = output.decode()
 
         if 'build information:' in output.lower():
-            output = output.split('[')[-1]
-            output = output[:-1]
-            return output.split(',')
+            if only_build_info:
+                output = output.split('[')[-1]
+                output = output[:-1]
+                return output.split(',')
+            else:
+                return output
+
     except Exception as e:
         logger.error(e)
-        return
+        return ""
 
 
 def check_executable(executable_config: Dict) -> Tuple[Dict, bool]:
