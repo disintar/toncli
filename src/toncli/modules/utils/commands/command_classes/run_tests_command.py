@@ -11,9 +11,10 @@ class RunTestsCommand():
         args = parser.parse_args(['run_tests', *kwargs])
 
         test_runner = TestsRunner()
+
         test_runner.run(args.contracts.split() if args.contracts else None,
                         tests=real_argv[2:],
                         verbose=args.verbose,
                         output_results=args.output_results,
                         run_tests_old_way=args.old,
-                        silent=bool(args.silent))
+                        silent=args.silent)

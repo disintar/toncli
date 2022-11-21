@@ -300,4 +300,4 @@ cr
     .s // this trick is for correct error porinting
 } if
 
-@count_fail @ 0> { {{ silent }} 0 = { 2 abort"One or more test have been failed" } if } if
+@count_fail @ 0> { {{ silent }} 0 = { 2 halt } if } if
