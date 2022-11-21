@@ -58,7 +58,7 @@ class TestsRunner:
         exit_codes = []
         for contract in real_contracts:
             # Add info to Jinja template
-            print(int(silent), silent)
+
             render_kwargs = {
                 'code_path': contract.to_save_location,
                 'test_path': contract.to_save_tests_location,
