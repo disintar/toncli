@@ -19,6 +19,7 @@ from toncli.modules.utils.system.project_conf import TonProjectConfig
 from toncli.modules.utils.system.log import logger
 from toncli.modules.utils.fift.fift import Fift
 from toncli.modules.utils.system.project_conf import ProjectConf
+from toncli.modules.utils.text.text_utils import chunks
 from toncli.modules.utils.ton.cell import deserialize
 from toncli.modules.utils.lite_client.parser import split_get_output
 from jinja2 import FileSystemLoader, Environment, select_autoescape
@@ -88,7 +89,8 @@ class AbstractDeployer:
 
         for contract, (_, is_inited) in zip(contracts, statuses):
             if not is_inited:
-                deploy_boc = send_boc(self.network, os.path.abspath(contract.boc), cwd=os.path.abspath(self.project_root),
+                deploy_boc = send_boc(self.network, os.path.abspath(contract.boc),
+                                      cwd=os.path.abspath(self.project_root),
                                       update_config=self.update_config, get_output=True)
 
                 if 'error' in deploy_boc:
@@ -136,14 +138,14 @@ class AbstractDeployer:
 
         return addresses
 
-    def export_address_to_fift( self, path: str, name: str = "owner" ):
+    def export_address_to_fift(self, path: str, name: str = "owner"):
         addresses = self.get_address()
 
-        with open( path, "w", encoding='utf-8' ) as f:
+        with open(path, "w", encoding='utf-8') as f:
             logger.info(f"🦘 Exporing address to {gr}{path}{rs}")
-            f.write( addresses[0][0].replace( ":", " ") + f" 2constant {name}_raw\n" )
-            f.write( f'"{addresses[0][1]}" constant {name}_address\n' )
-            f.write( f'"{addresses[0][2]}" constant {name}_no_bounce\n' )
+            f.write(addresses[0][0].replace(":", " ") + f" 2constant {name}_raw\n")
+            f.write(f'"{addresses[0][1]}" constant {name}_address\n')
+            f.write(f'"{addresses[0][2]}" constant {name}_no_bounce\n')
 
     def compile_func(self, contracts: List[TonProjectConfig] = None):
         """Compile func to code.fif"""
@@ -405,7 +407,12 @@ class AbstractDeployer:
                     f.write(rendered)
 
                 fift = Fift('run', args=[temp_location])
-                fift.run()
+                command = fift.run(get_output=True)
+                output = command.stdout.read().split('\n')
+                for i in chunks(output, 10):
+                    print("\n".join(i))
+                    sleep(0.001)
+
             else:
                 try:
                     output = int(output)

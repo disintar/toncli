@@ -57,13 +57,13 @@ class Fift:
         self.project_dir = check_for_needed_files_to_deploy(getcwd(), True)
         self.cli_fif_lib = None
 
-    def run(self):
+    def run(self, get_output=False):
         """Run specific command"""
 
         if not self.command or self.command == 'interactive':
             self.run_interactive()
         elif self.command == 'run':
-            self.run_script()
+            return self.run_script(get_output=get_output)
         elif self.command == 'sendboc':
             return self.sendboc()
         else:
