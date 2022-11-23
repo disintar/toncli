@@ -3,6 +3,7 @@
 import json
 import os
 import tempfile
+from time import sleep
 from typing import List
 
 from toncli.modules.utils.fift.fift import Fift, FiftParser
@@ -13,6 +14,7 @@ from colorama import Fore, Style
 from jinja2 import FileSystemLoader, select_autoescape, Environment
 
 from toncli.modules.utils.test.commands import build_test
+from toncli.modules.utils.text.text_utils import chunks
 
 bl = Fore.CYAN
 rd = Fore.RED
@@ -102,7 +104,10 @@ class TestsRunner:
             c = output.communicate()[0]
             exit_code = output.returncode
 
-            print(output_text)
+            for i in chunks(output_text, 10):
+                print("\n".join(i))
+                sleep(0.001)
+
             exit_codes.append(exit_code)
 
             cur = -2
