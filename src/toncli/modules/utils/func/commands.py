@@ -39,8 +39,8 @@ def build(ton_project_root: str,
 
     output = []
 
-    fift_version = safe_get_version(executable['fift'], False).replace("\n", " ")
-    func_version = safe_get_version(executable['func'], False).replace("\n", " ")
+    fift_version = safe_get_version(executable['fift'], False).replace(os.linesep, " ")
+    func_version = safe_get_version(executable['func'], False).replace(os.linesep, " ")
 
     for contract in contracts:
         output.append(
