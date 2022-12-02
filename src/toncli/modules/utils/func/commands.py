@@ -39,8 +39,8 @@ def build(ton_project_root: str,
 
     output = []
 
-    fift_version = safe_get_version(executable['fift'], False).replace("\n", " ")
-    func_version = safe_get_version(executable['func'], False).replace("\n", " ")
+    fift_version = safe_get_version(executable['fift'], False).replace(os.linesep, " ")
+    func_version = safe_get_version(executable['func'], False).replace(os.linesep, " ")
 
     for contract in contracts:
         output.append(
@@ -48,7 +48,7 @@ def build(ton_project_root: str,
 
         real_cwd = getcwd() if not cwd else os.path.abspath(cwd)
 
-        save_boc_and_json_path = os.path.join(project_root, "modules/fift/save_boc_and_base64.fif")
+        save_boc_and_json_path = os.path.abspath(os.path.join(project_root, "modules/fift/save_boc_and_base64.fif"))
         save_boc_and_json = [os.path.abspath(executable['fift']), "-I", os.path.abspath(f"{config_folder}/fift-libs"),
                              "-s", save_boc_and_json_path, os.path.join(real_cwd, "build"), contract.name, fift_version,
                              func_version, contract.name]
