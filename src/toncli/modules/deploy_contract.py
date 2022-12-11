@@ -47,7 +47,7 @@ class ContractDeployer(AbstractDeployer):
 
         if not is_inited:
             if balance > 0:
-                logger.info(f"🤑 Current balance is greater then 0: {gr}{balance}{rs} and "
+                logger.info(f"🤑 Current balance is greater than 0: {gr}{balance}{rs} and "
                             f"wallet code is not deployed - so try to deploy")
                 self.deploy_contract.build()
                 self.deploy_contract.deploy()
