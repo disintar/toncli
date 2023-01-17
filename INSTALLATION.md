@@ -4,8 +4,8 @@
 
 Special thanks to [Trinketer22](https://github.com/Trinketer22/) contributor we have Docker image with docker-hub:
 
-1. Docker-hub pre-build images can be founded [here](https://hub.docker.com/r/trinketer22/func_docker/)
-2. Docker files with instructions can be founded [here](https://github.com/Trinketer22/func_docker)
+1. Docker-hub pre-build images can be found [here](https://hub.docker.com/r/trinketer22/func_docker/)
+2. Docker files with instructions can be found [here](https://github.com/Trinketer22/func_docker)
 
 ### Linux / macOS (intel)
 
