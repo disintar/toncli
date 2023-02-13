@@ -53,7 +53,7 @@ def lite_client_execute_command(network: str, args: List[str], update_config=Fal
     :return:
     """
     network = get_network_config_path(network, update_config)
-    return [os.path.abspath(executable['lite-client']), "-v", "3", "--timeout", "3", "-C", network, *args]
+    return [os.path.abspath(executable['lite-client']), "-v", "3", "--timeout", "10", "-C", network, *args]
 
 
 def get_account_status(network: str, address: str, cwd: Optional[str] = None,
