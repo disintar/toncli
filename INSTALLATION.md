@@ -10,8 +10,8 @@ Special thanks to [Trinketer22](https://github.com/Trinketer22/) contributor we 
 ### Linux / macOS (intel)
 
 1. Download needed special pre-builds (from SpyCheese repo) for
-   Linux : [here](https://github.com/SpyCheese/ton/actions/runs/3176936192), for
-   Mac : [here](https://github.com/SpyCheese/ton/actions/runs/3176936191)
+   Linux : [here](https://github.com/SpyCheese/ton/actions/runs/4055187490), for
+   Mac : [here](https://github.com/SpyCheese/ton/actions/runs/4055187491)
     1. You need to be logged-in to GitHub to download pre-builds
 2. Install `Python3.9` or higher
 3. Run `pip install toncli` or `pip3 install toncli`
@@ -34,7 +34,7 @@ Special thanks to [Trinketer22](https://github.com/Trinketer22/) contributor we 
 
 4. Install `toncli` by running `pip install toncli`
 
-5. Download the compiled TON binaries from [here](https://github.com/SpyCheese/ton/actions/runs/3176936196) (you need to
+5. Download the compiled TON binaries from [here](https://github.com/SpyCheese/ton/actions/runs/4055187496) (you need to
    be logged in to GitHub)
 
 ![image](https://user-images.githubusercontent.com/19264196/160259203-07fd0e26-9b8e-4aff-b4f0-8e4e6f871088.png)
