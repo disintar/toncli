@@ -137,7 +137,7 @@ def send_boc(network: str, path: str, cwd: Optional[str] = None, update_config: 
 
         if _try == lite_client_tries + 1:
             logger.error(f"😢 Error running {' '.join(command)}")
-            raise exc
+            raise Exception()
         return output
 
 
